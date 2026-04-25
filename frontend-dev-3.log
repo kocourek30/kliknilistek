@@ -1,0 +1,33 @@
+
+> kliknilistek-frontend@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3001
+
+   Ôľ▓ Next.js 15.1.0
+   - Local:        http://127.0.0.1:3001
+   - Network:      http://127.0.0.1:3001
+   - Experiments (use with caution):
+     ┬Ě typedRoutes
+
+ Ôťô Starting...
+ ÔÜá Attempted to load @next/swc-win32-x64-msvc, but an error occurred: \\?\C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\@next\swc-win32-x64-msvc\next-swc.win32-x64-msvc.node is not a valid Win32 application.
+\\?\C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\@next\swc-win32-x64-msvc\next-swc.win32-x64-msvc.node
+ Ôťô Ready in 2.8s
+ ÔŚő Compiling /odbaveni ...
+ Ôťô Compiled /sprava in 10.8s (595 modules)
+ GET /sprava 200 in 5155ms
+ GET /odbaveni 200 in 12139ms
+ GET /sprava 200 in 4222ms
+ GET / 200 in 4235ms
+ GET / 200 in 12148ms
+ ÔŚő Compiling /api_proxy/[...cesta] ...
+ Ôťô Compiled /api_proxy/[...cesta] in 682ms (610 modules)
+ GET /api_proxy/uzivatele/profil 200 in 3965ms
+ GET /api_proxy/akce 200 in 4033ms
+ GET /api_proxy/objednavky 200 in 4041ms
+ GET /api_proxy/akce/mista-konani 200 in 4099ms
+ GET /api_proxy/platby 200 in 4052ms
+ GET /api_proxy/prehledy 200 in 4104ms
+ GET /api_proxy/organizace/clenstvi 200 in 4280ms
+ GET /api_proxy/organizace 200 in 4303ms
+ GET /api_proxy/akce/kategorie-vstupenek 200 in 4379ms
+[?25h

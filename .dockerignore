@@ -1,0 +1,14 @@
+.git
+.gitignore
+.env
+.env.*
+backend/__pycache__
+backend/**/*.pyc
+frontend/.next
+frontend/node_modules
+frontend/npm-debug.log
+frontend-dev.log
+frontend-dev-2.log
+frontend-dev-3.log
+frontend-prod.log
+backend-dev.log

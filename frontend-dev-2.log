@@ -1,0 +1,485 @@
+
+> kliknilistek-frontend@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3001
+
+   Ôľ▓ Next.js 15.1.0
+   - Local:        http://127.0.0.1:3001
+   - Network:      http://127.0.0.1:3001
+   - Experiments (use with caution):
+     ┬Ě typedRoutes
+
+ Ôťô Starting...
+ ÔÜá Attempted to load @next/swc-win32-x64-msvc, but an error occurred: \\?\C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\@next\swc-win32-x64-msvc\next-swc.win32-x64-msvc.node is not a valid Win32 application.
+\\?\C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\@next\swc-win32-x64-msvc\next-swc.win32-x64-msvc.node
+ Ôťô Ready in 2.2s
+ ÔŚő Compiling /akce/[slug] ...
+ Ôťô Compiled /akce/[slug] in 3.9s (599 modules)
+ GET /sprava 200 in 4221ms
+ GET /akce/jarni-koncert-2026 200 in 4750ms
+ GET /sprava 200 in 37ms
+ GET /sprava 200 in 45ms
+ Ôťô Compiled in 406ms (577 modules)
+ GET /sprava 200 in 333ms
+ GET /sprava 200 in 11ms
+ GET /sprava 200 in 47ms
+ Ôťô Compiled /api_proxy/[...cesta] in 254ms (595 modules)
+ GET /api_proxy/uzivatele/profil 401 in 997ms
+ Ôťô Compiled in 190ms (311 modules)
+ GET /sprava 200 in 144ms
+ Ôťô Compiled in 210ms (595 modules)
+ GET /sprava 200 in 148ms
+ GET /api_proxy/uzivatele/profil 200 in 457ms
+ GET /api_proxy/akce/mista-konani 200 in 1012ms
+ GET /api_proxy/akce 200 in 1039ms
+ GET /api_proxy/objednavky 200 in 1130ms
+ GET /api_proxy/akce/kategorie-vstupenek 200 in 1267ms
+ GET /api_proxy/organizace/clenstvi 200 in 1341ms
+ GET /api_proxy/uzivatele/profil 200 in 1362ms
+ GET /api_proxy/prehledy 200 in 1377ms
+ GET /api_proxy/platby 200 in 1407ms
+ GET /api_proxy/organizace 200 in 1437ms
+ Ôťô Compiled in 442ms (578 modules)
+ Ôťô Compiled in 1454ms (578 modules)
+ ÔŚő Compiling /odbaveni ...
+ Ôťô Compiled /odbaveni in 648ms (588 modules)
+ GET /odbaveni 200 in 1064ms
+ Ôťô Compiled /api_proxy/[...cesta] in 269ms (318 modules)
+ ÔĘ» TypeError: fetch failed
+    at async preposliNaBackend (app\api_proxy\[...cesta]\route.ts:19:18)
+  17 |   const maTelo = !["GET", "HEAD"].includes(request.method);
+  18 |
+> 19 |   const odpoved = await fetch(cilovaUrl, {
+     |                  ^
+  20 |     method: request.method,
+  21 |     headers: {
+  22 |       Accept: request.headers.get("accept") ?? "application/json", {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:8001
+      at <unknown> (Error: connect ECONNREFUSED 127.0.0.1:8001) {
+    errno: -4078,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 8001
+  }
+}
+ ÔĘ» TypeError: fetch failed
+    at async preposliNaBackend (app\api_proxy\[...cesta]\route.ts:19:18)
+  17 |   const maTelo = !["GET", "HEAD"].includes(request.method);
+  18 |
+> 19 |   const odpoved = await fetch(cilovaUrl, {
+     |                  ^
+  20 |     method: request.method,
+  21 |     headers: {
+  22 |       Accept: request.headers.get("accept") ?? "application/json", {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:8001
+      at <unknown> (Error: connect ECONNREFUSED 127.0.0.1:8001) {
+    errno: -4078,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 8001
+  }
+}
+ GET /api_proxy/uzivatele/profil 500 in 856ms
+ ÔĘ» TypeError: fetch failed
+    at async preposliNaBackend (app\api_proxy\[...cesta]\route.ts:19:18)
+  17 |   const maTelo = !["GET", "HEAD"].includes(request.method);
+  18 |
+> 19 |   const odpoved = await fetch(cilovaUrl, {
+     |                  ^
+  20 |     method: request.method,
+  21 |     headers: {
+  22 |       Accept: request.headers.get("accept") ?? "application/json", {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:8001
+      at <unknown> (Error: connect ECONNREFUSED 127.0.0.1:8001) {
+    errno: -4078,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 8001
+  }
+}
+ ÔĘ» TypeError: fetch failed
+    at async preposliNaBackend (app\api_proxy\[...cesta]\route.ts:19:18)
+  17 |   const maTelo = !["GET", "HEAD"].includes(request.method);
+  18 |
+> 19 |   const odpoved = await fetch(cilovaUrl, {
+     |                  ^
+  20 |     method: request.method,
+  21 |     headers: {
+  22 |       Accept: request.headers.get("accept") ?? "application/json", {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:8001
+      at <unknown> (Error: connect ECONNREFUSED 127.0.0.1:8001) {
+    errno: -4078,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 8001
+  }
+}
+ GET /api_proxy/uzivatele/profil 500 in 265ms
+ ÔŚő Compiling / ...
+ Ôťô Compiled / in 835ms (609 modules)
+ GET / 200 in 1204ms
+ Ôťô Compiled in 469ms (609 modules)
+ Ôťô Compiled in 133ms (307 modules)
+ Ôťô Compiled in 191ms (594 modules)
+ GET / 200 in 203ms
+ GET /sprava 200 in 194ms
+ GET /odbaveni 200 in 204ms
+ Ôťô Compiled /api_proxy/[...cesta] in 219ms (322 modules)
+ ÔĘ» Error: Cannot find module './638.js'
+Require stack:
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\api_proxy\[...cesta]\route.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\require.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\load-components.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\utils.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\options.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\index.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\parse-module.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\get-page-static-info.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\start-server.js
+    at __webpack_require__.f.require (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:203:28)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:116:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:115:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:167:22)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\odbaveni\page.js:1:16710)
+    at Object.<anonymous> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\odbaveni\page.js:1:16755) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/odbaveni'
+}
+ GET /api_proxy/vstupenky/DDBA01EC182341DEBB8690102435B497/pdf 200 in 392ms
+ ÔĘ» Error: Cannot find module './638.js'
+Require stack:
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\api_proxy\[...cesta]\route.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\require.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\load-components.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\utils.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\options.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\index.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\parse-module.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\get-page-static-info.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\start-server.js
+    at __webpack_require__.f.require (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:203:28)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:116:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:115:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:167:22)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\page.js:1:8868)
+    at Object.<anonymous> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\page.js:1:8917) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/'
+}
+ ÔĘ» Error: Cannot find module './638.js'
+Require stack:
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\api_proxy\[...cesta]\route.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\require.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\load-components.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\utils.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\options.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\index.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\parse-module.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\get-page-static-info.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\start-server.js
+    at __webpack_require__.f.require (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:203:28)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:116:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:115:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:167:22)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\sprava\page.js:1:53576)
+    at Object.<anonymous> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\sprava\page.js:1:53621) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/sprava'
+}
+ ÔŚő Compiling /_error ...
+ Ôťô Compiled /_error in 1719ms (851 modules)
+ GET /odbaveni 500 in 2471ms
+ GET /sprava 500 in 2470ms
+ GET / 500 in 2471ms
+ ÔĘ» Error: Cannot find module './638.js'
+Require stack:
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\pages\_document.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\require.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\load-components.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\utils.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\options.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\index.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\parse-module.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\get-page-static-info.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\start-server.js
+    at __webpack_require__.f.require (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:203:28)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:116:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:115:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:167:22)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\sprava\page.js:1:53576)
+    at Object.<anonymous> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\sprava\page.js:1:53621) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/sprava'
+}
+ ÔĘ» Error: Cannot find module './638.js'
+Require stack:
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\pages\_document.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\require.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\load-components.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\utils.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\options.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\index.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\parse-module.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\get-page-static-info.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\start-server.js
+    at __webpack_require__.f.require (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:203:28)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:116:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:115:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:167:22)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\odbaveni\page.js:1:16710)
+    at Object.<anonymous> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\odbaveni\page.js:1:16755) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/odbaveni'
+}
+ ÔĘ» Error: Cannot find module './638.js'
+Require stack:
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\pages\_document.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\require.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\load-components.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\utils.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\options.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\index.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\parse-module.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\get-page-static-info.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\start-server.js
+    at __webpack_require__.f.require (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:203:28)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:116:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:115:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:167:22)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\page.js:1:8868)
+    at Object.<anonymous> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\page.js:1:8917) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/'
+}
+ GET /sprava 500 in 306ms
+ GET /odbaveni 500 in 305ms
+ GET / 500 in 326ms
+ ÔĘ» Error: Cannot find module './638.js'
+Require stack:
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\pages\_document.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\require.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\load-components.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\utils.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\options.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\index.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\parse-module.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\get-page-static-info.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\start-server.js
+    at __webpack_require__.f.require (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:203:28)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:116:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:115:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:167:22)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\odbaveni\page.js:1:16710)
+    at Object.<anonymous> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\odbaveni\page.js:1:16755) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/odbaveni'
+}
+ ÔĘ» Error: Cannot find module './638.js'
+Require stack:
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\pages\_document.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\require.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\load-components.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\utils.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\options.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\index.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\parse-module.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\get-page-static-info.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\start-server.js
+    at __webpack_require__.f.require (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:203:28)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:116:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:115:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:167:22)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\sprava\page.js:1:53576)
+    at Object.<anonymous> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\sprava\page.js:1:53621) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/sprava'
+}
+ ÔĘ» Error: Cannot find module './638.js'
+Require stack:
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\pages\_document.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\require.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\load-components.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\utils.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\options.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\index.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\parse-module.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\get-page-static-info.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\start-server.js
+    at __webpack_require__.f.require (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:203:28)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:116:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:115:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:167:22)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\page.js:1:8868)
+    at Object.<anonymous> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\page.js:1:8917) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/'
+}
+ GET /odbaveni 500 in 270ms
+ GET /sprava 500 in 297ms
+ ÔĘ» Error: Cannot find module './638.js'
+Require stack:
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\pages\_document.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\require.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\load-components.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\utils.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\options.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\index.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\parse-module.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\get-page-static-info.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\start-server.js
+    at __webpack_require__.f.require (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:203:28)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:116:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:115:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:167:22)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\odbaveni\page.js:1:16710)
+    at Object.<anonymous> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\odbaveni\page.js:1:16755) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/odbaveni'
+}
+ GET / 500 in 298ms
+ ÔĘ» Error: Cannot find module './638.js'
+Require stack:
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\pages\_document.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\require.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\load-components.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\utils.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\options.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\index.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\parse-module.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\get-page-static-info.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\start-server.js
+    at __webpack_require__.f.require (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:203:28)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:116:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:115:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:167:22)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\sprava\page.js:1:53576)
+    at Object.<anonymous> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\sprava\page.js:1:53621) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/sprava'
+}
+ ÔĘ» Error: Cannot find module './638.js'
+Require stack:
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\pages\_document.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\require.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\load-components.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\utils.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\options.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\index.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\parse-module.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\get-page-static-info.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\start-server.js
+    at __webpack_require__.f.require (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:203:28)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:116:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:115:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:167:22)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\page.js:1:8868)
+    at Object.<anonymous> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\page.js:1:8917) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/'
+}
+ GET /odbaveni 500 in 266ms
+ GET /sprava 500 in 266ms
+ GET / 500 in 251ms
+ ÔĘ» Error: Cannot find module './638.js'
+Require stack:
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\pages\_document.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\require.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\load-components.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\utils.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\options.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\swc\index.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\parse-module.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\analysis\get-page-static-info.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\lib\start-server.js
+    at __webpack_require__.f.require (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:203:28)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:116:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:115:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js:167:22)
+    at <unknown> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\page.js:1:8868)
+    at Object.<anonymous> (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\page.js:1:8917) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/'
+}
+ GET / 500 in 366ms
+[?25h

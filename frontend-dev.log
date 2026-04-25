@@ -1,0 +1,52 @@
+
+> kliknilistek-frontend@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3001
+
+   Ôľ▓ Next.js 15.1.0
+   - Local:        http://127.0.0.1:3001
+   - Network:      http://127.0.0.1:3001
+   - Experiments (use with caution):
+     ┬Ě typedRoutes
+
+ Ôťô Starting...
+ ÔÜá Attempted to load @next/swc-win32-x64-msvc, but an error occurred: \\?\C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\@next\swc-win32-x64-msvc\next-swc.win32-x64-msvc.node is not a valid Win32 application.
+\\?\C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\@next\swc-win32-x64-msvc\next-swc.win32-x64-msvc.node
+ Ôťô Ready in 2.3s
+ ÔŚő Compiling /sprava ...
+ Ôťô Compiled /sprava in 3.5s (588 modules)
+ GET /sprava 200 in 3760ms
+ GET /sprava 200 in 82ms
+ GET /sprava 200 in 17ms
+ Ôťô Compiled /odbaveni in 433ms (584 modules)
+ GET /odbaveni 200 in 540ms
+ GET /sprava 200 in 46ms
+ GET /sprava 200 in 64ms
+ Ôťô Compiled /_not-found in 213ms (588 modules)
+ GET /sprava 404 in 316ms
+ GET /sprava 404 in 20ms
+ Ôťô Compiled /_not-found in 452ms (613 modules)
+ GET /sprava 404 in 595ms
+ ÔĘ» [Error: Cannot find module './vendor-chunks/@swc.js'
+Require stack:
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\webpack-runtime.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\.next\server\app\akce\[slug]\page.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\require.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\load-components.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\build\utils.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\server\dev\static-paths-worker.js
+- C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\compiled\jest-worker\processChild.js] {
+  type: 'Error',
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/akce/jarni-koncert-2026'
+}
+ ÔŚő Compiling /_error ...
+ Ôťô Compiled /_error in 1225ms (855 modules)
+ GET /sprava 404 in 445ms
+ GET /sprava 404 in 13ms
+ GET /sprava 404 in 34ms
+ GET /akce/jarni-koncert-2026 500 in 2780ms
+ GET /_next/static/chunks/main-app.js?v=1777009275029 404 in 182ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 182ms
+ GET /_next/static/css/app/layout.css?v=1777009275029 404 in 185ms
+[?25h
