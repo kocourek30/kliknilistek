@@ -6,15 +6,21 @@ import { PlanSalu } from "@/components/plan-salu";
 import { GrafRozlozeni, GrafSloupcovy } from "@/components/sprava-grafy";
 import {
   blokovatMistoAkce,
+  doporucFotkuGalerieAkceSprava,
+  nahrajFotkyGalerieAkceSprava,
   nactiPrehledSpravy,
   nactiProfilSpravy,
   nactiSouhrnAdministrace,
   odblokovatMistoAkce,
+  posunFotkuGalerieAkceSprava,
   prevzitSchemaMistaDoAkce,
   provedOdbaveni,
+  smazFotkuGalerieAkceSprava,
   upravAkciSprava,
+  upravFotkuGalerieAkceSprava,
   upravKategoriiVstupenkySprava,
   vytvorTokenSpravy,
+  zrusDoporuceniFotkyGalerieAkceSprava,
   zrusitSchemaOverrideAkce,
   type Akce,
   type KategorieVstupenky,
@@ -29,8 +35,14 @@ import {
   formatujStavObjednavky,
   formatujStavVstupenky,
 } from "@/lib/formatovani";
+import { vytvorVychoziPrihlaseni } from "@/lib/demo-rezim";
 
 const klicTokenu = "kliknilistek.sprava.token";
+const pomeryFotky = [
+  { hodnota: "kino", popisek: "Kino 16:9" },
+  { hodnota: "siroky", popisek: "Široký 3:2" },
+  { hodnota: "ctverec", popisek: "Čtverec 1:1" },
+];
 
 type StavNacitani = "cekam" | "prihlaseni" | "nacitani" | "pripraveno";
 
@@ -52,15 +64,15 @@ export function SpravaDetailAkceBrana({ slug }: Vlastnosti) {
   const [filtrStavuMista, nastavFiltrStavuMista] = useState("vse");
   const [filtrZonyMista, nastavFiltrZonyMista] = useState("vse");
   const [duvodBlokace, nastavDuvodBlokace] = useState("");
-  const [formular, nastavFormular] = useState({
-    uzivatel: "spravce",
-    heslo: "kliknilistek123",
-  });
+  const [formular, nastavFormular] = useState(vytvorVychoziPrihlaseni("spravce"));
   const [editor, nastavEditor] = useState({
     nazev: "",
     perex: "",
     popis: "",
     hlavni_fotka_url: "",
+    hlavni_fotka: null as File | null,
+    hlavni_fotka_pomer: "kino",
+    galerie_fotka_pomer: "siroky",
     video_url: "",
     stav: "navrh",
     kapacita: "0",
@@ -68,6 +80,10 @@ export function SpravaDetailAkceBrana({ slug }: Vlastnosti) {
     je_doporucena: false,
   });
   const [zonyKategorii, nastavZonyKategorii] = useState<Record<number, string>>({});
+  const [fotkyGalerieKUploadu, nastavFotkyGalerieKUploadu] = useState<File[]>([]);
+  const [nahledHlavniFotky, nastavNahledHlavniFotky] = useState("");
+  const [nahledyGalerie, nastavNahledyGalerie] = useState<string[]>([]);
+  const [popiskyGalerie, nastavPopiskyGalerie] = useState<Record<number, string>>({});
 
   async function nactiDetail(token: string) {
     nastavStav("nacitani");
@@ -110,6 +126,9 @@ export function SpravaDetailAkceBrana({ slug }: Vlastnosti) {
         perex: detailAkce.perex || "",
         popis: detailAkce.popis || "",
         hlavni_fotka_url: detailAkce.hlavni_fotka_url || "",
+        hlavni_fotka: null,
+        hlavni_fotka_pomer: detailAkce.hlavni_fotka_pomer || "kino",
+        galerie_fotka_pomer: detailAkce.galerie_fotka_pomer || "siroky",
         video_url: detailAkce.video_url || "",
         stav: detailAkce.stav,
         kapacita: String(detailAkce.kapacita),
@@ -120,6 +139,10 @@ export function SpravaDetailAkceBrana({ slug }: Vlastnosti) {
         Object.fromEntries(
           kategorieAkce.map((polozka) => [polozka.id, (polozka.povolene_zony ?? []).join(", ")]),
         ),
+      );
+      nastavFotkyGalerieKUploadu([]);
+      nastavPopiskyGalerie(
+        Object.fromEntries((detailAkce.fotky_galerie ?? []).map((fotka) => [fotka.id, fotka.popis || ""])),
       );
       nastavStav("pripraveno");
     } catch (error) {
@@ -143,6 +166,28 @@ export function SpravaDetailAkceBrana({ slug }: Vlastnosti) {
     }
     void nactiDetail(ulozenyToken);
   }, [slug]);
+
+  useEffect(() => {
+    if (!editor.hlavni_fotka) {
+      nastavNahledHlavniFotky("");
+      return;
+    }
+
+    const url = URL.createObjectURL(editor.hlavni_fotka);
+    nastavNahledHlavniFotky(url);
+    return () => URL.revokeObjectURL(url);
+  }, [editor.hlavni_fotka]);
+
+  useEffect(() => {
+    if (!fotkyGalerieKUploadu.length) {
+      nastavNahledyGalerie([]);
+      return;
+    }
+
+    const urls = fotkyGalerieKUploadu.map((soubor) => URL.createObjectURL(soubor));
+    nastavNahledyGalerie(urls);
+    return () => urls.forEach((url) => URL.revokeObjectURL(url));
+  }, [fotkyGalerieKUploadu]);
 
   const aktivniKategorie = useMemo(
     () => kategorie.filter((polozka) => polozka.je_aktivni),
@@ -229,6 +274,9 @@ export function SpravaDetailAkceBrana({ slug }: Vlastnosti) {
           perex: editor.perex,
           popis: editor.popis,
           hlavni_fotka_url: editor.hlavni_fotka_url,
+          hlavni_fotka: editor.hlavni_fotka,
+          hlavni_fotka_pomer: editor.hlavni_fotka_pomer,
+          galerie_fotka_pomer: editor.galerie_fotka_pomer,
           video_url: editor.video_url,
           stav: editor.stav,
           kapacita: Number(editor.kapacita),
@@ -325,8 +373,12 @@ export function SpravaDetailAkceBrana({ slug }: Vlastnosti) {
   }
 
   const obrazekPozadi =
+    nahledHlavniFotky ||
+    akce.hlavni_fotka_soubor_url ||
     editor.hlavni_fotka_url ||
+    akce.misto_konani_hlavni_fotka_url ||
     "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1600&q=80";
+  const galerieFotky = akce.fotky_galerie ?? [];
   return (
     <div className="stack">
       {(chyba || zprava) && (
@@ -537,6 +589,75 @@ export function SpravaDetailAkceBrana({ slug }: Vlastnosti) {
                 />
               </label>
               <label className="pole pole-cela">
+                <span className="pole-label">Nahrát novou fotku akce</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(event) =>
+                    nastavEditor((predchozi) => ({
+                      ...predchozi,
+                      hlavni_fotka: event.target.files?.[0] ?? null,
+                    }))
+                  }
+                />
+                <span className="pole-help">
+                  {akce.hlavni_fotka_soubor_url
+                    ? "Nahraná fotka má přednost před URL. Když vybereš nový soubor, přepíše aktuální obrázek akce."
+                    : "Můžeš použít URL nebo nahrát vlastní fotku přímo ze zařízení."}
+                </span>
+              </label>
+              <label className="pole">
+                <span className="pole-label">Poměr hlavní fotky</span>
+                <select
+                  value={editor.hlavni_fotka_pomer}
+                  onChange={(event) =>
+                    nastavEditor((predchozi) => ({
+                      ...predchozi,
+                      hlavni_fotka_pomer: event.target.value,
+                    }))
+                  }
+                >
+                  {pomeryFotky.map((pomer) => (
+                    <option key={pomer.hodnota} value={pomer.hodnota}>
+                      {pomer.popisek}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="pole">
+                <span className="pole-label">Poměr galerie</span>
+                <select
+                  value={editor.galerie_fotka_pomer}
+                  onChange={(event) =>
+                    nastavEditor((predchozi) => ({
+                      ...predchozi,
+                      galerie_fotka_pomer: event.target.value,
+                    }))
+                  }
+                >
+                  {pomeryFotky.map((pomer) => (
+                    <option key={pomer.hodnota} value={pomer.hodnota}>
+                      {pomer.popisek}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="pole pole-cela">
+                <span className="pole-label">Galerie akce</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(event) =>
+                    nastavFotkyGalerieKUploadu(Array.from(event.target.files ?? []))
+                  }
+                />
+                <span className="pole-help">
+                  Další fotky se ukážou pod hlavní fotkou v detailu akce. Hodí se pro sál, atmosféru
+                  a orientační snímky prostoru.
+                </span>
+              </label>
+              <label className="pole pole-cela">
                 <span className="pole-label">URL videa</span>
                 <input
                   value={editor.video_url}
@@ -562,6 +683,30 @@ export function SpravaDetailAkceBrana({ slug }: Vlastnosti) {
                 <button className="button primary" onClick={() => void ulozZmeny()} type="button">
                   Uložit obsah akce
                 </button>
+                <button
+                  className="button ghost"
+                  disabled={!fotkyGalerieKUploadu.length}
+                  onClick={async () => {
+                    try {
+                      const detail = await nahrajFotkyGalerieAkceSprava(
+                        akce.slug,
+                        fotkyGalerieKUploadu,
+                        tokenSpravy,
+                      );
+                      nastavAkci(detail);
+                      nastavFotkyGalerieKUploadu([]);
+                      nastavZpravu("Fotky galerie byly nahrány.");
+                      await nactiDetail(tokenSpravy);
+                    } catch (error) {
+                      nastavChybu(
+                        error instanceof Error ? error.message : "Galerii se nepodařilo nahrát.",
+                      );
+                    }
+                  }}
+                  type="button"
+                >
+                  Nahrát galerii
+                </button>
               </div>
             </div>
           </div>
@@ -576,13 +721,196 @@ export function SpravaDetailAkceBrana({ slug }: Vlastnosti) {
           </div>
           <div className="sprava-panel-body stack">
             <div
-              className="media-preview-fotka"
+              className={`media-preview-fotka ratio-${editor.hlavni_fotka_pomer}`}
               style={{
                 backgroundImage: `linear-gradient(180deg, rgba(8, 17, 27, 0.16), rgba(8, 17, 27, 0.86)), url('${obrazekPozadi}')`,
               }}
             >
               <div className="badge akcent">Hlavní fotka</div>
             </div>
+            {nahledyGalerie.length ? (
+              <div className="admin-fotogalerie">
+                <strong>Připraveno k nahrání</strong>
+                <div className="admin-fotogalerie-nahledy">
+                  {nahledyGalerie.map((url, index) => (
+                    <div
+                      key={url}
+                      className="admin-fotogalerie-miniatura pripravena"
+                      style={{ backgroundImage: `url('${url}')` }}
+                      title={`Nová fotka ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : null}
+            {galerieFotky.length ? (
+              <div className="admin-fotogalerie">
+                <strong>Aktuální galerie</strong>
+                <div className="admin-fotogalerie-nahledy">
+                  {galerieFotky.map((fotka) => (
+                    <div key={fotka.id} className="admin-fotogalerie-karta">
+                      <div
+                        className={`admin-fotogalerie-miniatura ratio-${editor.galerie_fotka_pomer}`}
+                        style={{ backgroundImage: `url('${fotka.soubor_url}')` }}
+                      />
+                      <div className="admin-fotogalerie-meta">
+                        <span className={`badge${fotka.je_doporucena ? " akcent" : ""}`}>
+                          {fotka.je_doporucena ? "Doporučená" : `Pořadí ${fotka.poradi}`}
+                        </span>
+                      </div>
+                      <label className="pole admin-fotogalerie-popis">
+                        <span className="pole-label">Popisek fotky</span>
+                        <input
+                          value={popiskyGalerie[fotka.id] ?? ""}
+                          onChange={(event) =>
+                            nastavPopiskyGalerie((aktualni) => ({
+                              ...aktualni,
+                              [fotka.id]: event.target.value,
+                            }))
+                          }
+                          placeholder="Např. foyer, sál před začátkem, pohled z balkonu"
+                        />
+                      </label>
+                      <div className="admin-fotogalerie-akce">
+                        <button
+                          className="button ghost small"
+                          onClick={async () => {
+                            try {
+                              const detail = await upravFotkuGalerieAkceSprava(
+                                akce.slug,
+                                fotka.id,
+                                { popis: popiskyGalerie[fotka.id] ?? "" },
+                                tokenSpravy,
+                              );
+                              nastavAkci(detail);
+                              nastavZpravu("Popisek fotky byl uložen.");
+                              await nactiDetail(tokenSpravy);
+                            } catch (error) {
+                              nastavChybu(
+                                error instanceof Error
+                                  ? error.message
+                                  : "Popisek fotky se nepodařilo uložit.",
+                              );
+                            }
+                          }}
+                          type="button"
+                        >
+                          Uložit popisek
+                        </button>
+                        <button
+                          className="button ghost small"
+                          onClick={async () => {
+                            try {
+                              const detail = await posunFotkuGalerieAkceSprava(
+                                akce.slug,
+                                fotka.id,
+                                "nahoru",
+                                tokenSpravy,
+                              );
+                              nastavAkci(detail);
+                              await nactiDetail(tokenSpravy);
+                            } catch (error) {
+                              nastavChybu(
+                                error instanceof Error
+                                  ? error.message
+                                  : "Fotku se nepodařilo posunout.",
+                              );
+                            }
+                          }}
+                          type="button"
+                        >
+                          Nahoru
+                        </button>
+                        <button
+                          className="button ghost small"
+                          onClick={async () => {
+                            try {
+                              const detail = await posunFotkuGalerieAkceSprava(
+                                akce.slug,
+                                fotka.id,
+                                "dolu",
+                                tokenSpravy,
+                              );
+                              nastavAkci(detail);
+                              await nactiDetail(tokenSpravy);
+                            } catch (error) {
+                              nastavChybu(
+                                error instanceof Error
+                                  ? error.message
+                                  : "Fotku se nepodařilo posunout.",
+                              );
+                            }
+                          }}
+                          type="button"
+                        >
+                          Dolů
+                        </button>
+                        <button
+                          className="button ghost small"
+                          onClick={async () => {
+                            try {
+                              const detail = fotka.je_doporucena
+                                ? await zrusDoporuceniFotkyGalerieAkceSprava(
+                                    akce.slug,
+                                    fotka.id,
+                                    tokenSpravy,
+                                  )
+                                : await doporucFotkuGalerieAkceSprava(
+                                    akce.slug,
+                                    fotka.id,
+                                    tokenSpravy,
+                                  );
+                              nastavAkci(detail);
+                              nastavZpravu(
+                                fotka.je_doporucena
+                                  ? "Doporučená fotka byla zrušena."
+                                  : "Fotka byla označena jako doporučená.",
+                              );
+                              await nactiDetail(tokenSpravy);
+                            } catch (error) {
+                              nastavChybu(
+                                error instanceof Error
+                                  ? error.message
+                                  : "Doporučenou fotku se nepodařilo změnit.",
+                              );
+                            }
+                          }}
+                          type="button"
+                        >
+                          {fotka.je_doporucena ? "Zrušit" : "Doporučit"}
+                        </button>
+                        <button
+                          className="button ghost small"
+                          onClick={async () => {
+                            try {
+                              const detail = await smazFotkuGalerieAkceSprava(
+                                akce.slug,
+                                fotka.id,
+                                tokenSpravy,
+                              );
+                              nastavAkci(detail);
+                              nastavZpravu("Fotka byla z galerie odebrána.");
+                              await nactiDetail(tokenSpravy);
+                            } catch (error) {
+                              nastavChybu(
+                                error instanceof Error
+                                  ? error.message
+                                  : "Fotku se nepodařilo odstranit.",
+                              );
+                            }
+                          }}
+                          type="button"
+                        >
+                          Odebrat
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="tlumeny">Galerie zatím neobsahuje další fotky.</div>
+            )}
             {editor.video_url ? (
               <div className="media-preview-video">
                 <strong>Video odkaz</strong>

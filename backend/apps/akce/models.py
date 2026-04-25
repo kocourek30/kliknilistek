@@ -8,6 +8,7 @@ class MistoKonani(ModelOrganizace):
     adresa = models.CharField(max_length=255, blank=True)
     mesto = models.CharField(max_length=120, blank=True)
     kapacita = models.PositiveIntegerField(default=0)
+    hlavni_fotka = models.FileField(upload_to="mista-konani/", blank=True)
     schema_sezeni = models.JSONField(default=dict, blank=True)
 
     class Meta:
@@ -18,6 +19,20 @@ class MistoKonani(ModelOrganizace):
 
 
 class Akce(ModelOrganizace):
+    class PomerFotky(models.TextChoices):
+        KINO = "kino", "Kino"
+        SIROKY = "siroky", "Široký"
+        CTVEREC = "ctverec", "Čtverec"
+
+    class TypAkce(models.TextChoices):
+        KONCERT = "koncert", "Koncert"
+        DIVADLO = "divadlo", "Divadlo"
+        KINO = "kino", "Kino"
+        PREDNASKA = "prednaska", "Přednáška"
+        PLES = "ples", "Ples"
+        DETSKE = "detske", "Pro děti"
+        KOMUNITNI = "komunitni", "Komunitní"
+
     class Stav(models.TextChoices):
         NAVRH = "navrh", "Navrh"
         ZVEREJNENO = "zverejneno", "Zverejneno"
@@ -27,9 +42,21 @@ class Akce(ModelOrganizace):
 
     nazev = models.CharField(max_length=255)
     slug = models.SlugField()
+    typ_akce = models.CharField(max_length=24, choices=TypAkce.choices, default=TypAkce.KONCERT)
     perex = models.CharField(max_length=255, blank=True)
     popis = models.TextField(blank=True)
     hlavni_fotka_url = models.URLField(blank=True)
+    hlavni_fotka = models.FileField(upload_to="akce/", blank=True)
+    hlavni_fotka_pomer = models.CharField(
+        max_length=16,
+        choices=PomerFotky.choices,
+        default=PomerFotky.KINO,
+    )
+    galerie_fotka_pomer = models.CharField(
+        max_length=16,
+        choices=PomerFotky.choices,
+        default=PomerFotky.SIROKY,
+    )
     video_url = models.URLField(blank=True)
     misto_konani = models.ForeignKey(MistoKonani, on_delete=models.PROTECT, related_name="akce")
     schema_sezeni_override = models.JSONField(default=dict, blank=True)
@@ -47,6 +74,20 @@ class Akce(ModelOrganizace):
 
     def __str__(self) -> str:
         return self.nazev
+
+
+class FotkaAkce(ModelOrganizace):
+    akce = models.ForeignKey(Akce, on_delete=models.CASCADE, related_name="fotky_galerie")
+    soubor = models.FileField(upload_to="akce-galerie/")
+    popis = models.CharField(max_length=255, blank=True)
+    poradi = models.PositiveIntegerField(default=0)
+    je_doporucena = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["poradi", "id"]
+
+    def __str__(self) -> str:
+        return f"{self.akce.nazev}: fotka {self.id}"
 
 
 class KategorieVstupenky(ModelOrganizace):

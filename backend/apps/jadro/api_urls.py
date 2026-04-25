@@ -1,10 +1,13 @@
 from django.urls import include, path
 
-from .views import koren_api
+from .views import NastaveniSystemuView, TestSmtpView, koren_api, tenant_kontext_api
 
 
 urlpatterns = [
     path("", koren_api, name="koren-api"),
+    path("tenant-kontekst/", tenant_kontext_api, name="tenant-kontekst"),
+    path("nastaveni-systemu/", NastaveniSystemuView.as_view(), name="nastaveni-systemu"),
+    path("nastaveni-systemu/test-smtp/", TestSmtpView.as_view(), name="test-smtp"),
     path("uzivatele/", include("apps.uzivatele.urls")),
     path("organizace/", include("apps.organizace.urls")),
     path("akce/", include("apps.akce.urls")),

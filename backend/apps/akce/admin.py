@@ -20,6 +20,7 @@ class MistoKonaniAdmin(admin.ModelAdmin):
 class AkceAdmin(admin.ModelAdmin):
     list_display = (
         "nazev",
+        "typ_akce",
         "organizace",
         "misto_konani",
         "zacatek",
@@ -28,7 +29,7 @@ class AkceAdmin(admin.ModelAdmin):
         "rezervace_platnost_minuty",
         "je_doporucena",
     )
-    list_filter = ("organizace", "stav", "je_doporucena", "zacatek")
+    list_filter = ("organizace", "typ_akce", "stav", "je_doporucena", "zacatek")
     search_fields = ("nazev", "slug", "popis", "organizace__nazev", "misto_konani__nazev")
     date_hierarchy = "zacatek"
     autocomplete_fields = ["organizace", "misto_konani"]

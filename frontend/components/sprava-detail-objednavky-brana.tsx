@@ -13,6 +13,7 @@ import {
   stornovatObjednavku,
   vratitObjednavku,
   vytvorTokenSpravy,
+  znovuOdeslatProformu,
   type Objednavka,
   type ProfilSpravy,
 } from "@/lib/api";
@@ -26,6 +27,7 @@ import {
 } from "@/lib/formatovani";
 import { formatujKratkeOznaceniMista } from "@/lib/plan-salu";
 import { GrafRozlozeni, GrafSloupcovy } from "@/components/sprava-grafy";
+import { vytvorVychoziPrihlaseni } from "@/lib/demo-rezim";
 
 const klicTokenu = "kliknilistek.sprava.token";
 
@@ -42,10 +44,7 @@ export function SpravaDetailObjednavkyBrana({ verejneId }: Vlastnosti) {
   const [objednavka, nastavObjednavku] = useState<Objednavka | null>(null);
   const [chyba, nastavChybu] = useState("");
   const [zprava, nastavZpravu] = useState("");
-  const [formular, nastavFormular] = useState({
-    uzivatel: "spravce",
-    heslo: "kliknilistek123",
-  });
+  const [formular, nastavFormular] = useState(vytvorVychoziPrihlaseni("spravce"));
   const [presazeni, nastavPresazeni] = useState({ vstupenka_kod: "", nove_misto: "" });
   const [prohozeni, nastavProhozeni] = useState({ vstupenka_kod_a: "", vstupenka_kod_b: "" });
 
@@ -592,6 +591,28 @@ export function SpravaDetailObjednavkyBrana({ verejneId }: Vlastnosti) {
                 >
                   PDF proformy
                 </a>
+                <button
+                  className="button ghost"
+                  type="button"
+                  onClick={() =>
+                    void provedAkci(
+                      async () => {
+                        await znovuOdeslatProformu(
+                          objednavka.proforma_doklad?.cislo_dokladu || "",
+                          tokenSpravy,
+                        );
+                        const novaObjednavka = await nactiObjednavku(verejneId);
+                        if (!novaObjednavka) {
+                          throw new Error("Objednávku se po odeslání proformy nepodařilo znovu načíst.");
+                        }
+                        return novaObjednavka;
+                      },
+                      "Proforma byla znovu odeslána e-mailem.",
+                    )
+                  }
+                >
+                  Znovu odeslat proformu
+                </button>
               </div>
             </div>
           </div>

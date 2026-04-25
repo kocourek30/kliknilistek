@@ -11,23 +11,106 @@
  Ôťô Starting...
  ÔÜá Attempted to load @next/swc-win32-x64-msvc, but an error occurred: \\?\C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\@next\swc-win32-x64-msvc\next-swc.win32-x64-msvc.node is not a valid Win32 application.
 \\?\C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\@next\swc-win32-x64-msvc\next-swc.win32-x64-msvc.node
- Ôťô Ready in 2.8s
- ÔŚő Compiling /odbaveni ...
- Ôťô Compiled /sprava in 10.8s (595 modules)
- GET /sprava 200 in 5155ms
- GET /odbaveni 200 in 12139ms
- GET /sprava 200 in 4222ms
- GET / 200 in 4235ms
- GET / 200 in 12148ms
+ Ôťô Ready in 1991ms
+ ÔŚő Compiling /sprava/organizace ...
+ Ôťô Compiled /sprava/organizace in 9.1s (1932 modules)
+ GET /sprava/organizace 200 in 9930ms
+ GET /sprava/organizace 200 in 80ms
  ÔŚő Compiling /api_proxy/[...cesta] ...
- Ôťô Compiled /api_proxy/[...cesta] in 682ms (610 modules)
- GET /api_proxy/uzivatele/profil 200 in 3965ms
- GET /api_proxy/akce 200 in 4033ms
- GET /api_proxy/objednavky 200 in 4041ms
- GET /api_proxy/akce/mista-konani 200 in 4099ms
- GET /api_proxy/platby 200 in 4052ms
- GET /api_proxy/prehledy 200 in 4104ms
- GET /api_proxy/organizace/clenstvi 200 in 4280ms
- GET /api_proxy/organizace 200 in 4303ms
- GET /api_proxy/akce/kategorie-vstupenek 200 in 4379ms
+ Ôťô Compiled /api_proxy/[...cesta] in 1901ms (1936 modules)
+ GET /api_proxy/uzivatele/profil 200 in 3036ms
+ GET /api_proxy/fakturace/proformy 200 in 3172ms
+ GET /api_proxy/akce 200 in 3185ms
+ GET /api_proxy/akce/kategorie-vstupenek 200 in 3184ms
+ GET /api_proxy/organizace 200 in 3189ms
+ GET /api_proxy/organizace/clenstvi 200 in 3388ms
+ GET /api_proxy/platby 200 in 575ms
+ GET /api_proxy/akce/mista-konani 200 in 522ms
+ GET /api_proxy/objednavky 200 in 555ms
+ GET /api_proxy/prehledy 200 in 560ms
+ GET /sprava/organizace 200 in 575ms
+ GET /api_proxy/akce/mista-konani 200 in 2754ms
+ GET /api_proxy/organizace/clenstvi 200 in 3324ms
+ GET /api_proxy/uzivatele/profil 200 in 3554ms
+ GET /api_proxy/organizace 200 in 3555ms
+ GET /api_proxy/platby 200 in 3642ms
+ GET /api_proxy/akce 200 in 3777ms
+ GET /api_proxy/prehledy 200 in 2134ms
+ GET /api_proxy/akce/kategorie-vstupenek 200 in 1027ms
+ GET /api_proxy/fakturace/proformy 200 in 1031ms
+ GET /api_proxy/objednavky 200 in 1050ms
+ ÔŚő Compiling /akce/[slug] ...
+ Ôťô Compiled /akce/[slug] in 696ms (1969 modules)
+ GET /akce/jarni-koncert-2026 200 in 1446ms
+ Ôťô Compiled / in 430ms (1979 modules)
+ GET /sprava/organizace 200 in 893ms
+ GET / 200 in 970ms
+ GET / 200 in 900ms
+ ÔŚő Compiling /sprava/mista/[id] ...
+ Ôťô Compiled /sprava/mista/[id] in 2.1s (1963 modules)
+ GET /sprava/mista/1 200 in 3330ms
+ Ôťô Compiled /api_proxy/[...cesta] in 403ms (1281 modules)
+ GET /api_proxy/organizace 200 in 1326ms
+ GET /api_proxy/akce/mista-konani 200 in 1414ms
+ GET /api_proxy/akce 200 in 1477ms
+ GET /api_proxy/akce/kategorie-vstupenek 200 in 1503ms
+ GET /api_proxy/organizace/clenstvi 200 in 1617ms
+ GET /api_proxy/uzivatele/profil 200 in 1665ms
+ GET /api_proxy/platby 200 in 1014ms
+ GET /api_proxy/objednavky 200 in 1118ms
+ GET /akce/jarni-koncert-2026 200 in 542ms
+ GET /api_proxy/fakturace/proformy 200 in 1246ms
+ GET /akce/jarni-koncert-2026 200 in 177ms
+ GET /akce/jarni-koncert-2026 200 in 108ms
+ ÔŚő Compiling /sprava/uzivatele ...
+ Ôťô Compiled /sprava/uzivatele in 1614ms (1965 modules)
+ GET /sprava/uzivatele 200 in 2185ms
+ Ôťô Compiled /api_proxy/[...cesta] in 218ms (1283 modules)
+ GET /api_proxy/akce/kategorie-vstupenek 200 in 1090ms
+ GET /api_proxy/akce/mista-konani 200 in 1453ms
+ GET /api_proxy/uzivatele/profil 200 in 1639ms
+ GET /api_proxy/organizace 200 in 1626ms
+ GET /api_proxy/akce 200 in 1591ms
+ GET /api_proxy/objednavky 200 in 1719ms
+ GET /api_proxy/fakturace/proformy 200 in 1292ms
+ GET /api_proxy/organizace/clenstvi 200 in 825ms
+ GET /api_proxy/platby 200 in 990ms
+ GET /api_proxy/prehledy 200 in 855ms
+ ÔŚő Compiling /sprava/platby ...
+ Ôťô Compiled /sprava/platby in 597ms (1984 modules)
+ GET /sprava/platby 200 in 1350ms
+ GET /api_proxy/akce 200 in 926ms
+ GET /api_proxy/uzivatele/profil 200 in 890ms
+ GET /api_proxy/organizace 200 in 1057ms
+ GET /api_proxy/akce/kategorie-vstupenek 200 in 1019ms
+ GET /api_proxy/organizace/clenstvi 200 in 1109ms
+ GET /api_proxy/objednavky 200 in 1305ms
+ GET /api_proxy/platby 200 in 867ms
+ GET /api_proxy/prehledy 200 in 690ms
+ GET /api_proxy/akce/mista-konani 200 in 728ms
+ GET /api_proxy/fakturace/proformy 200 in 999ms
+ Ôťô Compiled in 1082ms (1268 modules)
+ GET /sprava/platby 200 in 94ms
+ GET /akce/jarni-koncert-2026 200 in 192ms
+ Ôťô Compiled in 858ms (1981 modules)
+ GET /sprava/platby 200 in 69ms
+ GET /akce/jarni-koncert-2026 200 in 152ms
+ Ôťô Compiled /_not-found in 387ms (1971 modules)
+ GET /akce/jarni-koncert-2026 404 in 465ms
+ Ôťô Compiled / in 338ms (1276 modules)
+ GET /sprava/platby 404 in 147ms
+ GET / 200 in 519ms
+ GET /_next/static/css/app/layout.css?v=1777139737604 404 in 57ms
+ GET /_next/static/chunks/main-app.js?v=1777139737604 404 in 55ms
+ GET /_next/static/chunks/app/page.js 404 in 54ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 54ms
+ GET /sprava/platby 404 in 107ms
+ GET /_next/static/chunks/main-app.js?v=1777139737849 404 in 34ms
+ GET /_next/static/css/app/layout.css?v=1777139737849 404 in 36ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 32ms
+ GET / 200 in 66ms
+ GET /_next/static/css/app/layout.css?v=1777139740371 404 in 37ms
+ GET /_next/static/chunks/main-app.js?v=1777139740371 404 in 36ms
+ GET /_next/static/chunks/app/page.js 404 in 40ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 40ms
 [?25h

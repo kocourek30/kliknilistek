@@ -15,23 +15,30 @@ async function preposliNaBackend(request: NextRequest, context: { params: Promis
   const { cesta } = await context.params;
   const cilovaUrl = vytvorCilovouUrl(request, cesta);
   const maTelo = !["GET", "HEAD"].includes(request.method);
+  const obsahTyp = request.headers.get("content-type") ?? "";
+  const jeMultipart = obsahTyp.includes("multipart/form-data");
 
   try {
     const odpoved = await fetch(cilovaUrl, {
       method: request.method,
       headers: {
         Accept: request.headers.get("accept") ?? "application/json",
+        ...(request.headers.get("host")
+          ? {
+              "X-Tenant-Host": request.headers.get("host") as string,
+            }
+          : {}),
         ...((request.headers.get("x-sprava-token") ?? request.headers.get("authorization"))
           ? {
               Authorization: (request.headers.get("x-sprava-token") ??
                 request.headers.get("authorization")) as string,
             }
           : {}),
-        ...(request.headers.get("content-type")
+        ...(request.headers.get("content-type") && !jeMultipart
           ? { "Content-Type": request.headers.get("content-type") as string }
           : {}),
       },
-      body: maTelo ? await request.text() : undefined,
+      body: maTelo ? (jeMultipart ? await request.formData() : await request.text()) : undefined,
       cache: "no-store",
     });
 

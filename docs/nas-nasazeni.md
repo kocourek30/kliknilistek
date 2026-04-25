@@ -1,6 +1,6 @@
 # Nasazení KlikniListek na NAS přes Cloudflare Tunnel
 
-Tento postup připravuje online staging nebo první veřejné nasazení na NAS s Dockerem pro doménu `kliknijdlo.online`.
+Tento postup připravuje online staging nebo první veřejné nasazení na NAS s Dockerem pro doménu `kliknilistek.online`.
 
 ## Co vznikne
 
@@ -9,7 +9,7 @@ Tento postup připravuje online staging nebo první veřejné nasazení na NAS s
 - `frontend` bude dostupný v LAN na `http://10.0.0.108:3002`
 - `backend` bude dostupný v LAN na `http://10.0.0.108:8002`
 - `db` a `redis` poběží interně
-- `cloudflared` zveřejní frontend přes doménu `kliknijdlo.online`
+- `cloudflared` zveřejní frontend přes doménu `kliknilistek.online`
 
 Backend není potřeba vystavovat samostatně do internetu. Frontend používá interní proxy a server-side volání do `http://backend:8000/api`.
 
@@ -55,16 +55,19 @@ Pak uprav:
 - `POSTGRES_PASSWORD`
 - `DJANGO_SECRET_KEY`
 - `CLOUDFLARED_TOKEN`
+- `DJANGO_EMAIL_HOST`
+- `DJANGO_EMAIL_HOST_USER`
+- `DJANGO_EMAIL_HOST_PASSWORD`
 
 ## 5. Cloudflare Tunnel
 
 V Cloudflare Tunnel nastav veřejný hostname:
 
-- `kliknijdlo.online` -> `http://frontend:3000`
+- `kliknilistek.online` -> `http://frontend:3000`
 
 Pokud budeš chtít i `www`, přidej:
 
-- `www.kliknijdlo.online` -> `http://frontend:3000`
+- `www.kliknilistek.online` -> `http://frontend:3000`
 
 ## 6. Sestavení a spuštění
 
@@ -112,4 +115,6 @@ docker compose -f docker-compose.nas.yml --env-file .env.nas up -d
 
 - To, co teď připravujeme, beru jako první veřejný staging.
 - Cloudflare Tunnel řeší veřejný přístup bez otevírání portů na routeru.
-- Pokud později přidáme ostré e-maily, stačí přepnout `EMAIL_BACKEND` a doplnit SMTP proměnné.
+- Pro ostré e-maily nech `DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend` a doplň SMTP proměnné.
+- Pokud chceš staging bez reálného odesílání, přepni `DJANGO_EMAIL_BACKEND` zpět na `django.core.mail.backends.filebased.EmailBackend`.
+- Demo přístupy drž zapnuté jen při testování. Pro veřejný provoz nech `NEXT_PUBLIC_DEMO_REZIM=0`.

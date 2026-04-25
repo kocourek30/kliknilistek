@@ -31,18 +31,18 @@ export function DoruceniKlient({ verejneId, jeZaplaceno, jeDoruceno }: DoruceniK
   }
 
   if (!jeZaplaceno) {
-    return <div className="tlumeny">Doruceni vstupenek se odemkne po zaplaceni objednavky.</div>;
+    return <div className="inline-note">Doručení vstupenek se odemkne po zaplacení objednávky.</div>;
   }
 
   return (
     <div className="stack">
-      {chyba ? <div className="hlaseni chyba">{chyba}</div> : null}
+      {chyba ? <div className="public-alert public-alert-error">{chyba}</div> : null}
       {jeDoruceno ? (
-        <div className="hlaseni uspech">Vstupenky uz byly oznaceny jako dorucene.</div>
+        <div className="public-alert public-alert-success">Vstupenky už byly označeny jako doručené.</div>
       ) : (
         <div className="panel-akce">
-          <button className="button primary" disabled={odesilaSe} onClick={spustDoruceni} type="button">
-            {odesilaSe ? "Pripravuji doruceni..." : "Odeslat vstupenky zakaznikovi"}
+          <button className="kulturni-button kulturni-button-primary" disabled={odesilaSe} onClick={spustDoruceni} type="button">
+            {odesilaSe ? "Připravuji doručení..." : "Odeslat vstupenky zákazníkovi"}
           </button>
         </div>
       )}

@@ -29,10 +29,13 @@ class PrehledSpravyView(APIView):
 
     def get(self, request):
         organizace_ids = self.get_queryset_organizaci(request)
+        tenant_organizace = getattr(request, "tenant_organizace", None)
 
         filtr = Q()
         if organizace_ids is not None:
             filtr &= Q(organizace_id__in=organizace_ids)
+        if tenant_organizace is not None:
+            filtr &= Q(organizace=tenant_organizace)
 
         akce = Akce.objects.filter(filtr).select_related("organizace", "misto_konani")
         objednavky = Objednavka.objects.filter(filtr)

@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
 from apps.akce.schema_sezeni import iteruj_mista_schema, ziskej_schema_sezeni_pro_akci
+from apps.jadro.sluzby import zaloguj_audit
 from apps.platby.models import Platba
 from apps.vstupenky.models import Vstupenka
 from apps.vstupenky.sluzby import odeslat_vstupenky_objednavky
@@ -22,6 +23,15 @@ def zneplatni_propadlou_objednavku(objednavka: Objednavka) -> Objednavka:
     objednavka.vstupenky.filter(stav=Vstupenka.Stav.REZERVOVANA).update(
         stav=Vstupenka.Stav.ZRUSENA,
         upraveno=timezone.now(),
+    )
+    zaloguj_audit(
+        organizace=objednavka.organizace,
+        akce="objednavka.rezervace_vyprsela",
+        objekt_typ="objednavka",
+        objekt_id=str(objednavka.id),
+        objekt_popis=objednavka.verejne_id,
+        poznamka="Rezervace objednávky vypršela bez potvrzené úhrady.",
+        data={"stav": objednavka.stav},
     )
     return objednavka
 
@@ -63,6 +73,20 @@ def potvrdit_uhradu_objednavky(
             stav=Vstupenka.Stav.PLATNA,
             upraveno=timezone.now(),
             posledni_zmenu_stavu_provedl=uzivatel,
+        )
+        zaloguj_audit(
+            organizace=objednavka.organizace,
+            akce="objednavka.uhrada_potvrzena",
+            uzivatel=uzivatel,
+            objekt_typ="objednavka",
+            objekt_id=str(objednavka.id),
+            objekt_popis=objednavka.verejne_id,
+            poznamka=f"Objednávka byla potvrzena jako zaplacená přes {poskytovatel}.",
+            data={
+                "poskytovatel": poskytovatel,
+                "reference_poskytovatele": reference_poskytovatele,
+                "odeslat_na_email": odeslat_na_email,
+            },
         )
 
     if odeslat_na_email:
@@ -114,6 +138,16 @@ def stornovat_objednavku(objednavka: Objednavka, *, uzivatel=None, duvod: str = 
         upraveno=timezone.now(),
         posledni_zmenu_stavu_provedl=uzivatel,
     )
+    zaloguj_audit(
+        organizace=objednavka.organizace,
+        akce="objednavka.storno",
+        uzivatel=uzivatel,
+        objekt_typ="objednavka",
+        objekt_id=str(objednavka.id),
+        objekt_popis=objednavka.verejne_id,
+        poznamka=duvod or "Objednávka byla stornována ve správě.",
+        data={"stav": objednavka.stav},
+    )
     return objednavka
 
 
@@ -151,6 +185,16 @@ def vratit_objednavku(objednavka: Objednavka, *, uzivatel=None, duvod: str = "")
             posledni_platba.data_poskytovatele = data
             posledni_platba.save(update_fields=["data_poskytovatele", "upraveno"])
 
+    zaloguj_audit(
+        organizace=objednavka.organizace,
+        akce="objednavka.vraceni",
+        uzivatel=uzivatel,
+        objekt_typ="objednavka",
+        objekt_id=str(objednavka.id),
+        objekt_popis=objednavka.verejne_id,
+        poznamka=duvod or "Objednávka byla vrácena.",
+        data={"stav": objednavka.stav},
+    )
     return objednavka
 
 
@@ -186,6 +230,20 @@ def presadit_vstupenku(objednavka: Objednavka, *, vstupenka_kod: str, nove_misto
         vybrana_mista[vybrana_mista.index(stare_misto)] = nove_misto
         polozka.vybrana_mista = vybrana_mista
         polozka.save(update_fields=["vybrana_mista", "upraveno"])
+    zaloguj_audit(
+        organizace=objednavka.organizace,
+        akce="objednavka.presazeni_vstupenky",
+        uzivatel=uzivatel,
+        objekt_typ="vstupenka",
+        objekt_id=str(vstupenka.id),
+        objekt_popis=vstupenka.kod,
+        poznamka=f"Vstupenka byla přesazena z místa {stare_misto or '-'} na {nove_misto}.",
+        data={
+            "objednavka": objednavka.verejne_id,
+            "stare_misto": stare_misto,
+            "nove_misto": nove_misto,
+        },
+    )
     return objednavka
 
 
@@ -215,4 +273,19 @@ def prohodit_mista_objednavky(
             vybrana_mista[vybrana_mista.index(stare)] = nove
             polozka.vybrana_mista = vybrana_mista
             polozka.save(update_fields=["vybrana_mista", "upraveno"])
+    zaloguj_audit(
+        organizace=objednavka.organizace,
+        akce="objednavka.prohozeni_mist",
+        uzivatel=uzivatel,
+        objekt_typ="objednavka",
+        objekt_id=str(objednavka.id),
+        objekt_popis=objednavka.verejne_id,
+        poznamka="Ve správě došlo k prohození míst mezi dvěma vstupenkami.",
+        data={
+            "vstupenka_a": a.kod,
+            "vstupenka_b": b.kod,
+            "misto_a_puvodni": a_misto,
+            "misto_b_puvodni": b_misto,
+        },
+    )
     return objednavka

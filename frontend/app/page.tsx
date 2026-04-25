@@ -1,226 +1,215 @@
 import { Hlavicka } from "@/components/hlavicka";
-import { nactiSouhrnAdministrace } from "@/lib/api";
-import { formatujCastku, formatujDatum, formatujTypOrganizace } from "@/lib/formatovani";
+import { Paticka } from "@/components/paticka";
+import { VerejnyKatalog } from "@/components/verejny-katalog";
+import { nactiSouhrnAdministrace, nactiTenantKontext } from "@/lib/api";
+import { nactiAktualniHost } from "@/lib/tenant-server";
+import {
+  formatujCastku,
+  formatujDatum,
+  formatujTypAkce,
+  formatujTypOrganizace,
+} from "@/lib/formatovani";
 
-const modulyPlatformy = [
+const krokyNakupu = [
   {
-    nadpis: "Rychlé zveřejnění",
-    text: "Nová akce, místo konání, kapacita a kategorie vstupenek v jednom návazném toku bez zbytečné administrativy.",
+    nadpis: "Vyber si akci",
+    text: "Během pár sekund uvidíš termín, místo, cenu a dostupnost.",
   },
   {
-    nadpis: "Pokladna pod kontrolou",
-    text: "Přehled prodaných míst, cenových hladin a připravenost na navázání plateb, odbavení a vyúčtování.",
+    nadpis: "Zvol vstupenky",
+    text: "Bez registrace vybereš počet kusů nebo konkrétní místa v sále.",
   },
   {
-    nadpis: "Důvěryhodný katalog",
-    text: "Veřejný katalog akcí, který působí jako kulturní portál obce, ne jako náhodné formuláře slepené dohromady.",
-  },
-  {
-    nadpis: "Připraveno na QR vstup",
-    text: "Datový model počítá s odbavením, kategoriemi vstupenek i budoucím online objednávkovým tokem.",
+    nadpis: "Dokonči objednávku",
+    text: "Shrnutí máš stále na očích a potvrzení přijde hned na e-mail.",
   },
 ];
 
 export default async function HomePage() {
-  const data = await nactiSouhrnAdministrace();
-  const akce = data.akce.slice(0, 6);
-  const prvniOrganizace = data.organizace[0];
-  const kapacitaCelkem = data.akce.reduce((soucet, polozka) => soucet + polozka.kapacita, 0);
-  const aktivniVstupenky = data.kategorieVstupenek.reduce(
-    (soucet, polozka) => soucet + polozka.kapacita,
-    0,
+  const host = await nactiAktualniHost();
+  const tenantKontext = await nactiTenantKontext(host);
+  const data = await nactiSouhrnAdministrace(undefined, host);
+  const akce = [...data.akce].sort(
+    (a, b) => new Date(a.zacatek).getTime() - new Date(b.zacatek).getTime(),
   );
-  const doporuceneAkce = data.akce.filter((polozka) => polozka.je_doporucena).length;
-  const metriky = [
-    { popisek: "Aktivní organizace", hodnota: `${data.organizace.length}` },
-    { popisek: "Publikované akce", hodnota: `${data.akce.length}` },
-    { popisek: "Připravené vstupenky", hodnota: `${aktivniVstupenky}` },
-  ];
-  const vytizenost = kapacitaCelkem > 0 ? Math.min(92, Math.round((aktivniVstupenky / kapacitaCelkem) * 100)) : 0;
+  const doporucene = akce.filter((polozka) => polozka.je_doporucena).slice(0, 3);
+  const nejblizsi = akce[0] ?? null;
+  const prvniOrganizace = data.organizace[0] ?? null;
+  const pocetMist = data.akce.reduce((soucet, polozka) => soucet + polozka.kapacita, 0);
+  const odCeny =
+    [...data.kategorieVstupenek].sort((a, b) => Number(a.cena) - Number(b.cena))[0] ?? null;
+  const aktivniOrganizace = tenantKontext.organizace ?? prvniOrganizace;
+  const titulek = tenantKontext.organizace
+    ? `${tenantKontext.organizace.nazev_verejny || tenantKontext.organizace.nazev} na jednom místě`
+    : "Najdi kulturní akci a vyřiď vstupenky rychle a přehledně.";
+  const perex = tenantKontext.organizace
+    ? tenantKontext.organizace.verejny_popis ||
+      `Program, vstupenky a objednávky pro ${tenantKontext.organizace.nazev}. Přehledně, srozumitelně a bez zbytečných kroků.`
+    : "Přehled akcí, jasná cena, dostupnost i jednoduchá objednávka bez zbytečných kroků. KlikniListek je navržený pro běžné návštěvníky i starší uživatele, kteří chtějí mít vše srozumitelně na jednom místě.";
+  const tenantNazev =
+    tenantKontext.organizace?.nazev_verejny || tenantKontext.organizace?.nazev || null;
+  const tenantPodtitulek = tenantKontext.organizace
+    ? `Kulturní program a vstupenky · ${formatujTypOrganizace(tenantKontext.organizace.typ_organizace)}`
+    : null;
 
   return (
-    <main className="page-shell">
-      <Hlavicka />
+    <main className="verejny-shell">
+      <Hlavicka tenantNazev={tenantNazev} tenantPodtitulek={tenantPodtitulek} />
 
-      <div className="stranka-verejna">
-        <div className="obsah">
-          <section className="hero-verejny">
-            <div className="hero-obal">
-              <div className="hero-vrstva">
-                <div className="hero-copy">
-                  <div className="hero-meta">
-                    <span className="badge akcent">Pilotní kulturní portál</span>
-                    <span className="badge">{prvniOrganizace?.nazev ?? "Nová organizace"}</span>
-                  </div>
-                  <h1>Kulturní akce obce na jednom důvěryhodném místě.</h1>
-                  <p>
-                    KlikniListek spojuje veřejný katalog akcí s provozním zázemím pro obecní
-                    kulturák, kino, plesy i sezónní program. Návštěvník se rychle zorientuje,
-                    objedná bez registrace a pořadatel má pod rukou kapacitu, ceny i připravenost
-                    na prodej.
-                  </p>
-                  <div className="nav-actions">
-                    <a className="button primary" href="#katalog">
-                      Vybrat vstupenky
-                    </a>
-                    <a className="button" href="/sprava">
-                      Přihlášení do správy
-                    </a>
-                  </div>
-                </div>
-
-                <div className="hero-panel">
-                  <div className="panel">
-                    <h3>Aktivní instance</h3>
-                    <div className="rozpis">
-                      <div className="rozpis-radek">
-                        <span>Organizace</span>
-                        <strong>{prvniOrganizace?.nazev ?? "Neuvedeno"}</strong>
-                      </div>
-                      <div className="rozpis-radek">
-                        <span>Typ provozu</span>
-                        <strong>
-                          {prvniOrganizace
-                            ? formatujTypOrganizace(prvniOrganizace.typ_organizace)
-                            : "Neuvedeno"}
-                        </strong>
-                      </div>
-                      <div className="rozpis-radek">
-                        <span>Publikované akce</span>
-                        <strong>{data.akce.length}</strong>
-                      </div>
-                      <div className="rozpis-radek">
-                        <span>Doporučené akce</span>
-                        <strong>{doporuceneAkce}</strong>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="panel">
-                    <h3>Připravenost na prodej</h3>
-                    <div className="pruh">
-                      <div className="pruh-bar" style={{ width: `${vytizenost}%` }} />
-                      <div className="pruh-popis">
-                        <span>Obsaditelná kapacita</span>
-                        <strong>{vytizenost} % připraveno</strong>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      <div className="verejny-page">
+        <section className="verejny-hero">
+          <div className="verejny-hero-copy">
+            <span className="section-eyebrow">
+              {tenantKontext.organizace
+                ? `Kulturní program · ${formatujTypOrganizace(tenantKontext.organizace.typ_organizace)}`
+                : "Kulturní program obcí a místních pořadatelů"}
+            </span>
+            <h1>{titulek}</h1>
+            <p>{perex}</p>
+            <div className="verejny-hero-actions">
+              <a className="kulturni-button kulturni-button-primary" href="#program">
+                {tenantKontext.organizace ? "Zobrazit program organizace" : "Projít program"}
+              </a>
+              {tenantKontext.organizace ? null : (
+                <a className="kulturni-button kulturni-button-secondary" href="/akce">
+                  Všechny akce
+                </a>
+              )}
             </div>
-          </section>
+          </div>
 
-          <section className="sekce">
-            <div className="sekce-header">
+          <div className="verejny-hero-side">
+            <article className="verejny-surface">
+              <span className="section-eyebrow">Nejbližší akce</span>
+              <h2>{nejblizsi?.nazev ?? "Program se právě připravuje"}</h2>
+              <p>
+                {nejblizsi
+                  ? `${formatujDatum(nejblizsi.zacatek)} · ${nejblizsi.misto_konani_nazev}`
+                  : "Jakmile bude zveřejněná první akce, objeví se tady."}
+              </p>
+              <div className="hero-event-meta">
+                <span>{nejblizsi ? formatujTypAkce(nejblizsi.typ_akce) : "Kulturní akce"}</span>
+                <span>{odCeny ? `Od ${formatujCastku(odCeny.cena, odCeny.mena)}` : "Cena bude doplněna"}</span>
+              </div>
+              {nejblizsi ? (
+                <a className="text-link" href={`/akce/${nejblizsi.slug}`}>
+                  Otevřít detail akce
+                </a>
+              ) : null}
+            </article>
+
+            <article className="verejny-surface surface-accent">
+              <span className="section-eyebrow">Proč je to snadné</span>
+              <ul className="hero-bullet-list">
+                <li>Rychlý přehled termínu, místa, ceny a dostupnosti.</li>
+                <li>Nákup bez registrace a s jasným shrnutím objednávky.</li>
+                <li>
+                  {tenantKontext.organizace
+                    ? `Rezervace i nákup přímo pro ${tenantKontext.organizace.nazev}.`
+                    : "Rezervace i nákup vhodné pro menší obce a kulturní domy."}
+                </li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section className="verejny-metrics">
+          <div className="metric-card">
+            <span>Aktivní pořadatelé</span>
+            <strong>{data.organizace.length}</strong>
+          </div>
+          <div className="metric-card">
+            <span>Naplánované akce</span>
+            <strong>{data.akce.length}</strong>
+          </div>
+          <div className="metric-card">
+            <span>Kapacita v nabídce</span>
+            <strong>{pocetMist}</strong>
+          </div>
+          <div className="metric-card">
+            <span>Pořadatel</span>
+            <strong>{aktivniOrganizace?.nazev_verejny || aktivniOrganizace?.nazev || "Místní pořadatel"}</strong>
+          </div>
+        </section>
+
+        <section className="verejny-section" id="program">
+          <div className="section-heading section-heading-row">
+            <div>
+              <span className="section-eyebrow">Program</span>
+              <h2>{tenantKontext.organizace ? "Nejbližší akce organizace" : "Nejbližší a doporučené akce"}</h2>
+              <p>
+                {tenantKontext.organizace
+                  ? "Přehled akcí této organizace s rychlým filtrováním podle data, místa a typu programu."
+                  : "Filtruj podle obce, data, místa a typu akce. To nejdůležitější uvidíš rovnou v kartě."}
+              </p>
+            </div>
+            <a className="text-link" href="/akce">
+              {tenantKontext.organizace ? "Všechny akce organizace" : "Otevřít celý program"}
+            </a>
+          </div>
+
+          <VerejnyKatalog
+            akce={akce}
+            kategorieVstupenek={data.kategorieVstupenek}
+            organizace={data.organizace}
+            vychoziLimit={6}
+          />
+        </section>
+
+        {tenantKontext.organizace ? null : (
+          <section className="verejny-section">
+            <div className="section-heading">
               <div>
-                <h2>Provozní obraz</h2>
-                <p>První verze už drží pohromadě katalog, kapacitu, místenky i cenové hladiny.</p>
+                <span className="section-eyebrow">Doporučené</span>
+                <h2>Akce, které stojí za pozornost</h2>
+                <p>Vybrané termíny, které jsou právě v programu nejvíc vidět.</p>
               </div>
             </div>
-            <div className="maly-prehled">
-              {metriky.map((metrika) => (
-                <article key={metrika.popisek} className="metrika">
-                  <div className="popisek">{metrika.popisek}</div>
-                  <div className="hodnota">{metrika.hodnota}</div>
+            <div className="highlight-grid">
+              {doporucene.map((akcePolozka) => (
+                <article key={akcePolozka.id} className="highlight-card">
+                  <div className="highlight-card-body">
+                    <span className="event-type-chip">{formatujTypAkce(akcePolozka.typ_akce)}</span>
+                    <h3>{akcePolozka.nazev}</h3>
+                    <p>{akcePolozka.perex || akcePolozka.popis}</p>
+                  </div>
+                  <div className="highlight-card-meta">
+                    <span>{formatujDatum(akcePolozka.zacatek)}</span>
+                    <span>{akcePolozka.misto_konani_nazev}</span>
+                    <a className="text-link" href={`/akce/${akcePolozka.slug}`}>
+                      Detail akce
+                    </a>
+                  </div>
                 </article>
               ))}
             </div>
           </section>
+        )}
 
-          <section className="sekce pasmo">
-            <div className="pasmo-sloupec" id="katalog">
-              <div className="sekce-header">
-                <div>
-                  <h2>Katalog akcí</h2>
-                  <p>Navržený jako skutečný kulturní portál obce s rychlou orientací a jasnou cenou.</p>
-                </div>
-              </div>
-              <div className="katalog-grid">
-                {akce.map((polozkaAkce) => {
-                  const hlavniCena =
-                    data.kategorieVstupenek
-                      .filter((kategorie) => kategorie.akce === polozkaAkce.id)
-                      .sort((a, b) => Number(a.cena) - Number(b.cena))[0] ?? null;
-
-                  return (
-                    <article key={polozkaAkce.id} className="karta">
-                      <div className="karta-top">
-                        <div>
-                          <div className="micro">{polozkaAkce.organizace_nazev}</div>
-                          <h3>{polozkaAkce.nazev}</h3>
-                        </div>
-                        <span className="badge akcent">
-                          {polozkaAkce.je_doporucena ? "Doporučeno" : "V programu"}
-                        </span>
-                      </div>
-                      <p>{polozkaAkce.popis || "Kulturní akce připravená k online prodeji a odbavení."}</p>
-                      <div className="info-radek">
-                        <span>Termín</span>
-                        <strong>{formatujDatum(polozkaAkce.zacatek)}</strong>
-                      </div>
-                      <div className="info-radek">
-                        <span>Místo</span>
-                        <strong>{polozkaAkce.misto_konani_nazev}</strong>
-                      </div>
-                      <div className="info-radek">
-                        <span>Kapacita</span>
-                        <strong>{polozkaAkce.kapacita} míst</strong>
-                      </div>
-                      <div className="akce-footer">
-                        <span className="badge">
-                          {hlavniCena
-                            ? `Od ${formatujCastku(hlavniCena.cena, hlavniCena.mena)}`
-                            : "Cena bude doplněna"}
-                        </span>
-                        <a className="button" href={`/akce/${polozkaAkce.slug}`}>
-                          Detail a vstupenky
-                        </a>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
+        <section className="verejny-section" id="jak-to-funguje">
+          <div className="section-heading">
+            <div>
+              <span className="section-eyebrow">Jak to funguje</span>
+              <h2>Krátká cesta od programu k objednávce</h2>
+              <p>
+                Celý nákupní tok je postavený tak, aby byl srozumitelný i pro občasné nebo starší
+                návštěvníky.
+              </p>
             </div>
-
-            <div className="pasmo-sloupec">
-              <div className="panel">
-                <div className="sekce-header">
-                  <div>
-                    <h3>Jak je to poskládané</h3>
-                    <p>Produkt už drží nejdůležitější vrstvy, které obec opravdu potřebuje.</p>
-                  </div>
-                </div>
-                <div className="moduly-list">
-                  {modulyPlatformy.map((modul) => (
-                    <div key={modul.nadpis} className="modul-radek">
-                      <strong>{modul.nadpis}</strong>
-                      <span>{modul.text}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="panel">
-                <h3>Kam směřujeme dál</h3>
-                <div className="moduly-list">
-                  <div className="modul-radek">
-                    <strong>Objednávka</strong>
-                    <span>Výběr vstupenek bez registrace, potvrzení a další navázání plateb.</span>
-                  </div>
-                  <div className="modul-radek">
-                    <strong>QR distribuce</strong>
-                    <span>E-mail, PDF a později i rychlý check-in pro obsluhu.</span>
-                  </div>
-                  <div className="modul-radek">
-                    <strong>Vyúčtování</strong>
-                    <span>Přehled tržeb, exporty a podklady pro účetní i obec.</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        </div>
+          </div>
+          <div className="steps-grid">
+            {krokyNakupu.map((krok, index) => (
+              <article key={krok.nadpis} className="step-card">
+                <span className="step-index">0{index + 1}</span>
+                <h3>{krok.nadpis}</h3>
+                <p>{krok.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
       </div>
+
+      <Paticka tenantNazev={tenantNazev} />
     </main>
   );
 }

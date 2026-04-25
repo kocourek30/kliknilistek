@@ -8,7 +8,7 @@ from apps.jadro.permissions import MuzeVidetFinance
 
 from .models import ProformaDoklad
 from .serializery import ProformaDokladSerializer
-from .sluzby import oznac_proformu_jako_zaplacenou, vytvor_pdf_proformy
+from .sluzby import oznac_proformu_jako_zaplacenou, odeslat_proformu_objednavky, vytvor_pdf_proformy
 
 
 class ProformaDokladViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
@@ -43,6 +43,16 @@ class ProformaDokladViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, vi
         proforma.refresh_from_db()
         return Response(ProformaDokladSerializer(proforma, context={"request": request}).data)
 
+    @action(detail=True, methods=["post"], url_path="znovu-odeslat")
+    def znovu_odeslat(self, request, cislo_dokladu=None):
+        proforma = self.get_object()
+        try:
+            odeslat_proformu_objednavky(proforma)
+        except ValueError as error:
+            return Response({"detail": str(error)}, status=status.HTTP_400_BAD_REQUEST)
+        proforma.refresh_from_db()
+        return Response(ProformaDokladSerializer(proforma, context={"request": request}).data)
+
     @action(detail=True, methods=["get"], url_path="pdf")
     def pdf(self, request, cislo_dokladu=None):
         proforma = self.get_object()
@@ -64,4 +74,3 @@ class ProformaDokladViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, vi
         odpoved = HttpResponse(obsah, content_type="application/pdf")
         odpoved["Content-Disposition"] = f'inline; filename="proforma-{proforma.cislo_dokladu}.pdf"'
         return odpoved
-

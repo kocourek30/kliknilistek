@@ -11,6 +11,13 @@ class OrganizaceViewSet(viewsets.ModelViewSet):
     permission_classes = [MuzeSpravovatObsah]
     lookup_field = "slug"
 
+    def get_queryset(self):
+        queryset = Organizace.objects.all().order_by("nazev")
+        tenant_organizace = getattr(self.request, "tenant_organizace", None)
+        if tenant_organizace is not None:
+            queryset = queryset.filter(pk=tenant_organizace.pk)
+        return queryset
+
 
 class ClenstviOrganizaceViewSet(viewsets.ModelViewSet):
     queryset = ClenstviOrganizace.objects.select_related("organizace", "uzivatel").all()

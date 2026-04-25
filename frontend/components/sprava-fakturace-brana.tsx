@@ -7,11 +7,13 @@ import {
   nactiSouhrnAdministrace,
   oznacitProformuJakoZaplacenou,
   vytvorTokenSpravy,
+  znovuOdeslatProformu,
   type ProfilSpravy,
   type ProformaDoklad,
 } from "@/lib/api";
 import { formatujCastku, formatujDatum, formatujStavProformy } from "@/lib/formatovani";
 import { GrafRozlozeni, GrafSloupcovy } from "@/components/sprava-grafy";
+import { vytvorVychoziPrihlaseni } from "@/lib/demo-rezim";
 
 const klicTokenu = "kliknilistek.sprava.token";
 
@@ -52,7 +54,7 @@ export function SpravaFakturaceBrana() {
   const [proformy, nastavProformy] = useState<ProformaDoklad[]>([]);
   const [chyba, nastavChybu] = useState("");
   const [zprava, nastavZpravu] = useState("");
-  const [formular, nastavFormular] = useState({ uzivatel: "spravce", heslo: "kliknilistek123" });
+  const [formular, nastavFormular] = useState(vytvorVychoziPrihlaseni("spravce"));
   const [pohled, nastavPohled] = useState<PohledFakturace>("vse");
   const [hledani, nastavHledani] = useState("");
 
@@ -151,6 +153,18 @@ export function SpravaFakturaceBrana() {
       nastavZpravu(`Proforma ${cisloDokladu} byla označena jako zaplacená a vstupenky byly odeslány.`);
     } catch (error) {
       nastavChybu(error instanceof Error ? error.message : "Úhradu se nepodařilo potvrdit.");
+    }
+  }
+
+  async function znovuOdesli(cisloDokladu: string) {
+    nastavChybu("");
+    nastavZpravu("");
+    try {
+      await znovuOdeslatProformu(cisloDokladu, token);
+      await nactiData(token);
+      nastavZpravu(`Proforma ${cisloDokladu} byla znovu odeslána e-mailem.`);
+    } catch (error) {
+      nastavChybu(error instanceof Error ? error.message : "Proformu se nepodařilo znovu odeslat.");
     }
   }
 
@@ -282,6 +296,9 @@ export function SpravaFakturaceBrana() {
                   {proforma.objednavka_verejne_id ? (
                     <a className="button ghost" href={`/sprava/objednavky/${proforma.objednavka_verejne_id}`}>Objednávka</a>
                   ) : null}
+                  <button className="button ghost" type="button" onClick={() => void znovuOdesli(proforma.cislo_dokladu)}>
+                    Znovu odeslat
+                  </button>
                 </div>
                 <div className="actions-wrap actions-wrap-end">
                   {proforma.stav !== "zaplaceno" ? (

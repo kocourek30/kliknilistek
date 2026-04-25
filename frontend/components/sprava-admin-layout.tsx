@@ -34,37 +34,36 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 
-const klicMotivuSpravy = "kliknilistek.sprava.motiv";
+const klicMotivuSpravy = "kliknilistek.sprava.motiv.v2";
 
 const skupinyMenu = [
   {
     nazev: "Řízení",
     polozky: [
-      { href: "/sprava", nazev: "Dashboard", popis: "Přehled provozu", ikona: IconLayoutDashboard },
+      { href: "/sprava", nazev: "Dashboard", ikona: IconLayoutDashboard },
       {
         href: "/sprava/organizace",
         nazev: "Organizace",
-        popis: "Subjekty a kontakty",
         ikona: IconBuildingCommunity,
       },
-      { href: "/sprava/uzivatele", nazev: "Uživatelé", popis: "Tým a oprávnění", ikona: IconUsers },
+      { href: "/sprava/uzivatele", nazev: "Uživatelé", ikona: IconUsers },
     ],
   },
   {
     nazev: "Prostor a program",
     polozky: [
-      { href: "/sprava/mista", nazev: "Místa", popis: "Sály a plánky", ikona: IconMap2 },
-      { href: "/sprava/mista/1", nazev: "Builder plánků", popis: "Návrh mapy míst", ikona: IconTool },
-      { href: "/sprava/akce", nazev: "Akce", popis: "Program a prodej", ikona: IconCalendarEvent },
+      { href: "/sprava/mista", nazev: "Místa", ikona: IconMap2 },
+      { href: "/sprava/mista/1", nazev: "Builder plánků", ikona: IconTool },
+      { href: "/sprava/akce", nazev: "Akce", ikona: IconCalendarEvent },
     ],
   },
   {
     nazev: "Prodej a finance",
     polozky: [
-      { href: "/sprava/vstupenky", nazev: "Vstupenky", popis: "Vydané kusy", ikona: IconTicket },
-      { href: "/sprava/objednavky", nazev: "Objednávky", popis: "Košíky a rezervace", ikona: IconReceipt2 },
-      { href: "/sprava/fakturace", nazev: "Fakturace", popis: "Proformy a banka", ikona: IconFileInvoice },
-      { href: "/sprava/platby", nazev: "Platby", popis: "Finance a hotovost", ikona: IconCreditCard },
+      { href: "/sprava/vstupenky", nazev: "Vstupenky", ikona: IconTicket },
+      { href: "/sprava/objednavky", nazev: "Objednávky", ikona: IconReceipt2 },
+      { href: "/sprava/fakturace", nazev: "Fakturace", ikona: IconFileInvoice },
+      { href: "/sprava/platby", nazev: "Platby", ikona: IconCreditCard },
     ],
   },
 ] as const;
@@ -79,7 +78,7 @@ function jeAktivni(cesta: string, href: string) {
 
 export function SpravaAdminLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const [motiv, nastavMotiv] = useState<"dark" | "light">("dark");
+  const [motiv, nastavMotiv] = useState<"dark" | "light">("light");
 
   useEffect(() => {
     const ulozenyMotiv =
@@ -105,31 +104,31 @@ export function SpravaAdminLayout({ children }: { children: ReactNode }) {
         palette: {
           mode: motiv,
           primary: {
-            main: "#73e0ba",
+            main: "#175f66",
           },
           secondary: {
-            main: "#7db9ff",
+            main: "#7a4c59",
           },
           background:
             motiv === "dark"
               ? {
-                  default: "#071019",
-                  paper: "#0d1724",
+                  default: "#0f1720",
+                  paper: "#16202b",
                 }
               : {
-                  default: "#f4f8fc",
-                  paper: "#ffffff",
+                  default: "#f6f3ee",
+                  paper: "#fffdfa",
                 },
           divider: motiv === "dark" ? "rgba(164, 184, 209, 0.14)" : "rgba(110, 133, 160, 0.18)",
           text:
             motiv === "dark"
               ? {
-                  primary: "#f3f7fb",
-                  secondary: "#92a7be",
+                  primary: "#eef5fb",
+                  secondary: "#a2b2c2",
                 }
               : {
                   primary: "#122133",
-                  secondary: "#5c7087",
+                  secondary: "#5b6d7d",
                 },
         },
         shape: {
@@ -158,11 +157,66 @@ export function SpravaAdminLayout({ children }: { children: ReactNode }) {
                 border:
                   motiv === "dark"
                     ? "1px solid rgba(164, 184, 209, 0.14)"
-                    : "1px solid rgba(110, 133, 160, 0.16)",
+                    : "1px solid rgba(32, 50, 62, 0.10)",
                 boxShadow:
                   motiv === "dark"
-                    ? "0 12px 32px rgba(0, 0, 0, 0.16)"
-                    : "0 10px 24px rgba(20, 36, 52, 0.08)",
+                    ? "0 16px 34px rgba(4, 10, 18, 0.22)"
+                    : "0 10px 24px rgba(28, 44, 60, 0.07)",
+              },
+            },
+          },
+          MuiOutlinedInput: {
+            styleOverrides: {
+              root: {
+                backgroundColor:
+                  motiv === "dark" ? alpha("#ffffff", 0.03) : alpha("#fffdfa", 0.92),
+                "& fieldset": {
+                  borderColor:
+                    motiv === "dark" ? "rgba(164, 184, 209, 0.16)" : "rgba(92, 109, 125, 0.20)",
+                },
+                "&:hover fieldset": {
+                  borderColor:
+                    motiv === "dark" ? "rgba(164, 184, 209, 0.3)" : "rgba(23, 95, 102, 0.24)",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#175f66",
+                  borderWidth: 1,
+                },
+              },
+            },
+          },
+          MuiButton: {
+            styleOverrides: {
+              root: {
+                borderRadius: 10,
+                minHeight: 42,
+              },
+              contained: {
+                background: "linear-gradient(135deg, #175f66 0%, #2d7a81 100%)",
+                color: "#fefcf8",
+                boxShadow: "none",
+                "&:hover": {
+                  background: "linear-gradient(135deg, #15565c 0%, #286a71 100%)",
+                  boxShadow: "none",
+                },
+              },
+              outlined: {
+                borderColor: motiv === "dark" ? "rgba(164, 184, 209, 0.18)" : "rgba(92, 109, 125, 0.22)",
+                backgroundColor: motiv === "dark" ? "transparent" : alpha("#fffdfa", 0.72),
+                "&:hover": {
+                  borderColor: motiv === "dark" ? "rgba(164, 184, 209, 0.3)" : "rgba(23, 95, 102, 0.24)",
+                  backgroundColor: motiv === "dark" ? alpha("#ffffff", 0.04) : alpha("#175f66", 0.04),
+                },
+              },
+            },
+          },
+          MuiChip: {
+            styleOverrides: {
+              root: {
+                fontWeight: 700,
+              },
+              outlined: {
+                backgroundColor: motiv === "dark" ? alpha("#ffffff", 0.03) : alpha("#175f66", 0.05),
               },
             },
           },
@@ -186,16 +240,16 @@ export function SpravaAdminLayout({ children }: { children: ReactNode }) {
         sx={{
           width: "100%",
           maxWidth: "100%",
-          px: { xs: 1, sm: 1.5 },
+          px: { xs: 1, sm: 1.5, xl: 2 },
           mx: "auto",
           display: "grid",
-          gridTemplateColumns: { xs: "1fr", lg: "320px minmax(0, 1fr)" },
-          gap: 3,
-          pt: 2,
+          gridTemplateColumns: { xs: "1fr", lg: "300px minmax(0, 1fr)" },
+          gap: { xs: 2, lg: 3 },
+          pt: { xs: 1.5, md: 2 },
           pb: 7,
         }}
       >
-        <Stack spacing={2} sx={{ position: { lg: "sticky" }, top: { lg: 96 }, alignSelf: "start" }}>
+        <Stack spacing={1.75} sx={{ position: { lg: "sticky" }, top: { lg: 92 }, alignSelf: "start" }}>
           <Paper sx={{ p: 2 }}>
             <Stack spacing={2}>
               <Stack spacing={1}>
@@ -207,9 +261,6 @@ export function SpravaAdminLayout({ children }: { children: ReactNode }) {
                 />
                 <Box>
                   <Typography variant="h6">Správa KlikniLístek</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Hlavní rozcestník pro provoz, plánky, prodej a finance.
-                  </Typography>
                 </Box>
               </Stack>
 
@@ -225,11 +276,11 @@ export function SpravaAdminLayout({ children }: { children: ReactNode }) {
                         textTransform: "uppercase",
                         letterSpacing: "0.08em",
                         fontWeight: 700,
-                        display: "block",
-                        mb: 1,
-                      }}
-                    >
-                      {skupina.nazev}
+                  display: "block",
+                  mb: 1,
+                }}
+              >
+                {skupina.nazev}
                     </Typography>
                     <List disablePadding sx={{ display: "grid", gap: 1 }}>
                       {skupina.polozky.map((polozka) => {
@@ -247,16 +298,20 @@ export function SpravaAdminLayout({ children }: { children: ReactNode }) {
                               px: 1.5,
                               py: 1.2,
                               border: "1px solid transparent",
-                              backgroundColor: aktivni
-                                ? alpha(temaSpravy.palette.primary.main, 0.12)
-                                : alpha("#ffffff", 0.02),
+                                backgroundColor: aktivni
+                                  ? alpha(temaSpravy.palette.primary.main, 0.12)
+                                  : motiv === "dark"
+                                    ? alpha("#ffffff", 0.03)
+                                    : alpha("#122133", 0.03),
                               borderColor: aktivni
                                 ? alpha(temaSpravy.palette.primary.main, 0.24)
                                 : "transparent",
                               "&:hover": {
                                 backgroundColor: aktivni
                                   ? alpha(temaSpravy.palette.primary.main, 0.16)
-                                  : alpha("#ffffff", 0.04),
+                                  : motiv === "dark"
+                                    ? alpha("#ffffff", 0.05)
+                                    : alpha("#122133", 0.05),
                               },
                             }}
                           >
@@ -266,9 +321,6 @@ export function SpravaAdminLayout({ children }: { children: ReactNode }) {
                             <Box sx={{ display: "grid", gap: 0.25 }}>
                               <Typography sx={{ fontWeight: 700, fontSize: 14, color: "text.primary" }}>
                                 {polozka.nazev}
-                              </Typography>
-                              <Typography sx={{ fontSize: 12, color: "text.secondary", lineHeight: 1.5 }}>
-                                {polozka.popis}
                               </Typography>
                             </Box>
                           </ListItemButton>
@@ -289,7 +341,7 @@ export function SpravaAdminLayout({ children }: { children: ReactNode }) {
                 variant="outlined"
                 startIcon={motiv === "dark" ? <IconSun size={18} /> : <IconMoonStars size={18} />}
                 onClick={() => nastavMotiv((aktualni) => (aktualni === "dark" ? "light" : "dark"))}
-                sx={{ justifyContent: "flex-start" }}
+                sx={{ justifyContent: "flex-start", minHeight: 44 }}
               >
                 {motiv === "dark" ? "Přepnout na světlý režim" : "Přepnout na tmavý režim"}
               </Button>
@@ -304,7 +356,7 @@ export function SpravaAdminLayout({ children }: { children: ReactNode }) {
                 href="/odbaveni"
                 variant="outlined"
                 startIcon={<IconDoorExit size={18} />}
-                sx={{ justifyContent: "flex-start" }}
+                sx={{ justifyContent: "flex-start", minHeight: 44 }}
               >
                 Odbavení
               </Button>
@@ -314,7 +366,7 @@ export function SpravaAdminLayout({ children }: { children: ReactNode }) {
                 target="_blank"
                 variant="outlined"
                 startIcon={<IconChartBar size={18} />}
-                sx={{ justifyContent: "flex-start" }}
+                sx={{ justifyContent: "flex-start", minHeight: 44 }}
               >
                 Veřejný portál
               </Button>

@@ -13,7 +13,7 @@ COPY --from=zavislosti /app/node_modules ./node_modules
 COPY . .
 
 ARG NEXT_PUBLIC_API_URL=http://backend:8000/api
-ARG NEXT_PUBLIC_APP_URL=https://kliknijdlo.online
+ARG NEXT_PUBLIC_APP_URL=https://kliknilistek.online
 
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}

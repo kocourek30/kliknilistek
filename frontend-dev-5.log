@@ -1,0 +1,48 @@
+
+> kliknilistek-frontend@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3001
+
+   Ôľ▓ Next.js 15.1.0
+   - Local:        http://127.0.0.1:3001
+   - Network:      http://127.0.0.1:3001
+   - Experiments (use with caution):
+     ┬Ě typedRoutes
+
+ Ôťô Starting...
+ ÔÜá Attempted to load @next/swc-win32-x64-msvc, but an error occurred: \\?\C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\@next\swc-win32-x64-msvc\next-swc.win32-x64-msvc.node is not a valid Win32 application.
+\\?\C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\@next\swc-win32-x64-msvc\next-swc.win32-x64-msvc.node
+ Ôťô Ready in 2.1s
+ ÔŚő Compiling /sprava/organizace ...
+ Ôťô Compiled /sprava/organizace in 9.1s (1938 modules)
+ GET /sprava/organizace 200 in 9815ms
+ GET / 200 in 9824ms
+ GET / 200 in 463ms
+ ÔŚő Compiling /akce/[slug] ...
+ Ôťô Compiled /akce/[slug] in 1548ms (1961 modules)
+ GET /akce/jarni-koncert-2026 200 in 2374ms
+ Ôťô Compiled /sprava/platby in 369ms (1963 modules)
+ GET /sprava/platby 200 in 887ms
+ ÔŚő Compiling /api_proxy/[...cesta] ...
+ Ôťô Compiled /api_proxy/[...cesta] in 534ms (1981 modules)
+ GET /api_proxy/organizace 200 in 2032ms
+ GET /api_proxy/organizace/clenstvi 200 in 2031ms
+ GET /api_proxy/akce/mista-konani 200 in 2061ms
+ GET /api_proxy/uzivatele/profil 200 in 2119ms
+ GET /api_proxy/akce 200 in 2236ms
+ GET /api_proxy/platby 200 in 2366ms
+ GET /api_proxy/akce/kategorie-vstupenek 200 in 741ms
+ GET /api_proxy/fakturace/proformy 200 in 755ms
+ GET /api_proxy/objednavky 200 in 967ms
+ GET /api_proxy/prehledy 200 in 770ms
+ Ôťô Compiled /sprava/objednavky in 359ms (1983 modules)
+ GET /sprava/objednavky 200 in 682ms
+ GET /api_proxy/prehledy 200 in 634ms
+ GET /api_proxy/organizace 200 in 842ms
+ GET /api_proxy/akce 200 in 928ms
+ GET /api_proxy/uzivatele/profil 200 in 944ms
+ GET /api_proxy/akce/mista-konani 200 in 1000ms
+ GET /api_proxy/organizace/clenstvi 200 in 981ms
+ GET /api_proxy/platby 200 in 571ms
+ GET /api_proxy/fakturace/proformy 200 in 483ms
+ GET /api_proxy/akce/kategorie-vstupenek 200 in 445ms
+ GET /api_proxy/objednavky 200 in 527ms

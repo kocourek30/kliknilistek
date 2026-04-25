@@ -1,11 +1,31 @@
 "use client";
 
+import { useEffect } from "react";
+
 type Vlastnosti = {
   error: Error & { digest?: string };
   reset: () => void;
 };
 
 export default function ChybaSpravy({ error, reset }: Vlastnosti) {
+  useEffect(() => {
+    const jeChybaChunku =
+      typeof error?.message === "string" &&
+      (error.message.includes("Loading chunk") || error.message.includes("ChunkLoadError"));
+
+    if (!jeChybaChunku || typeof window === "undefined") {
+      return;
+    }
+
+    const klic = "kliknilistek.sprava.chunk-reload";
+    if (window.sessionStorage.getItem(klic) === "1") {
+      return;
+    }
+
+    window.sessionStorage.setItem(klic, "1");
+    window.location.reload();
+  }, [error]);
+
   return (
     <section
       style={{
@@ -33,6 +53,19 @@ export default function ChybaSpravy({ error, reset }: Vlastnosti) {
         <button className="button primary" onClick={() => reset()} type="button">
           Zkusit znovu
         </button>
+        {error?.message?.includes("Loading chunk") ? (
+          <button
+            className="button ghost"
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.location.reload();
+              }
+            }}
+            type="button"
+          >
+            Obnovit aplikaci
+          </button>
+        ) : null}
         <a className="button ghost" href="/sprava">
           Zpět na dashboard
         </a>

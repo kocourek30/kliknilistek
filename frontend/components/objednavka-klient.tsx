@@ -1,52 +1,143 @@
 "use client";
 
-import { useMemo, useState, type FormEvent } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { PlanSalu } from "@/components/plan-salu";
 import type { Akce, KategorieVstupenky } from "@/lib/api";
 import { vytvorObjednavku } from "@/lib/api";
 import { formatujCastku } from "@/lib/formatovani";
-import { popisMistaZeSchema } from "@/lib/plan-salu";
+import { formatujKratkeOznaceniMista } from "@/lib/plan-salu";
 
-type ObjednavkaKlientProps = {
+type Vlastnosti = {
   akce: Akce;
   kategorieVstupenek: KategorieVstupenky[];
 };
 
-type PoctyKategorii = Record<number, number>;
+type FormularObjednavky = {
+  email_zakaznika: string;
+  jmeno_zakaznika: string;
+  telefon_zakaznika: string;
+  zpusob_uhrady: "online" | "bankovni_prevod";
+};
 
-const prazdneKontakty = {
+const vychoziFormular: FormularObjednavky = {
   email_zakaznika: "",
   jmeno_zakaznika: "",
   telefon_zakaznika: "",
   zpusob_uhrady: "online",
 };
 
-export function ObjednavkaKlient({ akce, kategorieVstupenek }: ObjednavkaKlientProps) {
+function ziskejZonuMista(schema: Akce["schema_sezeni"], kod: string) {
+  if (!schema) {
+    return "";
+  }
+
+  if (schema.podlazi?.length) {
+    for (const podlazi of schema.podlazi) {
+      const bunka = podlazi.mrizka.bunky.find((polozka) => polozka.kod === kod);
+      if (bunka?.zona) {
+        return bunka.zona;
+      }
+    }
+  }
+
+  if (schema.mrizka?.bunky?.length) {
+    return schema.mrizka.bunky.find((polozka) => polozka.kod === kod)?.zona ?? "";
+  }
+
+  for (const rada of schema.rady ?? []) {
+    if (rada.useky?.length) {
+      for (const usek of rada.useky) {
+        const kodPrefix = usek.kod_prefix ?? "M";
+        if (usek.mista.some((cislo) => `${kodPrefix}${cislo}` === kod)) {
+          return usek.zona ?? "";
+        }
+      }
+      continue;
+    }
+
+    for (const cislo of rada.levy_pristavek ?? []) {
+      if (`R${rada.rada}-L${cislo}` === kod) {
+        return rada.zona_levy ?? "";
+      }
+    }
+    for (const cislo of rada.stred ?? []) {
+      if (`R${rada.rada}-S${cislo}` === kod) {
+        return "stred";
+      }
+    }
+    for (const cislo of rada.pravy_pristavek ?? []) {
+      if (`R${rada.rada}-P${cislo}` === kod) {
+        return rada.zona_pravy ?? "";
+      }
+    }
+  }
+
+  return "";
+}
+
+function normalizujZpravuChyby(chyba: unknown) {
+  if (!(chyba instanceof Error)) {
+    return "Objednávku se nepodařilo vytvořit.";
+  }
+
+  const zprava = chyba.message.trim();
+
+  try {
+    const data = JSON.parse(zprava) as Record<string, unknown>;
+    const chyby = Object.values(data)
+      .flatMap((hodnota) =>
+        Array.isArray(hodnota)
+          ? hodnota.map(String)
+          : typeof hodnota === "string"
+            ? [hodnota]
+            : [],
+      )
+      .filter(Boolean);
+
+    if (chyby.length) {
+      return chyby.join(" ");
+    }
+  } catch {
+    return zprava || "Objednávku se nepodařilo vytvořit.";
+  }
+
+  return zprava || "Objednávku se nepodařilo vytvořit.";
+}
+
+export function ObjednavkaKlient({ akce, kategorieVstupenek }: Vlastnosti) {
   const router = useRouter();
-  const [pocty, setPocty] = useState<PoctyKategorii>({});
-  const [kontakty, setKontakty] = useState(prazdneKontakty);
-  const [odesilaSe, setOdesilaSe] = useState(false);
-  const [chyba, setChyba] = useState("");
-  const [vybranaKategorieId, nastavVybranouKategorii] = useState(
-    kategorieVstupenek[0] ? String(kategorieVstupenek[0].id) : "",
+  const aktivniKategorie = useMemo(
+    () => kategorieVstupenek.filter((kategorie) => kategorie.je_aktivni),
+    [kategorieVstupenek],
+  );
+  const [mnozstvi, nastavMnozstvi] = useState<Record<number, number>>({});
+  const [formular, nastavFormular] = useState<FormularObjednavky>(vychoziFormular);
+  const [vybranaKategorieId, nastavVybranouKategoriiId] = useState(
+    aktivniKategorie[0] ? String(aktivniKategorie[0].id) : "",
   );
   const [vybranaMista, nastavVybranaMista] = useState<string[]>([]);
+  const [odesilaSe, nastavOdesilani] = useState(false);
+  const [chyba, nastavChybu] = useState("");
 
-  const jeMistenkovyVyber = Boolean(akce.schema_sezeni?.rady?.length || akce.schema_sezeni?.mrizka || akce.schema_sezeni?.podlazi?.length);
-  const vybranaKategorie = kategorieVstupenek.find((kategorie) => String(kategorie.id) === vybranaKategorieId) ?? kategorieVstupenek[0];
-  const mapaMist = useMemo(
-    () => new Map((akce.stavy_mist ?? []).map((misto) => [misto.kod, misto])),
-    [akce.stavy_mist],
+  const maSchemaMist = Boolean(
+    akce.schema_sezeni?.rady?.length ||
+      akce.schema_sezeni?.mrizka ||
+      akce.schema_sezeni?.podlazi?.length,
   );
 
-  const vybranePolozky = useMemo(() => {
-    if (jeMistenkovyVyber && vybranaKategorie) {
+  const aktivniKategorieMista = useMemo(
+    () => aktivniKategorie.find((kategorie) => String(kategorie.id) === vybranaKategorieId) ?? aktivniKategorie[0],
+    [aktivniKategorie, vybranaKategorieId],
+  );
+
+  const polozkyObjednavky = useMemo(() => {
+    if (maSchemaMist && aktivniKategorieMista) {
       return vybranaMista.length
         ? [
             {
-              ...vybranaKategorie,
+              ...aktivniKategorieMista,
               pocet: vybranaMista.length,
               vybrana_mista: vybranaMista,
             },
@@ -54,347 +145,352 @@ export function ObjednavkaKlient({ akce, kategorieVstupenek }: ObjednavkaKlientP
         : [];
     }
 
-    return kategorieVstupenek
+    return aktivniKategorie
       .map((kategorie) => ({
         ...kategorie,
-        pocet: pocty[kategorie.id] ?? 0,
+        pocet: mnozstvi[kategorie.id] ?? 0,
       }))
       .filter((kategorie) => kategorie.pocet > 0);
-  }, [jeMistenkovyVyber, kategorieVstupenek, pocty, vybranaKategorie, vybranaMista]);
+  }, [aktivniKategorie, aktivniKategorieMista, maSchemaMist, mnozstvi, vybranaMista]);
 
-  const celkemKs = vybranePolozky.reduce((soucet, polozka) => soucet + polozka.pocet, 0);
-  const celkemCastka = vybranePolozky.reduce(
+  const celkemKusu = polozkyObjednavky.reduce((soucet, polozka) => soucet + polozka.pocet, 0);
+  const celkemCena = polozkyObjednavky.reduce(
     (soucet, polozka) => soucet + Number(polozka.cena) * polozka.pocet,
     0,
   );
-  const mena = vybranePolozky[0]?.mena ?? kategorieVstupenek[0]?.mena ?? "CZK";
+  const mena = polozkyObjednavky[0]?.mena ?? aktivniKategorie[0]?.mena ?? "CZK";
 
-  function nastavPocet(kategorieId: number, hodnota: string) {
-    const cislo = Number(hodnota);
-    setPocty((aktualni) => ({
-      ...aktualni,
-      [kategorieId]: Number.isNaN(cislo) ? 0 : Math.max(0, cislo),
-    }));
+  function zmenMnozstvi(kategorieId: number, delta: number) {
+    nastavMnozstvi((aktualni) => {
+      const dalsi = Math.max(0, (aktualni[kategorieId] ?? 0) + delta);
+      return {
+        ...aktualni,
+        [kategorieId]: dalsi,
+      };
+    });
   }
 
-  function prepnoutMisto(kod: string) {
-    const detail = mapaMist.get(kod);
-    if (vybranaKategorie?.povolene_zony?.length && detail && !vybranaKategorie.povolene_zony.includes(detail.zona)) {
-      setChyba("Vybrane misto nespadá do povolene zony pro tuto kategorii.");
+  function prepniMisto(kod: string) {
+    if (!aktivniKategorieMista) {
       return;
     }
-    nastavVybranaMista((aktualni) =>
-      aktualni.includes(kod) ? aktualni.filter((misto) => misto !== kod) : [...aktualni, kod],
-    );
-    setChyba("");
-  }
 
-  function ziskejTextChyby(error: unknown) {
-    if (!(error instanceof Error)) {
-      return "Objednavku se nepodarilo vytvorit.";
-    }
-
-    const text = error.message.trim();
-    try {
-      const data = JSON.parse(text) as Record<string, unknown>;
-      const zpravy = Object.values(data)
-        .flatMap((hodnota) => {
-          if (Array.isArray(hodnota)) {
-            return hodnota.map(String);
-          }
-          if (typeof hodnota === "string") {
-            return [hodnota];
-          }
-          return [];
-        })
-        .filter(Boolean);
-
-      if (zpravy.length > 0) {
-        return zpravy.join(" ");
+    const povoleneZony = aktivniKategorieMista.povolene_zony ?? [];
+    if (povoleneZony.length) {
+      const zonaMista = ziskejZonuMista(akce.schema_sezeni, kod);
+      if (zonaMista && !povoleneZony.includes(zonaMista)) {
+        nastavChybu("Vybrané místo nespadá do povolené zóny pro tuto kategorii.");
+        return;
       }
-    } catch {
-      return text;
     }
 
-    return text || "Objednavku se nepodarilo vytvorit.";
+    nastavChybu("");
+    nastavVybranaMista((aktualni) =>
+      aktualni.includes(kod)
+        ? aktualni.filter((misto) => misto !== kod)
+        : [...aktualni, kod],
+    );
   }
 
-  async function odesliObjednavku(event: FormEvent<HTMLFormElement>) {
+  async function odesliObjednavku(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setChyba("");
+    nastavChybu("");
 
-    if (vybranePolozky.length === 0) {
-      setChyba(jeMistenkovyVyber ? "Vyber alespon jedno konkretni misto." : "Vyber alespon jednu kategorii vstupenek.");
+    if (!polozkyObjednavky.length) {
+      nastavChybu(
+        maSchemaMist
+          ? "Vyber alespoň jedno konkrétní místo."
+          : "Vyber alespoň jednu vstupenku.",
+      );
       return;
     }
 
-    setOdesilaSe(true);
+    nastavOdesilani(true);
 
     try {
       const objednavka = await vytvorObjednavku({
-        ...kontakty,
-        polozky: vybranePolozky.map((polozka) => ({
+        ...formular,
+        polozky: polozkyObjednavky.map((polozka) => ({
           kategorie_vstupenky: polozka.id,
           pocet: polozka.pocet,
           vybrana_mista: "vybrana_mista" in polozka ? polozka.vybrana_mista : undefined,
         })),
       });
 
-      setPocty({});
+      nastavFormular(vychoziFormular);
+      nastavMnozstvi({});
       nastavVybranaMista([]);
-      setKontakty(prazdneKontakty);
       router.push(`/objednavka/${objednavka.verejne_id}`);
     } catch (error) {
-      setChyba(ziskejTextChyby(error));
+      nastavChybu(normalizujZpravuChyby(error));
     } finally {
-      setOdesilaSe(false);
+      nastavOdesilani(false);
     }
   }
 
   return (
-    <div className="objednavka-grid">
-      <form className="sprava-panel" onSubmit={odesliObjednavku}>
-        <div className="sprava-panel-header">
+    <div className="checkout-shell">
+      <div className="checkout-stepper" aria-label="Průběh objednávky">
+        <div className="checkout-step checkout-step-active">
+          <span>1</span>
           <div>
-            <h3>{jeMistenkovyVyber ? "Vyber konkretni mista" : "Vyber vstupenky"}</h3>
-            <p>
-              {jeMistenkovyVyber
-                ? "Klikni na sedadla v salu. Obsazena mista jsou zamcena, vybrana mista se okamzite promitaji do objednavky."
-                : "Zvol pocet vstupenek a nech si pripravit objednavku pro dalsi krok."}
-            </p>
+            <strong>Výběr</strong>
+            <small>Vstupenky nebo místa</small>
           </div>
         </div>
-        <div className="sprava-panel-body stack">
-          {jeMistenkovyVyber && vybranaKategorie ? (
-            <>
-              <div className="form-grid compact">
-                <label className="pole">
-                  <span className="pole-label">Kategorie vstupenky</span>
-                  <select
-                    value={vybranaKategorieId}
-                    onChange={(event) => {
-                      nastavVybranouKategorii(event.target.value);
-                      nastavVybranaMista([]);
-                    }}
-                  >
-                    {kategorieVstupenek.filter((kategorie) => kategorie.je_aktivni).map((kategorie) => (
-                      <option key={kategorie.id} value={kategorie.id}>
-                        {kategorie.nazev} · {formatujCastku(kategorie.cena, kategorie.mena)}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                {vybranaKategorie?.povolene_zony?.length ? (
-                  <div className="micro">Povolene zony: {vybranaKategorie.povolene_zony.join(", ")}</div>
-                ) : null}
-              </div>
+        <div className="checkout-step checkout-step-active">
+          <span>2</span>
+          <div>
+            <strong>Údaje</strong>
+            <small>Kontakt a úhrada</small>
+          </div>
+        </div>
+        <div className="checkout-step">
+          <span>3</span>
+          <div>
+            <strong>Potvrzení</strong>
+            <small>Shrnutí objednávky</small>
+          </div>
+        </div>
+      </div>
 
-              <div className="legenda-salu">
-                <div className="legenda-polozka">
-                  <span className="legenda-bod zona-stred" />
-                  <span>Hlavni sedadla</span>
-                </div>
-                <div className="legenda-polozka">
-                  <span className="legenda-bod zona-predni" />
-                  <span>Predni pristavky</span>
-                </div>
-                <div className="legenda-polozka">
-                  <span className="legenda-bod zona-zadni" />
-                  <span>Zadni pristavky</span>
-                </div>
-                <div className="legenda-polozka">
-                  <span className="legenda-bod zona-parket" />
-                  <span>Parket</span>
-                </div>
-                <div className="legenda-polozka">
-                  <span className="legenda-bod zona-prizemi" />
-                  <span>Prizemi</span>
-                </div>
-                <div className="legenda-polozka">
-                  <span className="legenda-bod zona-balkon" />
-                  <span>Balkon</span>
-                </div>
-                <div className="legenda-polozka">
-                  <span className="legenda-bod zona-balkon_bok" />
-                  <span>Balkon bok</span>
-                </div>
-                <div className="legenda-polozka">
-                  <span className="legenda-bod vybrane" />
-                  <span>Vybrano</span>
-                </div>
-                <div className="legenda-polozka">
-                  <span className="legenda-bod stav-rezervace" />
-                  <span>V rezervaci</span>
-                </div>
-                <div className="legenda-polozka">
-                  <span className="legenda-bod stav-platne" />
-                  <span>Prodano</span>
-                </div>
-                <div className="legenda-polozka">
-                  <span className="legenda-bod stav-odbavene" />
-                  <span>Odbaveno</span>
-                </div>
+      <form className="checkout-layout" onSubmit={odesliObjednavku}>
+        <div className="checkout-main">
+          <section className="verejny-surface verejny-surface-spacious">
+            <div className="section-heading">
+              <div>
+                <span className="section-eyebrow">Krok 1</span>
+                <h3>Vyber vstupenky</h3>
+                <p>
+                  {maSchemaMist
+                    ? "Vyber kategorii a označ konkrétní místa v sále. Obsazená místa jsou nepřístupná."
+                    : "Zvol počet vstupenek. Cena i mezisoučet se průběžně přepočítají."}
+                </p>
               </div>
-
-              <PlanSalu
-                schema={akce.schema_sezeni}
-                stavyMist={akce.stavy_mist}
-                vybranaMista={vybranaMista}
-                priPrepnutiMista={prepnoutMisto}
-              />
-            </>
-          ) : (
-            <div className="stack-karty">
-              {kategorieVstupenek.map((kategorie) => (
-                <article key={kategorie.id} className="nabidka-vstupenky">
-                  <div className="nabidka-vstupenky-copy">
-                    <div>
-                      <strong>{kategorie.nazev}</strong>
-                      <p>{kategorie.popis || "Vstupenka pripravenna k online rezervaci."}</p>
-                    </div>
-                    <div className="micro">Kapacita {kategorie.kapacita} ks</div>
-                  </div>
-                  <div className="nabidka-vstupenky-akce">
-                    <strong>{formatujCastku(kategorie.cena, kategorie.mena)}</strong>
-                    <input
-                      min={0}
-                      max={kategorie.kapacita}
-                      type="number"
-                      value={pocty[kategorie.id] ?? 0}
-                      onChange={(event) => nastavPocet(kategorie.id, event.target.value)}
-                      aria-label={`Pocet pro ${kategorie.nazev}`}
-                    />
-                  </div>
-                </article>
-              ))}
             </div>
-          )}
 
-          <div className="form-grid">
-            <label className="pole">
-              <span className="pole-label">E-mail pro potvrzeni</span>
-              <input
-                required
-                type="email"
-                value={kontakty.email_zakaznika}
-                onChange={(event) =>
-                  setKontakty((aktualni) => ({
-                    ...aktualni,
-                    email_zakaznika: event.target.value,
-                  }))
+            {maSchemaMist && aktivniKategorieMista ? (
+              <div className="checkout-seat-flow">
+                <div className="checkout-category-strip">
+                  <label className="field field-inline">
+                    <span>Kategorie</span>
+                    <select
+                      value={vybranaKategorieId}
+                      onChange={(event) => {
+                        nastavVybranouKategoriiId(event.target.value);
+                        nastavVybranaMista([]);
+                        nastavChybu("");
+                      }}
+                    >
+                      {aktivniKategorie.map((kategorie) => (
+                        <option key={kategorie.id} value={String(kategorie.id)}>
+                          {kategorie.nazev} · {formatujCastku(kategorie.cena, kategorie.mena)}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  {(aktivniKategorieMista.povolene_zony ?? []).length ? (
+                    <div className="inline-note">
+                      Dostupné zóny: {aktivniKategorieMista.povolene_zony?.join(", ")}
+                    </div>
+                  ) : (
+                    <div className="inline-note">Vybrat můžeš libovolné volné místo.</div>
+                  )}
+                </div>
+
+                <div className="seat-legend">
+                  <span><i className="seat-dot seat-dot-free" /> Volné</span>
+                  <span><i className="seat-dot seat-dot-selected" /> Vybrané</span>
+                  <span><i className="seat-dot seat-dot-reserved" /> V rezervaci</span>
+                  <span><i className="seat-dot seat-dot-sold" /> Prodáno</span>
+                </div>
+
+                <div className="seat-plan-frame">
+                  <PlanSalu
+                    schema={akce.schema_sezeni}
+                    stavyMist={akce.stavy_mist}
+                    vybranaMista={vybranaMista}
+                    priPrepnutiMista={prepniMisto}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="ticket-list">
+                {aktivniKategorie.map((kategorie) => (
+                  <article key={kategorie.id} className="ticket-card">
+                    <div className="ticket-card-copy">
+                      <div className="ticket-card-header">
+                        <strong>{kategorie.nazev}</strong>
+                        <span>{formatujCastku(kategorie.cena, kategorie.mena)}</span>
+                      </div>
+                      <p>{kategorie.popis || "Vstupenka na kulturní akci s jednoduchým online nákupem."}</p>
+                      <small>Kapacita {kategorie.kapacita} ks</small>
+                    </div>
+                    <div className="ticket-counter" aria-label={`Počet pro ${kategorie.nazev}`}>
+                      <button type="button" onClick={() => zmenMnozstvi(kategorie.id, -1)}>
+                        -
+                      </button>
+                      <span>{mnozstvi[kategorie.id] ?? 0}</span>
+                      <button type="button" onClick={() => zmenMnozstvi(kategorie.id, 1)}>
+                        +
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+
+          <section className="verejny-surface verejny-surface-spacious">
+            <div className="section-heading">
+              <div>
+                <span className="section-eyebrow">Krok 2</span>
+                <h3>Vyplň kontaktní údaje</h3>
+                <p>
+                  Bez registrace. Potvrzení objednávky a další instrukce pošleme na uvedený e-mail.
+                </p>
+              </div>
+            </div>
+
+            <div className="checkout-form-grid">
+              <label className="field">
+                <span>E-mail</span>
+                <input
+                  required
+                  type="email"
+                  value={formular.email_zakaznika}
+                  onChange={(event) =>
+                    nastavFormular((aktualni) => ({
+                      ...aktualni,
+                      email_zakaznika: event.target.value,
+                    }))
+                  }
+                />
+              </label>
+              <label className="field">
+                <span>Jméno a příjmení</span>
+                <input
+                  required
+                  type="text"
+                  value={formular.jmeno_zakaznika}
+                  onChange={(event) =>
+                    nastavFormular((aktualni) => ({
+                      ...aktualni,
+                      jmeno_zakaznika: event.target.value,
+                    }))
+                  }
+                />
+              </label>
+              <label className="field field-wide">
+                <span>Telefon</span>
+                <input
+                  type="tel"
+                  value={formular.telefon_zakaznika}
+                  onChange={(event) =>
+                    nastavFormular((aktualni) => ({
+                      ...aktualni,
+                      telefon_zakaznika: event.target.value,
+                    }))
+                  }
+                />
+              </label>
+            </div>
+
+            <div className="payment-choice">
+              <button
+                type="button"
+                className={`choice-card${formular.zpusob_uhrady === "online" ? " active" : ""}`}
+                onClick={() =>
+                  nastavFormular((aktualni) => ({ ...aktualni, zpusob_uhrady: "online" }))
                 }
-              />
-            </label>
-            <label className="pole">
-              <span className="pole-label">Jmeno navstevnika</span>
-              <input
-                type="text"
-                value={kontakty.jmeno_zakaznika}
-                onChange={(event) =>
-                  setKontakty((aktualni) => ({
+              >
+                <strong>Online platba</strong>
+                <span>Rychlé potvrzení a okamžité doručení vstupenek.</span>
+              </button>
+              <button
+                type="button"
+                className={`choice-card${formular.zpusob_uhrady === "bankovni_prevod" ? " active" : ""}`}
+                onClick={() =>
+                  nastavFormular((aktualni) => ({
                     ...aktualni,
-                    jmeno_zakaznika: event.target.value,
-                  }))
-                }
-              />
-            </label>
-            <label className="pole pole-cela">
-              <span className="pole-label">Telefon</span>
-              <input
-                type="tel"
-                value={kontakty.telefon_zakaznika}
-                onChange={(event) =>
-                  setKontakty((aktualni) => ({
-                    ...aktualni,
-                    telefon_zakaznika: event.target.value,
-                  }))
-                }
-              />
-            </label>
-            <label className="pole pole-cela">
-              <span className="pole-label">Způsob úhrady</span>
-              <select
-                value={kontakty.zpusob_uhrady}
-                onChange={(event) =>
-                  setKontakty((aktualni) => ({
-                    ...aktualni,
-                    zpusob_uhrady: event.target.value,
+                    zpusob_uhrady: "bankovni_prevod",
                   }))
                 }
               >
-                <option value="online">Online platba</option>
-                <option value="bankovni_prevod">Bankovní převod přes QR z proformy</option>
-              </select>
-            </label>
-          </div>
+                <strong>Bankovní převod</strong>
+                <span>Obdržíš proformu s QR platbou a pokyny k úhradě.</span>
+              </button>
+            </div>
 
-          {chyba ? <div className="hlaseni chyba">{chyba}</div> : null}
+            {chyba ? <div className="public-alert public-alert-error">{chyba}</div> : null}
+          </section>
+        </div>
 
-          <div className="actions-end">
-            <button className="button primary" disabled={odesilaSe} type="submit">
-              {odesilaSe ? "Zakladam objednavku..." : "Pokracovat k objednavce"}
+        <aside className="checkout-summary">
+          <div className="verejny-surface verejny-surface-sticky">
+            <div className="section-heading">
+              <div>
+                <span className="section-eyebrow">Shrnutí</span>
+                <h3>Tvoje objednávka</h3>
+                <p>Cena i vybrané položky zůstávají stále na očích.</p>
+              </div>
+            </div>
+
+            <div className="summary-event-card">
+              <strong>{akce.nazev}</strong>
+              <span>{akce.misto_konani_nazev}</span>
+            </div>
+
+            <div className="summary-list">
+              {polozkyObjednavky.length ? (
+                polozkyObjednavky.map((polozka) => (
+                  <div key={polozka.id} className="summary-row">
+                    <div>
+                      <strong>{polozka.nazev}</strong>
+                      <small>
+                        {polozka.pocet} × {formatujCastku(polozka.cena, polozka.mena)}
+                      </small>
+                      {"vybrana_mista" in polozka && polozka.vybrana_mista?.length ? (
+                        <div className="summary-tags">
+                          {polozka.vybrana_mista.map((misto) => (
+                            <span key={misto}>{formatujKratkeOznaceniMista(misto)}</span>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                    <strong>{formatujCastku(String(Number(polozka.cena) * polozka.pocet), polozka.mena)}</strong>
+                  </div>
+                ))
+              ) : (
+                <div className="empty-inline-state">
+                  Zatím nemáš vybranou žádnou vstupenku.
+                </div>
+              )}
+            </div>
+
+            <div className="summary-total">
+              <span>Celkem</span>
+              <strong>{formatujCastku(String(celkemCena), mena)}</strong>
+            </div>
+
+            <div className="summary-note-list">
+              <div>
+                <strong>{celkemKusu}</strong>
+                <span>{celkemKusu === 1 ? "položka" : "položek"} v objednávce</span>
+              </div>
+              <div>
+                <strong>{akce.rezervace_platnost_minuty} min</strong>
+                <span>čas na dokončení objednávky</span>
+              </div>
+            </div>
+
+            <button className="kulturni-button kulturni-button-primary checkout-submit" disabled={odesilaSe} type="submit">
+              {odesilaSe ? "Zakládám objednávku..." : "Pokračovat k potvrzení"}
             </button>
           </div>
-        </div>
+        </aside>
       </form>
-
-      <aside className="sprava-panel">
-        <div className="sprava-panel-header">
-          <div>
-            <h3>Shrnuti objednavky</h3>
-            <p>{jeMistenkovyVyber ? "Vybrana sedadla a jejich cena." : "Zakladni souhrn pred napojenim platebni brany."}</p>
-          </div>
-        </div>
-        <div className="sprava-panel-body stack">
-          {vybranePolozky.length > 0 ? (
-            <div className="stack-karty">
-              {vybranePolozky.map((polozka) => (
-                <div key={polozka.id} className="souhrn-objednavky-radek">
-                  <div>
-                    <strong>{polozka.nazev}</strong>
-                    <div className="micro">
-                      {polozka.pocet} x {formatujCastku(polozka.cena, polozka.mena)}
-                    </div>
-                    {"vybrana_mista" in polozka && polozka.vybrana_mista?.length ? (
-                      <div className="stack-mini">
-                        {polozka.vybrana_mista.map((misto) => (
-                          <div key={misto} className="micro">
-                            {popisMistaZeSchema(akce.schema_sezeni, misto, akce.stavy_mist)}
-                          </div>
-                        ))}
-                      </div>
-                    ) : null}
-                  </div>
-                  <strong>{formatujCastku(String(Number(polozka.cena) * polozka.pocet), polozka.mena)}</strong>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="tlumeny">
-              {jeMistenkovyVyber ? "Zatim nemas vybrane zadne konkretni misto." : "Zatim nemas vybranou zadnou vstupenku."}
-            </div>
-          )}
-
-          <div className="souhrn-objednavky-celkem">
-            <div className="info-radek">
-              <span>Pocet vstupenek</span>
-              <strong>{celkemKs}</strong>
-            </div>
-            <div className="info-radek">
-              <span>Celkem</span>
-              <strong>{formatujCastku(String(celkemCastka), mena)}</strong>
-            </div>
-            <div className="info-radek">
-              <span>Úhrada</span>
-              <strong>
-                {kontakty.zpusob_uhrady === "bankovni_prevod"
-                  ? "Proforma s QR"
-                  : "Online platba"}
-              </strong>
-            </div>
-          </div>
-        </div>
-      </aside>
     </div>
   );
 }

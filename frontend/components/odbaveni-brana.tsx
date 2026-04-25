@@ -10,6 +10,7 @@ import {
   vytvorTokenSpravy,
   type ProfilSpravy,
 } from "@/lib/api";
+import { demoRezimZapnuty, vytvorVychoziPrihlaseni } from "@/lib/demo-rezim";
 
 const klicTokenu = "kliknilistek.sprava.token";
 
@@ -18,10 +19,7 @@ export function OdbaveniBrana() {
   const [token, nastavToken] = useState("");
   const [profil, nastavProfil] = useState<ProfilSpravy | null>(null);
   const [chyba, nastavChybu] = useState("");
-  const [formular, nastavFormular] = useState({
-    uzivatel: "odbaveni",
-    heslo: "kliknilistek123",
-  });
+  const [formular, nastavFormular] = useState(vytvorVychoziPrihlaseni("odbaveni"));
 
   async function overToken(tokenSpravy: string) {
     try {
@@ -148,19 +146,21 @@ export function OdbaveniBrana() {
             </div>
           </form>
           {chyba ? <div className="hlaseni chyba">{chyba}</div> : null}
-          <div className="panel">
-            <h3>Demo přístup pro dveře</h3>
-            <div className="rozpis">
-              <div className="rozpis-radek">
-                <span>Uživatel</span>
-                <strong>odbaveni</strong>
-              </div>
-              <div className="rozpis-radek">
-                <span>Heslo</span>
-                <strong>kliknilistek123</strong>
+          {demoRezimZapnuty ? (
+            <div className="panel">
+              <h3>Demo přístup pro dveře</h3>
+              <div className="rozpis">
+                <div className="rozpis-radek">
+                  <span>Uživatel</span>
+                  <strong>odbaveni</strong>
+                </div>
+                <div className="rozpis-radek">
+                  <span>Heslo</span>
+                  <strong>kliknilistek123</strong>
+                </div>
               </div>
             </div>
-          </div>
+          ) : null}
         </div>
       </section>
     );

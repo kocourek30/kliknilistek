@@ -11,6 +11,7 @@ ALLOWED_HOSTS = [
     for host in os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
     if host.strip()
 ]
+KLIKNILISTEK_BASE_DOMAIN = os.getenv("KLIKNILISTEK_BASE_DOMAIN", "kliknilistek.online")
 
 INSTALLED_APPS = [
     "jazzmin",
@@ -48,6 +49,7 @@ JAZZMIN_SETTINGS = {
         {"name": "Vstupenky", "model": "vstupenky.Vstupenka"},
     ],
     "order_with_respect_to": [
+        "jadro",
         "organizace",
         "akce",
         "objednavky",
@@ -56,6 +58,7 @@ JAZZMIN_SETTINGS = {
         "auth",
     ],
     "icons": {
+        "jadro.AuditniLog": "fas fa-clipboard-list",
         "organizace.Organizace": "fas fa-building",
         "organizace.ClenstviOrganizace": "fas fa-user-shield",
         "akce.MistoKonani": "fas fa-location-dot",
@@ -84,6 +87,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "config.middleware.ApiCorsMiddleware",
+    "config.middleware.TenantContextMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -146,6 +150,8 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
@@ -162,6 +168,13 @@ CSRF_COOKIE_SECURE = os.getenv("DJANGO_CSRF_COOKIE_SECURE", "0").lower() in {"1"
 EMAIL_BACKEND = os.getenv("DJANGO_EMAIL_BACKEND", "django.core.mail.backends.filebased.EmailBackend")
 EMAIL_FILE_PATH = BASE_DIR / "odeslane_emaily"
 DEFAULT_FROM_EMAIL = os.getenv("DJANGO_DEFAULT_FROM_EMAIL", "KlikniListek <noreply@kliknilistek.local>")
+EMAIL_HOST = os.getenv("DJANGO_EMAIL_HOST", "")
+EMAIL_PORT = int(os.getenv("DJANGO_EMAIL_PORT", "587"))
+EMAIL_HOST_USER = os.getenv("DJANGO_EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("DJANGO_EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = os.getenv("DJANGO_EMAIL_USE_TLS", "1").lower() in {"1", "true", "yes", "on"}
+EMAIL_USE_SSL = os.getenv("DJANGO_EMAIL_USE_SSL", "0").lower() in {"1", "true", "yes", "on"}
+EMAIL_TIMEOUT = int(os.getenv("DJANGO_EMAIL_TIMEOUT", "20"))
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

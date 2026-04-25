@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "KlikniListek",
-  description: "Vstupenkova platforma pro obce, kulturni domy a lokalni akce.",
+  description: "Kulturní služba pro obce, kulturní domy a místní akce.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

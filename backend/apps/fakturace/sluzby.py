@@ -9,6 +9,14 @@ from reportlab.graphics.shapes import Drawing
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
+from django.core.mail import EmailMessage
+
+from apps.jadro.sluzby import zaloguj_audit
+from apps.vstupenky.models import EmailovaZasilka
+from apps.vstupenky.sluzby import (
+    ziskej_email_connection_pro_organizaci,
+    ziskej_odesilatele_pro_organizaci,
+)
 
 from .models import ProformaDoklad
 
@@ -150,6 +158,79 @@ def vytvor_pdf_proformy(proforma: ProformaDoklad) -> bytes:
     return buffer.getvalue()
 
 
+def sestav_text_emailu_proformy(proforma: ProformaDoklad) -> str:
+    return (
+        f"Dobrý den,\n\n"
+        f"k objednávce {proforma.objednavka.verejne_id} posíláme proforma doklad k bankovnímu převodu.\n"
+        f"V příloze najdete PDF s QR platbou, variabilním symbolem a platebními údaji.\n\n"
+        f"Číslo dokladu: {proforma.cislo_dokladu}\n"
+        f"Částka: {proforma.castka:.2f} {proforma.mena}\n"
+        f"Variabilní symbol: {proforma.variabilni_symbol}\n"
+        f"Splatnost: {proforma.datum_splatnosti.strftime('%d.%m.%Y')}\n\n"
+        f"Po přijetí platby se vstupenky automaticky odešlou e-mailem.\n\n"
+        f"Děkujeme.\nKlikniLístek"
+    )
+
+
+def odeslat_proformu_objednavky(proforma: ProformaDoklad):
+    objednavka = proforma.objednavka
+    text_emailu = sestav_text_emailu_proformy(proforma)
+    zasilka = EmailovaZasilka.objects.create(
+        organizace=objednavka.organizace,
+        objednavka=objednavka,
+        prijemce_email=objednavka.email_zakaznika,
+        predmet=f"Proforma k objednávce {objednavka.verejne_id}",
+        stav=EmailovaZasilka.Stav.VYTVORENO,
+        text_zpravy=text_emailu,
+        pocet_priloh=1,
+    )
+
+    email = EmailMessage(
+        subject=zasilka.predmet,
+        body=text_emailu,
+        from_email=ziskej_odesilatele_pro_organizaci(objednavka.organizace),
+        to=[objednavka.email_zakaznika],
+        connection=ziskej_email_connection_pro_organizaci(objednavka.organizace),
+    )
+    email.attach(
+        f"proforma-{proforma.cislo_dokladu}.pdf",
+        vytvor_pdf_proformy(proforma),
+        "application/pdf",
+    )
+
+    try:
+        email.send(fail_silently=False)
+    except Exception as error:
+        zasilka.stav = EmailovaZasilka.Stav.CHYBA
+        zasilka.chyba_text = str(error)
+        zasilka.save(update_fields=["stav", "chyba_text", "upraveno"])
+        zaloguj_audit(
+            organizace=proforma.organizace,
+            akce="fakturace.proforma_email_chyba",
+            objekt_typ="proforma",
+            objekt_id=str(proforma.id),
+            objekt_popis=proforma.cislo_dokladu,
+            poznamka="Odeslání proforma dokladu e-mailem skončilo chybou.",
+            data={"prijemce": objednavka.email_zakaznika, "chyba": str(error)},
+        )
+        raise
+
+    cas_odeslani = timezone.now()
+    zasilka.stav = EmailovaZasilka.Stav.ODESLANO
+    zasilka.odeslano_v = cas_odeslani
+    zasilka.save(update_fields=["stav", "odeslano_v", "upraveno"])
+    zaloguj_audit(
+        organizace=proforma.organizace,
+        akce="fakturace.proforma_email_odeslan",
+        objekt_typ="proforma",
+        objekt_id=str(proforma.id),
+        objekt_popis=proforma.cislo_dokladu,
+        poznamka="Proforma byla úspěšně doručena e-mailem.",
+        data={"prijemce": objednavka.email_zakaznika},
+    )
+    return proforma
+
+
 def vytvor_nebo_aktualizuj_proformu(objednavka):
     organizace = objednavka.organizace
     if not organizace.cislo_uctu or not organizace.kod_banky:
@@ -157,7 +238,7 @@ def vytvor_nebo_aktualizuj_proformu(objednavka):
 
     iban = organizace.iban or sestav_iban_cz(organizace.cislo_uctu, organizace.kod_banky)
     zprava = f"Objednávka {objednavka.verejne_id}"
-    doklad, _ = ProformaDoklad.objects.get_or_create(
+    doklad, vytvoreno = ProformaDoklad.objects.get_or_create(
         objednavka=objednavka,
         defaults={
             "organizace": objednavka.organizace,
@@ -186,6 +267,20 @@ def vytvor_nebo_aktualizuj_proformu(objednavka):
     if organizace.iban != iban:
         organizace.iban = iban
         organizace.save(update_fields=["iban", "upraveno"])
+    zaloguj_audit(
+        organizace=objednavka.organizace,
+        akce="fakturace.proforma_vytvorena" if vytvoreno else "fakturace.proforma_aktualizovana",
+        objekt_typ="proforma",
+        objekt_id=str(doklad.id),
+        objekt_popis=doklad.cislo_dokladu,
+        poznamka="Proforma byla připravena pro bankovní převod objednávky.",
+        data={
+            "objednavka": objednavka.verejne_id,
+            "castka": str(doklad.castka),
+            "mena": doklad.mena,
+            "variabilni_symbol": doklad.variabilni_symbol,
+        },
+    )
     return doklad
 
 
@@ -218,4 +313,17 @@ def oznac_proformu_jako_zaplacenou(proforma: ProformaDoklad, *, uzivatel=None):
     proforma.uhrazeno_v = timezone.now()
     proforma.potvrzeno_uzivatelem = uzivatel
     proforma.save(update_fields=["stav", "uhrazeno_v", "potvrzeno_uzivatelem", "upraveno"])
+    zaloguj_audit(
+        organizace=proforma.organizace,
+        akce="fakturace.proforma_zaplacena",
+        uzivatel=uzivatel,
+        objekt_typ="proforma",
+        objekt_id=str(proforma.id),
+        objekt_popis=proforma.cislo_dokladu,
+        poznamka="Proforma byla ručně označena jako zaplacená.",
+        data={
+            "objednavka": proforma.objednavka.verejne_id,
+            "variabilni_symbol": proforma.variabilni_symbol,
+        },
+    )
     return proforma

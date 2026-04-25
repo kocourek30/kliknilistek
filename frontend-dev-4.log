@@ -1,0 +1,17 @@
+
+> kliknilistek-frontend@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3001
+
+Error: spawn EPERM
+    at ChildProcess.spawn (node:internal/child_process:420:11)
+    at spawn (node:child_process:786:9)
+    at fork (node:child_process:174:10)
+    at C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\cli\next-dev.js:234:45
+    at new Promise (<anonymous>)
+    at startServer (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\cli\next-dev.js:210:16)
+    at runDevServer (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\cli\next-dev.js:317:23)
+    at Module.nextDev (C:\Users\Tom├í┼íKocourek\Documents\Kliknilistek_v2\frontend\node_modules\next\dist\cli\next-dev.js:325:11) {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'spawn'
+}

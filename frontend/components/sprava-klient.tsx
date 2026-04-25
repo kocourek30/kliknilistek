@@ -159,6 +159,16 @@ export function SpravaKlient({
     kod_banky: "",
     iban: "",
     swift: "",
+    smtp_aktivni: false,
+    smtp_host: "",
+    smtp_port: 587,
+    smtp_uzivatel: "",
+    smtp_heslo: "",
+    smtp_use_tls: true,
+    smtp_use_ssl: false,
+    smtp_od_email: "",
+    smtp_od_jmeno: "",
+    smtp_timeout: 20,
   });
 
   const [formularMista, nastavFormularMista] = useState({
@@ -285,6 +295,16 @@ export function SpravaKlient({
           kod_banky: "",
           iban: "",
           swift: "",
+          smtp_aktivni: false,
+          smtp_host: "",
+          smtp_port: 587,
+          smtp_uzivatel: "",
+          smtp_heslo: "",
+          smtp_use_tls: true,
+          smtp_use_ssl: false,
+          smtp_od_email: "",
+          smtp_od_jmeno: "",
+          smtp_timeout: 20,
         });
         await dokoncit("Organizace byla vytvořena.");
       } catch (error) {

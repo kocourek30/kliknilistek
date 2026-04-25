@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.db import models
 from django.utils import timezone
 
-from .models import Akce, KategorieVstupenky, MistoKonani
+from .models import Akce, FotkaAkce, KategorieVstupenky, MistoKonani
 from .schema_sezeni import (
     iteruj_mista_schema,
     ziskej_schema_sezeni_pro_akci,
@@ -95,6 +95,8 @@ def ziskej_stavy_mist_pro_akci(akce):
 class MistoKonaniSerializer(serializers.ModelSerializer):
     organizace_nazev = serializers.CharField(source="organizace.nazev", read_only=True)
     schema_sezeni = serializers.JSONField(required=False)
+    hlavni_fotka_url = serializers.SerializerMethodField()
+    hlavni_fotka = serializers.FileField(required=False, allow_null=True)
 
     class Meta:
         model = MistoKonani
@@ -106,6 +108,8 @@ class MistoKonaniSerializer(serializers.ModelSerializer):
             "adresa",
             "mesto",
             "kapacita",
+            "hlavni_fotka",
+            "hlavni_fotka_url",
             "schema_sezeni",
             "vytvoreno",
             "upraveno",
@@ -117,10 +121,43 @@ class MistoKonaniSerializer(serializers.ModelSerializer):
         data["schema_sezeni"] = ziskej_schema_sezeni_pro_misto(instance)
         return data
 
+    def get_hlavni_fotka_url(self, obj):
+        request = self.context.get("request")
+        if obj.hlavni_fotka:
+            url = obj.hlavni_fotka.url
+            return request.build_absolute_uri(url) if request else url
+        return ""
+
+
+class FotkaAkceSerializer(serializers.ModelSerializer):
+    soubor_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = FotkaAkce
+        fields = [
+            "id",
+            "soubor",
+            "soubor_url",
+            "popis",
+            "poradi",
+            "je_doporucena",
+            "vytvoreno",
+            "upraveno",
+        ]
+        read_only_fields = ["id", "vytvoreno", "upraveno", "soubor_url"]
+
+    def get_soubor_url(self, obj):
+        request = self.context.get("request")
+        if obj.soubor:
+            url = obj.soubor.url
+            return request.build_absolute_uri(url) if request else url
+        return ""
+
 
 class AkceSerializer(serializers.ModelSerializer):
     organizace_nazev = serializers.CharField(source="organizace.nazev", read_only=True)
     misto_konani_nazev = serializers.CharField(source="misto_konani.nazev", read_only=True)
+    misto_konani_hlavni_fotka_url = serializers.SerializerMethodField()
     schema_sezeni = serializers.SerializerMethodField()
     schema_sezeni_override = serializers.JSONField(required=False)
     ma_vlastni_schema_sezeni = serializers.SerializerMethodField()
@@ -129,6 +166,9 @@ class AkceSerializer(serializers.ModelSerializer):
     stavy_mist = serializers.SerializerMethodField()
     souhrn_mist = serializers.SerializerMethodField()
     dostupne_zony = serializers.SerializerMethodField()
+    hlavni_fotka = serializers.FileField(required=False, allow_null=True)
+    hlavni_fotka_soubor_url = serializers.SerializerMethodField()
+    fotky_galerie = FotkaAkceSerializer(many=True, read_only=True)
 
     class Meta:
         model = Akce
@@ -138,12 +178,19 @@ class AkceSerializer(serializers.ModelSerializer):
             "organizace_nazev",
             "nazev",
             "slug",
+            "typ_akce",
             "perex",
             "popis",
             "hlavni_fotka_url",
+            "hlavni_fotka",
+            "hlavni_fotka_soubor_url",
+            "hlavni_fotka_pomer",
+            "fotky_galerie",
+            "galerie_fotka_pomer",
             "video_url",
             "misto_konani",
             "misto_konani_nazev",
+            "misto_konani_hlavni_fotka_url",
             "schema_sezeni",
             "schema_sezeni_override",
             "ma_vlastni_schema_sezeni",
@@ -177,6 +224,20 @@ class AkceSerializer(serializers.ModelSerializer):
 
     def get_schema_sezeni(self, obj):
         return ziskej_schema_sezeni_pro_akci(obj)
+
+    def get_hlavni_fotka_soubor_url(self, obj):
+        request = self.context.get("request")
+        if obj.hlavni_fotka:
+            url = obj.hlavni_fotka.url
+            return request.build_absolute_uri(url) if request else url
+        return ""
+
+    def get_misto_konani_hlavni_fotka_url(self, obj):
+        request = self.context.get("request")
+        if obj.misto_konani and obj.misto_konani.hlavni_fotka:
+            url = obj.misto_konani.hlavni_fotka.url
+            return request.build_absolute_uri(url) if request else url
+        return ""
 
     def get_ma_vlastni_schema_sezeni(self, obj):
         return bool(obj.schema_sezeni_override)

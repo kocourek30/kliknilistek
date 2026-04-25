@@ -9,7 +9,11 @@ from rest_framework import serializers
 
 from apps.akce.models import KategorieVstupenky
 from apps.akce.schema_sezeni import iteruj_mista_schema, ziskej_schema_sezeni_pro_akci
-from apps.fakturace.sluzby import vytvor_nebo_aktualizuj_proformu, vytvor_qr_svg
+from apps.fakturace.sluzby import (
+    odeslat_proformu_objednavky,
+    vytvor_nebo_aktualizuj_proformu,
+    vytvor_qr_svg,
+)
 from apps.vstupenky.models import Vstupenka
 
 from .models import Objednavka, PolozkaObjednavky
@@ -292,6 +296,13 @@ class VytvoreniObjednavkySerializer(serializers.Serializer):
         self.context["kategorie_map"] = kategorie
         self.context["organizace_id"] = organizace_id
         self.context["mena"] = mena
+
+        request = self.context.get("request")
+        tenant_organizace = getattr(request, "tenant_organizace", None) if request else None
+        if tenant_organizace is not None and tenant_organizace.id != organizace_id:
+            raise serializers.ValidationError(
+                "Na této subdoméně lze objednávat jen akce dané organizace."
+            )
         return value
 
     @transaction.atomic
@@ -363,7 +374,11 @@ class VytvoreniObjednavkySerializer(serializers.Serializer):
         objednavka.celkem = mezisoucet
         objednavka.save(update_fields=["mezisoucet", "poplatek", "celkem", "upraveno"])
         if objednavka.zpusob_uhrady == Objednavka.ZpusobUhrady.BANKOVNI_PREVOD:
-            vytvor_nebo_aktualizuj_proformu(objednavka)
+            proforma = vytvor_nebo_aktualizuj_proformu(objednavka)
+            try:
+                odeslat_proformu_objednavky(proforma)
+            except Exception:
+                pass
         return objednavka
 
 

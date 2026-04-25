@@ -13,6 +13,7 @@ import {
   type MistoKonani,
   type ProfilSpravy,
 } from "@/lib/api";
+import { vytvorVychoziPrihlaseni } from "@/lib/demo-rezim";
 
 const klicTokenu = "kliknilistek.sprava.token";
 const vychoziRadky = 18;
@@ -314,12 +315,13 @@ export function SpravaDetailMistaBrana({ idMista }: { idMista: string }) {
   const [misto, nastavMisto] = useState<MistoKonani | null>(null);
   const [chyba, nastavChybu] = useState("");
   const [zprava, nastavZpravu] = useState("");
-  const [formular, nastavFormular] = useState({ uzivatel: "spravce", heslo: "kliknilistek123" });
+  const [formular, nastavFormular] = useState(vytvorVychoziPrihlaseni("spravce"));
   const [editor, nastavEditor] = useState({
     nazev: "",
     adresa: "",
     mesto: "",
     kapacita: "0",
+    hlavni_fotka: null as File | null,
     schema_nazev: "Mrizkovy planek",
     schema_popis: "Klikaci planek mistenek pro misto konani.",
   });
@@ -333,6 +335,7 @@ export function SpravaDetailMistaBrana({ idMista }: { idMista: string }) {
   const [vyberOblasti, nastavVyberOblasti] = useState<OblastVyberu | null>(null);
   const [historieZpet, nastavHistoriiZpet] = useState<PodlaziEditoru[][]>([]);
   const [historieVpred, nastavHistoriiVpred] = useState<PodlaziEditoru[][]>([]);
+  const [nahledFotkyMista, nastavNahledFotkyMista] = useState("");
 
   useEffect(() => {
     function ukonciMalovani() {
@@ -389,6 +392,7 @@ export function SpravaDetailMistaBrana({ idMista }: { idMista: string }) {
         adresa: detail.adresa,
         mesto: detail.mesto,
         kapacita: String(detail.kapacita),
+        hlavni_fotka: null,
         schema_nazev: builder.schemaNazev,
         schema_popis: builder.schemaPopis,
       });
@@ -418,6 +422,17 @@ export function SpravaDetailMistaBrana({ idMista }: { idMista: string }) {
     }
     void nacti(ulozenyToken);
   }, [idMista]);
+
+  useEffect(() => {
+    if (!editor.hlavni_fotka) {
+      nastavNahledFotkyMista("");
+      return;
+    }
+
+    const url = URL.createObjectURL(editor.hlavni_fotka);
+    nastavNahledFotkyMista(url);
+    return () => URL.revokeObjectURL(url);
+  }, [editor.hlavni_fotka]);
 
   const aktivniPodlazi = useMemo(
     () => podlazi.find((polozka) => polozka.id === aktivniPodlaziId) ?? podlazi[0] ?? null,
@@ -1067,6 +1082,7 @@ export function SpravaDetailMistaBrana({ idMista }: { idMista: string }) {
           adresa: editor.adresa,
           mesto: editor.mesto,
           kapacita: Number(editor.kapacita),
+          hlavni_fotka: editor.hlavni_fotka,
           schema_sezeni: schemaNahledu,
         },
         tokenSpravy,
@@ -1196,6 +1212,15 @@ export function SpravaDetailMistaBrana({ idMista }: { idMista: string }) {
               <label className="pole"><span className="pole-label">Mesto</span><input value={editor.mesto} onChange={(e) => nastavEditor((a) => ({ ...a, mesto: e.target.value }))} /></label>
               <label className="pole"><span className="pole-label">Nazev planku</span><input value={editor.schema_nazev} onChange={(e) => nastavEditor((a) => ({ ...a, schema_nazev: e.target.value }))} /></label>
               <label className="pole pole-cela"><span className="pole-label">Adresa</span><input value={editor.adresa} onChange={(e) => nastavEditor((a) => ({ ...a, adresa: e.target.value }))} /></label>
+              <label className="pole pole-cela"><span className="pole-label">Fotka místa</span><input type="file" accept="image/*" onChange={(e) => nastavEditor((a) => ({ ...a, hlavni_fotka: e.target.files?.[0] ?? null }))} /></label>
+              {nahledFotkyMista || misto?.hlavni_fotka_url ? (
+                <div
+                  className="admin-form-photo-preview pole-cela"
+                  style={{
+                    backgroundImage: `url('${nahledFotkyMista || misto?.hlavni_fotka_url || ""}')`,
+                  }}
+                />
+              ) : null}
               <label className="pole pole-cela"><span className="pole-label">Popis planku</span><input value={editor.schema_popis} onChange={(e) => nastavEditor((a) => ({ ...a, schema_popis: e.target.value }))} /></label>
             </div>
           </div>

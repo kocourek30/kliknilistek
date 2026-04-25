@@ -37,16 +37,16 @@ export function PlatbaKlient({
   }
 
   if (jeZaplaceno) {
-    return <div className="hlaseni uspech">Objednavka uz je zaplacena a vstupenky jsou platne.</div>;
+    return <div className="public-alert public-alert-success">Objednávka je zaplacená a vstupenky jsou platné.</div>;
   }
 
   if (!rezervaceAktivni) {
-    return <div className="hlaseni chyba">Rezervace uz vyprsela, proto uz nejde simulovat platbu.</div>;
+    return <div className="public-alert public-alert-error">Rezervace už vypršela, proto už nejde pokračovat v platbě.</div>;
   }
 
   if (zpusobUhrady === "bankovni_prevod") {
     return (
-      <div className="hlaseni uspech">
+      <div className="public-alert public-alert-success">
         Objednávka čeká na bankovní převod podle vystavené proformy. Po přijetí platby budou
         vstupenky automaticky doručeny e-mailem.
       </div>
@@ -55,10 +55,10 @@ export function PlatbaKlient({
 
   return (
     <div className="stack">
-      {chyba ? <div className="hlaseni chyba">{chyba}</div> : null}
+      {chyba ? <div className="public-alert public-alert-error">{chyba}</div> : null}
       <div className="panel-akce">
-        <button className="button primary" disabled={odesilaSe} onClick={spustSimulaci} type="button">
-          {odesilaSe ? "Potvrzuji platbu..." : "Simulovat zaplaceni objednavky"}
+        <button className="kulturni-button kulturni-button-primary" disabled={odesilaSe} onClick={spustSimulaci} type="button">
+          {odesilaSe ? "Potvrzuji platbu..." : "Simulovat zaplacení objednávky"}
         </button>
       </div>
     </div>

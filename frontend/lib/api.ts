@@ -2,6 +2,12 @@ export type Organizace = {
   id: number;
   nazev: string;
   slug: string;
+  slug_subdomeny?: string | null;
+  vlastni_domena?: string;
+  tenant_aktivni?: boolean;
+  nazev_verejny?: string;
+  verejny_popis?: string;
+  logo_url?: string;
   typ_organizace: string;
   kontaktni_email: string;
   kontaktni_telefon: string;
@@ -16,9 +22,39 @@ export type Organizace = {
   kod_banky: string;
   iban: string;
   swift: string;
+  smtp_aktivni: boolean;
+  smtp_host: string;
+  smtp_port: number;
+  smtp_uzivatel: string;
+  smtp_use_tls: boolean;
+  smtp_use_ssl: boolean;
+  smtp_od_email: string;
+  smtp_od_jmeno: string;
+  smtp_timeout: number;
+  ma_vlastni_smtp?: boolean;
   je_aktivni: boolean;
   vytvoreno: string;
   upraveno: string;
+};
+
+export type NastaveniSystemu = {
+  id?: number;
+  smtp_aktivni: boolean;
+  smtp_host: string;
+  smtp_port: number;
+  smtp_uzivatel: string;
+  smtp_use_tls: boolean;
+  smtp_use_ssl: boolean;
+  smtp_od_email: string;
+  smtp_od_jmeno: string;
+  smtp_timeout: number;
+  ma_globalni_smtp?: boolean;
+};
+
+export type TenantKontext = {
+  host: string;
+  je_centralni: boolean;
+  organizace: Organizace | null;
 };
 
 export type ProformaDoklad = {
@@ -142,9 +178,22 @@ export type MistoKonani = {
   adresa: string;
   mesto: string;
   kapacita: number;
+  hlavni_fotka?: string;
+  hlavni_fotka_url?: string;
   schema_sezeni?: Akce["schema_sezeni"];
   vytvoreno: string;
   upraveno: string;
+};
+
+export type FotkaAkce = {
+  id: number;
+  soubor?: string;
+  soubor_url: string;
+  popis: string;
+  poradi: number;
+  je_doporucena: boolean;
+  vytvoreno?: string;
+  upraveno?: string;
 };
 
 export type Akce = {
@@ -153,12 +202,19 @@ export type Akce = {
   organizace_nazev?: string;
   nazev: string;
   slug: string;
+  typ_akce?: string;
   perex: string;
   popis: string;
   hlavni_fotka_url: string;
+  hlavni_fotka?: string;
+  hlavni_fotka_soubor_url?: string;
+  hlavni_fotka_pomer?: string;
+  galerie_fotka_pomer?: string;
+  fotky_galerie?: FotkaAkce[];
   video_url: string;
   misto_konani: number;
   misto_konani_nazev?: string;
+  misto_konani_hlavni_fotka_url?: string;
   schema_sezeni?: {
     typ: string;
     nazev: string;
@@ -376,6 +432,10 @@ type SouhrnAdministrace = {
   proformy: ProformaDoklad[];
 };
 
+type UpravaNastaveniSystemu = Partial<NastaveniSystemu> & {
+  smtp_heslo?: string;
+};
+
 type NovaOrganizace = {
   nazev: string;
   slug: string;
@@ -393,6 +453,16 @@ type NovaOrganizace = {
   kod_banky: string;
   iban: string;
   swift: string;
+  smtp_aktivni: boolean;
+  smtp_host: string;
+  smtp_port: number;
+  smtp_uzivatel: string;
+  smtp_heslo?: string;
+  smtp_use_tls: boolean;
+  smtp_use_ssl: boolean;
+  smtp_od_email: string;
+  smtp_od_jmeno: string;
+  smtp_timeout: number;
   je_aktivni: boolean;
 };
 
@@ -402,6 +472,7 @@ type NoveMistoKonani = {
   adresa: string;
   mesto: string;
   kapacita: number;
+  hlavni_fotka?: File | null;
   schema_sezeni?: Akce["schema_sezeni"];
 };
 
@@ -409,9 +480,13 @@ type NovaAkce = {
   organizace: number;
   nazev: string;
   slug: string;
+  typ_akce?: string;
   perex: string;
   popis: string;
   hlavni_fotka_url: string;
+  hlavni_fotka?: File | null;
+  hlavni_fotka_pomer?: string;
+  galerie_fotka_pomer?: string;
   video_url: string;
   misto_konani: number;
   zacatek: string;
@@ -468,20 +543,18 @@ type OdpovedApiChyby = {
   [klic: string]: unknown;
 };
 
-function vytvorHlavicky(token?: string): HeadersInit | undefined {
-  if (!token) {
-    return undefined;
+function vytvorHlavicky(token?: string, extraHlavicky?: HeadersInit): HeadersInit | undefined {
+  const hlavicky = new Headers(extraHlavicky);
+
+  if (token) {
+    if (typeof window !== "undefined") {
+      hlavicky.set("X-Sprava-Token", token);
+    } else {
+      hlavicky.set("Authorization", token);
+    }
   }
 
-  if (typeof window !== "undefined") {
-    return {
-      "X-Sprava-Token": token,
-    };
-  }
-
-  return {
-    Authorization: token,
-  };
+  return Array.from(hlavicky.keys()).length > 0 ? hlavicky : undefined;
 }
 
 async function vytvorApiChybu(odpoved: Response, cesta: string, akce: "nacist" | "odeslat") {
@@ -514,10 +587,10 @@ export function jeDocasneNedostupnaApiChyba(chyba: unknown) {
   return chyba instanceof ApiChyba && chyba.status === 503;
 }
 
-async function nactiJson<T>(cesta: string, token?: string): Promise<T> {
+async function nactiJson<T>(cesta: string, token?: string, extraHlavicky?: HeadersInit): Promise<T> {
   const odpoved = await fetch(`${zakladApi}${cesta}`, {
     cache: "no-store",
-    headers: vytvorHlavicky(token),
+    headers: vytvorHlavicky(token, extraHlavicky),
   });
 
   if (!odpoved.ok) {
@@ -527,9 +600,14 @@ async function nactiJson<T>(cesta: string, token?: string): Promise<T> {
   return (await odpoved.json()) as T;
 }
 
-async function nactiJsonVolitelne<T>(cesta: string, vychozi: T, token?: string): Promise<T> {
+async function nactiJsonVolitelne<T>(
+  cesta: string,
+  vychozi: T,
+  token?: string,
+  extraHlavicky?: HeadersInit,
+): Promise<T> {
   try {
-    return await nactiJson<T>(cesta, token);
+    return await nactiJson<T>(cesta, token, extraHlavicky);
   } catch {
     return vychozi;
   }
@@ -552,24 +630,64 @@ async function odesliJson<T>(cesta: string, data: unknown, token?: string): Prom
   return (await odpoved.json()) as T;
 }
 
-export async function nactiSouhrnAdministrace(token?: string): Promise<SouhrnAdministrace> {
+async function odesliFormData<T>(
+  cesta: string,
+  data: Record<string, string | Blob | null | undefined>,
+  token?: string,
+  method: "POST" | "PATCH" = "POST",
+): Promise<T> {
+  const formData = new FormData();
+  for (const [klic, hodnota] of Object.entries(data)) {
+    if (hodnota === undefined || hodnota === null || hodnota === "") {
+      continue;
+    }
+    formData.append(klic, hodnota);
+  }
+
+  const odpoved = await fetch(`${zakladApi}${cesta}`, {
+    method,
+    headers: {
+      ...(vytvorHlavicky(token) ?? {}),
+    },
+    body: formData,
+  });
+
+  if (!odpoved.ok) {
+    throw await vytvorApiChybu(odpoved, cesta, "odeslat");
+  }
+
+  return (await odpoved.json()) as T;
+}
+
+function vytvorTenantHlavicky(host?: string): HeadersInit | undefined {
+  return host ? { "X-Tenant-Host": host } : undefined;
+}
+
+export async function nactiTenantKontext(host?: string): Promise<TenantKontext> {
+  return nactiJson<TenantKontext>("/tenant-kontekst/", undefined, vytvorTenantHlavicky(host));
+}
+
+export async function nactiSouhrnAdministrace(token?: string, host?: string): Promise<SouhrnAdministrace> {
+  const tenantHlavicky = vytvorTenantHlavicky(host);
   const [organizace, clenstvi, mistaKonani, akce, kategorieVstupenek, objednavky, platby, proformy] = await Promise.all([
-    nactiJsonVolitelne<Organizace[]>("/organizace/", ukazkovaData.organizace, token),
-    token ? nactiJsonVolitelne<ClenstviOrganizace[]>("/organizace/clenstvi/", ukazkovaData.clenstvi, token) : Promise.resolve([]),
-    nactiJsonVolitelne<MistoKonani[]>("/akce/mista-konani/", ukazkovaData.mistaKonani, token),
-    nactiJsonVolitelne<Akce[]>("/akce/", ukazkovaData.akce, token),
-    nactiJsonVolitelne<KategorieVstupenky[]>("/akce/kategorie-vstupenek/", ukazkovaData.kategorieVstupenek, token),
-    token ? nactiJsonVolitelne<Objednavka[]>("/objednavky/", [], token) : Promise.resolve([]),
-    token ? nactiJsonVolitelne<PlatbaSpravy[]>("/platby/", [], token) : Promise.resolve([]),
-    token ? nactiJsonVolitelne<ProformaDoklad[]>("/fakturace/proformy/", [], token) : Promise.resolve([]),
+    nactiJsonVolitelne<Organizace[]>("/organizace/", ukazkovaData.organizace, token, tenantHlavicky),
+    token
+      ? nactiJsonVolitelne<ClenstviOrganizace[]>("/organizace/clenstvi/", ukazkovaData.clenstvi, token, tenantHlavicky)
+      : Promise.resolve([]),
+    nactiJsonVolitelne<MistoKonani[]>("/akce/mista-konani/", ukazkovaData.mistaKonani, token, tenantHlavicky),
+    nactiJsonVolitelne<Akce[]>("/akce/", ukazkovaData.akce, token, tenantHlavicky),
+    nactiJsonVolitelne<KategorieVstupenky[]>("/akce/kategorie-vstupenek/", ukazkovaData.kategorieVstupenek, token, tenantHlavicky),
+    token ? nactiJsonVolitelne<Objednavka[]>("/objednavky/", [], token, tenantHlavicky) : Promise.resolve([]),
+    token ? nactiJsonVolitelne<PlatbaSpravy[]>("/platby/", [], token, tenantHlavicky) : Promise.resolve([]),
+    token ? nactiJsonVolitelne<ProformaDoklad[]>("/fakturace/proformy/", [], token, tenantHlavicky) : Promise.resolve([]),
   ]);
 
   return { organizace, clenstvi, mistaKonani, akce, kategorieVstupenek, objednavky, platby, proformy };
 }
 
-export async function nactiAkci(slug: string): Promise<Akce | null> {
+export async function nactiAkci(slug: string, host?: string): Promise<Akce | null> {
   try {
-    return await nactiJson<Akce>(`/akce/${slug}/`);
+    return await nactiJson<Akce>(`/akce/${slug}/`, undefined, vytvorTenantHlavicky(host));
   } catch {
     return ukazkovaData.akce.find((polozka) => polozka.slug === slug) ?? null;
   }
@@ -577,9 +695,14 @@ export async function nactiAkci(slug: string): Promise<Akce | null> {
 
 export async function nactiKategorieVstupenekProAkci(
   akceId: number,
+  host?: string,
 ): Promise<KategorieVstupenky[]> {
   try {
-    const vsechny = await nactiJson<KategorieVstupenky[]>("/akce/kategorie-vstupenek/");
+    const vsechny = await nactiJson<KategorieVstupenky[]>(
+      "/akce/kategorie-vstupenek/",
+      undefined,
+      vytvorTenantHlavicky(host),
+    );
     return vsechny.filter((polozka) => polozka.akce === akceId && polozka.je_aktivni);
   } catch {
     return ukazkovaData.kategorieVstupenek.filter(
@@ -607,7 +730,19 @@ export async function vytvorMistoKonaniSprava(
   data: NoveMistoKonani,
   token: string,
 ): Promise<MistoKonani> {
-  return odesliJson<MistoKonani>("/akce/mista-konani/", data, token);
+  return odesliFormData<MistoKonani>(
+    "/akce/mista-konani/",
+    {
+      organizace: String(data.organizace),
+      nazev: data.nazev,
+      adresa: data.adresa,
+      mesto: data.mesto,
+      kapacita: String(data.kapacita),
+      schema_sezeni: data.schema_sezeni ? JSON.stringify(data.schema_sezeni) : undefined,
+      hlavni_fotka: data.hlavni_fotka ?? undefined,
+    },
+    token,
+  );
 }
 
 export async function upravMistoKonaniSprava(
@@ -615,6 +750,23 @@ export async function upravMistoKonaniSprava(
   data: Partial<NoveMistoKonani>,
   token: string,
 ): Promise<MistoKonani> {
+  const obsahujeSoubor = typeof File !== "undefined" && data.hlavni_fotka instanceof File;
+  if (obsahujeSoubor) {
+    return odesliFormData<MistoKonani>(
+      `/akce/mista-konani/${id}/`,
+      {
+        organizace: data.organizace ? String(data.organizace) : undefined,
+        nazev: data.nazev,
+        adresa: data.adresa,
+        mesto: data.mesto,
+        kapacita: data.kapacita !== undefined ? String(data.kapacita) : undefined,
+        schema_sezeni: data.schema_sezeni ? JSON.stringify(data.schema_sezeni) : undefined,
+        hlavni_fotka: data.hlavni_fotka ?? undefined,
+      },
+      token,
+      "PATCH",
+    );
+  }
   const odpoved = await fetch(`${zakladApi}/akce/mista-konani/${id}/`, {
     method: "PATCH",
     headers: {
@@ -637,7 +789,30 @@ export async function vytvorAkci(data: NovaAkce): Promise<Akce> {
 }
 
 export async function vytvorAkciSprava(data: NovaAkce, token: string): Promise<Akce> {
-  return odesliJson<Akce>("/akce/", data, token);
+  return odesliFormData<Akce>(
+    "/akce/",
+    {
+      organizace: String(data.organizace),
+      nazev: data.nazev,
+      slug: data.slug,
+      typ_akce: data.typ_akce ?? "koncert",
+      perex: data.perex,
+      popis: data.popis,
+      hlavni_fotka_url: data.hlavni_fotka_url,
+      hlavni_fotka: data.hlavni_fotka ?? undefined,
+      hlavni_fotka_pomer: data.hlavni_fotka_pomer,
+      galerie_fotka_pomer: data.galerie_fotka_pomer,
+      video_url: data.video_url,
+      misto_konani: String(data.misto_konani),
+      zacatek: data.zacatek,
+      konec: data.konec ?? undefined,
+      stav: data.stav,
+      kapacita: String(data.kapacita),
+      rezervace_platnost_minuty: String(data.rezervace_platnost_minuty),
+      je_doporucena: data.je_doporucena ? "true" : "false",
+    },
+    token,
+  );
 }
 
 export async function upravAkciSprava(
@@ -645,6 +820,38 @@ export async function upravAkciSprava(
   data: Partial<NovaAkce>,
   token: string,
 ): Promise<Akce> {
+  const obsahujeSoubor = typeof File !== "undefined" && data.hlavni_fotka instanceof File;
+  if (obsahujeSoubor) {
+    return odesliFormData<Akce>(
+      `/akce/${slug}/`,
+      {
+        organizace: data.organizace ? String(data.organizace) : undefined,
+        nazev: data.nazev,
+        slug: data.slug,
+        typ_akce: data.typ_akce,
+        perex: data.perex,
+        popis: data.popis,
+        hlavni_fotka_url: data.hlavni_fotka_url,
+        hlavni_fotka: data.hlavni_fotka ?? undefined,
+        hlavni_fotka_pomer: data.hlavni_fotka_pomer,
+        galerie_fotka_pomer: data.galerie_fotka_pomer,
+        video_url: data.video_url,
+        misto_konani: data.misto_konani ? String(data.misto_konani) : undefined,
+        zacatek: data.zacatek,
+        konec: data.konec ?? undefined,
+        stav: data.stav,
+        kapacita: data.kapacita !== undefined ? String(data.kapacita) : undefined,
+        rezervace_platnost_minuty:
+          data.rezervace_platnost_minuty !== undefined
+            ? String(data.rezervace_platnost_minuty)
+            : undefined,
+        je_doporucena:
+          data.je_doporucena !== undefined ? (data.je_doporucena ? "true" : "false") : undefined,
+      },
+      token,
+      "PATCH",
+    );
+  }
   const odpoved = await fetch(`${zakladApi}/akce/${slug}/`, {
     method: "PATCH",
     headers: {
@@ -657,6 +864,97 @@ export async function upravAkciSprava(
   if (!odpoved.ok) {
     const text = await odpoved.text();
     throw new Error(text || `Nepodarilo se upravit akci ${slug}: ${odpoved.status}`);
+  }
+
+  return (await odpoved.json()) as Akce;
+}
+
+export async function nahrajFotkyGalerieAkceSprava(
+  slug: string,
+  fotky: File[],
+  token: string,
+): Promise<Akce> {
+  const formData = new FormData();
+  for (const fotka of fotky) {
+    formData.append("fotky", fotka);
+  }
+
+  const odpoved = await fetch(`${zakladApi}/akce/${slug}/fotky/`, {
+    method: "POST",
+    headers: {
+      ...(vytvorHlavicky(token) ?? {}),
+    },
+    body: formData,
+  });
+
+  if (!odpoved.ok) {
+    throw await vytvorApiChybu(odpoved, `/akce/${slug}/fotky/`, "odeslat");
+  }
+
+  return (await odpoved.json()) as Akce;
+}
+
+export async function smazFotkuGalerieAkceSprava(
+  slug: string,
+  fotkaId: number,
+  token: string,
+): Promise<Akce> {
+  const odpoved = await fetch(`${zakladApi}/akce/${slug}/fotky/${fotkaId}/`, {
+    method: "DELETE",
+    headers: {
+      ...(vytvorHlavicky(token) ?? {}),
+    },
+  });
+
+  if (!odpoved.ok) {
+    throw await vytvorApiChybu(odpoved, `/akce/${slug}/fotky/${fotkaId}/`, "odeslat");
+  }
+
+  return (await odpoved.json()) as Akce;
+}
+
+export async function posunFotkuGalerieAkceSprava(
+  slug: string,
+  fotkaId: number,
+  smer: "nahoru" | "dolu",
+  token: string,
+): Promise<Akce> {
+  return odesliJson<Akce>(`/akce/${slug}/fotky/${fotkaId}/posunout/`, { smer }, token);
+}
+
+export async function doporucFotkuGalerieAkceSprava(
+  slug: string,
+  fotkaId: number,
+  token: string,
+): Promise<Akce> {
+  return odesliJson<Akce>(`/akce/${slug}/fotky/${fotkaId}/doporucit/`, {}, token);
+}
+
+export async function zrusDoporuceniFotkyGalerieAkceSprava(
+  slug: string,
+  fotkaId: number,
+  token: string,
+): Promise<Akce> {
+  return odesliJson<Akce>(`/akce/${slug}/fotky/${fotkaId}/zrusit-doporuceni/`, {}, token);
+}
+
+export async function upravFotkuGalerieAkceSprava(
+  slug: string,
+  fotkaId: number,
+  data: { popis: string },
+  token: string,
+): Promise<Akce> {
+  const odpoved = await fetch(`${zakladApi}/akce/${slug}/fotky/${fotkaId}/`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...(vytvorHlavicky(token) ?? {}),
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!odpoved.ok) {
+    throw await vytvorApiChybu(odpoved, `/akce/${slug}/fotky/${fotkaId}/`, "odeslat");
   }
 
   return (await odpoved.json()) as Akce;
@@ -815,6 +1113,17 @@ export async function oznacitProformuJakoZaplacenou(
   );
 }
 
+export async function znovuOdeslatProformu(
+  cisloDokladu: string,
+  token: string,
+): Promise<ProformaDoklad> {
+  return odesliJson<ProformaDoklad>(
+    `/fakturace/proformy/${cisloDokladu}/znovu-odeslat/`,
+    {},
+    token,
+  );
+}
+
 export async function presaditVstupenkuObjednavky(
   verejneId: string,
   vstupenkaKod: string,
@@ -868,6 +1177,41 @@ export async function nactiPrehledSpravy(token: string): Promise<PrehledSpravy> 
   }
 }
 
+export async function nactiNastaveniSystemu(token: string): Promise<NastaveniSystemu> {
+  try {
+    return await nactiJson<NastaveniSystemu>("/nastaveni-systemu/", token);
+  } catch {
+    return ukazkoveNastaveniSystemu;
+  }
+}
+
+export async function upravNastaveniSystemu(
+  data: UpravaNastaveniSystemu,
+  token: string,
+): Promise<NastaveniSystemu> {
+  const odpoved = await fetch(`${zakladApi}/nastaveni-systemu/`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...(vytvorHlavicky(token) ?? {}),
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!odpoved.ok) {
+    throw await vytvorApiChybu(odpoved, "/nastaveni-systemu/", "odeslat");
+  }
+
+  return (await odpoved.json()) as NastaveniSystemu;
+}
+
+export async function odesliTestovaciEmailSmtp(
+  email: string,
+  token: string,
+): Promise<{ detail: string }> {
+  return odesliJson<{ detail: string }>("/nastaveni-systemu/test-smtp/", { email }, token);
+}
+
 export function vytvorTokenSpravy(uzivatel: string, heslo: string): string {
   if (typeof window !== "undefined") {
     return `Basic ${window.btoa(`${uzivatel}:${heslo}`)}`;
@@ -896,6 +1240,16 @@ const ukazkovaData: SouhrnAdministrace = {
       kod_banky: "5500",
       iban: "CZ5855000000001265098001",
       swift: "",
+      smtp_aktivni: false,
+      smtp_host: "",
+      smtp_port: 587,
+      smtp_uzivatel: "",
+      smtp_use_tls: true,
+      smtp_use_ssl: false,
+      smtp_od_email: "",
+      smtp_od_jmeno: "",
+      smtp_timeout: 20,
+      ma_vlastni_smtp: false,
       je_aktivni: true,
       vytvoreno: "2026-04-23T19:57:08.316338+02:00",
       upraveno: "2026-04-23T19:57:08.316368+02:00",
@@ -947,6 +1301,7 @@ const ukazkovaData: SouhrnAdministrace = {
       organizace_nazev: "Dolni Kralovice",
       nazev: "Jarni koncert v kulturnim dome",
       slug: "jarni-koncert-2026",
+      typ_akce: "koncert",
       perex: "Vecerni koncert mistnich souboru a hostu s jednoduchym online prodejem vstupenek.",
       popis: "Vecerni koncert mistnich souboru a hostu.",
       hlavni_fotka_url:
@@ -1136,4 +1491,17 @@ const ukazkovyPrehledSpravy: PrehledSpravy = {
       navstevnost_procent: 33,
     },
   ],
+};
+
+const ukazkoveNastaveniSystemu: NastaveniSystemu = {
+  smtp_aktivni: false,
+  smtp_host: "",
+  smtp_port: 587,
+  smtp_uzivatel: "",
+  smtp_use_tls: true,
+  smtp_use_ssl: false,
+  smtp_od_email: "",
+  smtp_od_jmeno: "",
+  smtp_timeout: 20,
+  ma_globalni_smtp: false,
 };

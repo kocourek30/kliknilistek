@@ -41,6 +41,7 @@ import {
 } from "@/lib/formatovani";
 import { formatujKratkeOznaceniMista } from "@/lib/plan-salu";
 import { GrafRozlozeni, GrafSloupcovy } from "@/components/sprava-grafy";
+import { vytvorVychoziPrihlaseni } from "@/lib/demo-rezim";
 
 const klicTokenu = "kliknilistek.sprava.token";
 
@@ -415,10 +416,9 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
   const [chyba, nastavChybu] = useState("");
   const [zprava, nastavZpravu] = useState("");
   const [beziPrechod, spustPrechod] = useTransition();
-  const [formularPrihlaseni, nastavFormularPrihlaseni] = useState({
-    uzivatel: "spravce",
-    heslo: "kliknilistek123",
-  });
+  const [nahledFotkyMista, nastavNahledFotkyMista] = useState("");
+  const [nahledFotkyAkce, nastavNahledFotkyAkce] = useState("");
+  const [formularPrihlaseni, nastavFormularPrihlaseni] = useState(vytvorVychoziPrihlaseni("spravce"));
 
   const [formularOrganizace, nastavFormularOrganizace] = useState({
     nazev: "",
@@ -437,6 +437,16 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
     kod_banky: "",
     iban: "",
     swift: "",
+    smtp_aktivni: false,
+    smtp_host: "",
+    smtp_port: "587",
+    smtp_uzivatel: "",
+    smtp_heslo: "",
+    smtp_use_tls: true,
+    smtp_use_ssl: false,
+    smtp_od_email: "",
+    smtp_od_jmeno: "",
+    smtp_timeout: "20",
   });
   const [formularMista, nastavFormularMista] = useState({
     organizace: "",
@@ -444,6 +454,7 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
     adresa: "",
     mesto: "",
     kapacita: "0",
+    hlavni_fotka: null as File | null,
   });
   const [formularAkce, nastavFormularAkce] = useState({
     organizace: "",
@@ -457,6 +468,7 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
     kapacita: "0",
     rezervace_platnost_minuty: "15",
     je_doporucena: false,
+    hlavni_fotka: null as File | null,
   });
   const [formularClenstvi, nastavFormularClenstvi] = useState({
     organizace: "",
@@ -473,6 +485,28 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
     pocet: "1",
     odeslat_na_email: false,
   });
+
+  useEffect(() => {
+    if (!formularMista.hlavni_fotka) {
+      nastavNahledFotkyMista("");
+      return;
+    }
+
+    const url = URL.createObjectURL(formularMista.hlavni_fotka);
+    nastavNahledFotkyMista(url);
+    return () => URL.revokeObjectURL(url);
+  }, [formularMista.hlavni_fotka]);
+
+  useEffect(() => {
+    if (!formularAkce.hlavni_fotka) {
+      nastavNahledFotkyAkce("");
+      return;
+    }
+
+    const url = URL.createObjectURL(formularAkce.hlavni_fotka);
+    nastavNahledFotkyAkce(url);
+    return () => URL.revokeObjectURL(url);
+  }, [formularAkce.hlavni_fotka]);
   const [pohledObjednavek, nastavPohledObjednavek] = useState<PohledObjednavek>("vse");
   const [filtrObjednavek, nastavFiltrObjednavek] = useState({ hledani: "", stav: "vse" });
   const [razeniObjednavek, nastavRazeniObjednavek] = useState<RazeniObjednavek>("nejnovejsi");
@@ -1314,7 +1348,10 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
                       </div>
                       <div>
                         <strong>{organizace.kontaktni_email || "Bez e-mailu"}</strong>
-                        <div className="micro">{organizace.kontaktni_telefon || "Bez telefonu"}</div>
+                        <div className="micro">
+                          {organizace.kontaktni_telefon || "Bez telefonu"} ·{" "}
+                          {organizace.ma_vlastni_smtp ? "Vlastní SMTP" : "Systémové odesílání"}
+                        </div>
                       </div>
                       <div>
                         <strong>{pocetMist} míst</strong>
@@ -1350,6 +1387,8 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
                           {
                             ...formularOrganizace,
                             slug: formularOrganizace.slug || vytvorSlug(formularOrganizace.nazev),
+                            smtp_port: Number(formularOrganizace.smtp_port || 587),
+                            smtp_timeout: Number(formularOrganizace.smtp_timeout || 20),
                             je_aktivni: true,
                           },
                           tokenSpravy,
@@ -1559,6 +1598,134 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
                       }
                     />
                   </label>
+                  <label className="pole pole-cela check-line">
+                    <input
+                      type="checkbox"
+                      checked={formularOrganizace.smtp_aktivni}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_aktivni: event.target.checked,
+                        }))
+                      }
+                    />
+                    <span>Používat vlastní SMTP této organizace</span>
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">SMTP host</span>
+                    <input
+                      value={formularOrganizace.smtp_host}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_host: event.target.value,
+                        }))
+                      }
+                      placeholder="smtp.obec.cz"
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">SMTP port</span>
+                    <input
+                      type="number"
+                      value={formularOrganizace.smtp_port}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_port: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">SMTP uživatel</span>
+                    <input
+                      value={formularOrganizace.smtp_uzivatel}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_uzivatel: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">SMTP heslo</span>
+                    <input
+                      type="password"
+                      value={formularOrganizace.smtp_heslo}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_heslo: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Odesílací e-mail</span>
+                    <input
+                      type="email"
+                      value={formularOrganizace.smtp_od_email}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_od_email: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Jméno odesílatele</span>
+                    <input
+                      value={formularOrganizace.smtp_od_jmeno}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_od_jmeno: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">SMTP timeout (s)</span>
+                    <input
+                      type="number"
+                      value={formularOrganizace.smtp_timeout}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_timeout: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole check-line">
+                    <input
+                      type="checkbox"
+                      checked={formularOrganizace.smtp_use_tls}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_use_tls: event.target.checked,
+                        }))
+                      }
+                    />
+                    <span>TLS</span>
+                  </label>
+                  <label className="pole check-line">
+                    <input
+                      type="checkbox"
+                      checked={formularOrganizace.smtp_use_ssl}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_use_ssl: event.target.checked,
+                        }))
+                      }
+                    />
+                    <span>SSL</span>
+                  </label>
                   <div className="actions-end pole-cela">
                     <button className="button primary" disabled={beziPrechod} type="submit">
                       {beziPrechod ? "Ukládám…" : "Vytvořit organizaci"}
@@ -1582,6 +1749,10 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
                 <div className="detail-pole">
                   <span>Typ</span>
                   <strong>{formatujTypOrganizace(aktivniOrganizace.typ_organizace)}</strong>
+                </div>
+                <div className="detail-pole">
+                  <span>Odesílání</span>
+                  <strong>{aktivniOrganizace.ma_vlastni_smtp ? "Vlastní SMTP" : "Systémové SMTP"}</strong>
                 </div>
                 <div className="actions-wrap">
                   <Link className="button ghost" href="/sprava/organizace">
@@ -1774,6 +1945,7 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
                             adresa: formularMista.adresa,
                             mesto: formularMista.mesto,
                             kapacita: Number(formularMista.kapacita),
+                            hlavni_fotka: formularMista.hlavni_fotka,
                           },
                           tokenSpravy,
                         ),
@@ -1842,6 +2014,28 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
                       }
                     />
                   </label>
+                  <label className="pole pole-cela">
+                    <span className="pole-label">Fotka místa</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(event) =>
+                        nastavFormularMista((aktualni) => ({
+                          ...aktualni,
+                          hlavni_fotka: event.target.files?.[0] ?? null,
+                        }))
+                      }
+                    />
+                    <span className="pole-help">
+                      Nahraj hlavní fotku sálu nebo prostoru. Zobrazí se pak i na veřejném webu.
+                    </span>
+                  </label>
+                  {nahledFotkyMista ? (
+                    <div
+                      className="admin-form-photo-preview pole-cela"
+                      style={{ backgroundImage: `url('${nahledFotkyMista}')` }}
+                    />
+                  ) : null}
                   <div className="actions-end pole-cela">
                     <button className="button primary" disabled={beziPrechod} type="submit">
                       {beziPrechod ? "Ukládám…" : "Vytvořit místo"}
@@ -1943,6 +2137,7 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
                             perex: "",
                             popis: formularAkce.popis,
                             hlavni_fotka_url: "",
+                            hlavni_fotka: formularAkce.hlavni_fotka,
                             video_url: "",
                             misto_konani: Number(formularAkce.misto_konani),
                             zacatek: new Date(formularAkce.zacatek).toISOString(),
@@ -2075,6 +2270,28 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
                       }
                     />
                   </label>
+                  <label className="pole pole-cela">
+                    <span className="pole-label">Hlavní fotka akce</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(event) =>
+                        nastavFormularAkce((aktualni) => ({
+                          ...aktualni,
+                          hlavni_fotka: event.target.files?.[0] ?? null,
+                        }))
+                      }
+                    />
+                    <span className="pole-help">
+                      Nahraj titulní fotku akce. Pokud ji nevybereš, zůstane bez vlastní nahrané fotky.
+                    </span>
+                  </label>
+                  {nahledFotkyAkce ? (
+                    <div
+                      className="admin-form-photo-preview pole-cela"
+                      style={{ backgroundImage: `url('${nahledFotkyAkce}')` }}
+                    />
+                  ) : null}
                   <div className="actions-end pole-cela">
                     <button className="button primary" disabled={beziPrechod} type="submit">
                       {beziPrechod ? "Ukládám…" : "Vytvořit akci"}

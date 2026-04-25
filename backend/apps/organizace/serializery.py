@@ -5,12 +5,21 @@ from .models import ClenstviOrganizace, Organizace
 
 
 class OrganizaceSerializer(serializers.ModelSerializer):
+    ma_vlastni_smtp = serializers.SerializerMethodField(read_only=True)
+    smtp_heslo = serializers.CharField(write_only=True, required=False, allow_blank=True)
+
     class Meta:
         model = Organizace
         fields = [
             "id",
             "nazev",
             "slug",
+            "slug_subdomeny",
+            "vlastni_domena",
+            "tenant_aktivni",
+            "nazev_verejny",
+            "verejny_popis",
+            "logo_url",
             "typ_organizace",
             "kontaktni_email",
             "kontaktni_telefon",
@@ -25,11 +34,33 @@ class OrganizaceSerializer(serializers.ModelSerializer):
             "kod_banky",
             "iban",
             "swift",
+            "smtp_aktivni",
+            "smtp_host",
+            "smtp_port",
+            "smtp_uzivatel",
+            "smtp_heslo",
+            "smtp_use_tls",
+            "smtp_use_ssl",
+            "smtp_od_email",
+            "smtp_od_jmeno",
+            "smtp_timeout",
+            "ma_vlastni_smtp",
             "je_aktivni",
             "vytvoreno",
             "upraveno",
         ]
         read_only_fields = ["id", "vytvoreno", "upraveno"]
+
+    def get_ma_vlastni_smtp(self, obj):
+        return bool(obj.smtp_aktivni and obj.smtp_host)
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        for pole in ["slug_subdomeny", "vlastni_domena", "nazev_verejny"]:
+            if pole in attrs and isinstance(attrs[pole], str):
+                hodnota = attrs[pole].strip()
+                attrs[pole] = (hodnota or None) if pole == "slug_subdomeny" else hodnota
+        return attrs
 
 
 class ClenstviOrganizaceSerializer(serializers.ModelSerializer):

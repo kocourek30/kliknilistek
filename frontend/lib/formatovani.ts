@@ -37,6 +37,24 @@ export function formatujTypOrganizace(typ: string): string {
   return mapovani[typ] ?? typ;
 }
 
+export function formatujTypAkce(typ: string | null | undefined): string {
+  const mapovani: Record<string, string> = {
+    koncert: "Koncert",
+    divadlo: "Divadlo",
+    kino: "Kino",
+    prednaska: "Přednáška",
+    ples: "Ples",
+    detske: "Pro děti",
+    komunitni: "Komunitní",
+  };
+
+  if (!typ) {
+    return "Kulturní akce";
+  }
+
+  return mapovani[typ] ?? typ;
+}
+
 export function formatujStavAkce(stav: string): string {
   const mapovani: Record<string, string> = {
     navrh: "Návrh",

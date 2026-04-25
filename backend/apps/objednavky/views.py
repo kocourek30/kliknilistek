@@ -63,6 +63,9 @@ class ObjednavkaViewSet(
             .all()
             .order_by("-vytvoreno")
             )
+        tenant_organizace = getattr(self.request, "tenant_organizace", None)
+        if tenant_organizace is not None:
+            queryset = queryset.filter(organizace=tenant_organizace)
         if self.action not in {"create", "retrieve"} and not self.request.user.is_superuser:
             queryset = queryset.filter(
                 organizace_id__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(

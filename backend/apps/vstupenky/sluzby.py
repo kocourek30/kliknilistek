@@ -1,7 +1,8 @@
 from io import BytesIO
+from email.utils import formataddr
 
 from django.conf import settings
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, get_connection
 from django.utils import timezone
 from reportlab.graphics import renderPDF
 from reportlab.graphics.barcode.qr import QrCodeWidget
@@ -10,8 +11,62 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
 
+from apps.jadro.models import NastaveniSystemu
+from apps.jadro.sluzby import zaloguj_audit
 from apps.objednavky.models import Objednavka
 from apps.vstupenky.models import EmailovaZasilka, Vstupenka
+
+
+def ziskej_globalni_smtp_nastaveni() -> NastaveniSystemu | None:
+    return NastaveniSystemu.objects.filter(pk=1).first()
+
+
+def ziskej_globalni_email_connection():
+    nastaveni = ziskej_globalni_smtp_nastaveni()
+    if nastaveni and nastaveni.smtp_aktivni and nastaveni.smtp_host:
+        return get_connection(
+            backend="django.core.mail.backends.smtp.EmailBackend",
+            host=nastaveni.smtp_host,
+            port=nastaveni.smtp_port or 587,
+            username=nastaveni.smtp_uzivatel or "",
+            password=nastaveni.smtp_heslo or "",
+            use_tls=nastaveni.smtp_use_tls,
+            use_ssl=nastaveni.smtp_use_ssl,
+            timeout=nastaveni.smtp_timeout or 20,
+        )
+    return get_connection()
+
+
+def ziskej_globalniho_odesilatele() -> str:
+    nastaveni = ziskej_globalni_smtp_nastaveni()
+    if nastaveni and nastaveni.smtp_aktivni and nastaveni.smtp_od_email:
+        if nastaveni.smtp_od_jmeno:
+            return formataddr((nastaveni.smtp_od_jmeno, nastaveni.smtp_od_email))
+        return nastaveni.smtp_od_email
+    return getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@kliknilistek.local")
+
+
+def ziskej_email_connection_pro_organizaci(organizace):
+    if organizace.smtp_aktivni and organizace.smtp_host:
+        return get_connection(
+            backend="django.core.mail.backends.smtp.EmailBackend",
+            host=organizace.smtp_host,
+            port=organizace.smtp_port or 587,
+            username=organizace.smtp_uzivatel or "",
+            password=organizace.smtp_heslo or "",
+            use_tls=organizace.smtp_use_tls,
+            use_ssl=organizace.smtp_use_ssl,
+            timeout=organizace.smtp_timeout or 20,
+        )
+    return ziskej_globalni_email_connection()
+
+
+def ziskej_odesilatele_pro_organizaci(organizace) -> str:
+    if organizace.smtp_aktivni and organizace.smtp_od_email:
+        if organizace.smtp_od_jmeno:
+            return formataddr((organizace.smtp_od_jmeno, organizace.smtp_od_email))
+        return organizace.smtp_od_email
+    return ziskej_globalniho_odesilatele()
 
 
 def vytvor_pdf_vstupenky(vstupenka: Vstupenka) -> bytes:
@@ -61,12 +116,12 @@ def vytvor_pdf_vstupenky(vstupenka: Vstupenka) -> bytes:
 
 def sestav_text_emailu(objednavka: Objednavka) -> str:
     return (
-        f"Dobry den,\n\n"
-        f"k objednavce {objednavka.verejne_id} posilame vstupenky na akci.\n"
-        f"V e-mailu najdete PDF prilohy a vstupenky jsou dostupne i pres verejny detail objednavky.\n\n"
-        f"Objednavka: {objednavka.verejne_id}\n"
+        f"Dobrý den,\n\n"
+        f"k objednávce {objednavka.verejne_id} posíláme vstupenky na akci.\n"
+        f"V e-mailu najdete PDF přílohy a vstupenky jsou dostupné i přes veřejný detail objednávky.\n\n"
+        f"Objednávka: {objednavka.verejne_id}\n"
         f"Celkem: {objednavka.celkem} {objednavka.mena}\n\n"
-        f"Dekujeme.\nKlikniListek"
+        f"Děkujeme.\nKlikniListek"
     )
 
 
@@ -97,8 +152,9 @@ def odeslat_vstupenky_objednavky(objednavka: Objednavka):
     email = EmailMessage(
         subject=zasilka.predmet,
         body=text_emailu,
-        from_email=getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@kliknilistek.local"),
+        from_email=ziskej_odesilatele_pro_organizaci(objednavka.organizace),
         to=[objednavka.email_zakaznika],
+        connection=ziskej_email_connection_pro_organizaci(objednavka.organizace),
     )
     for poradi, vstupenka in enumerate(vstupenky, start=1):
         email.attach(
@@ -113,6 +169,15 @@ def odeslat_vstupenky_objednavky(objednavka: Objednavka):
         zasilka.stav = EmailovaZasilka.Stav.CHYBA
         zasilka.chyba_text = str(error)
         zasilka.save(update_fields=["stav", "chyba_text", "upraveno"])
+        zaloguj_audit(
+            organizace=objednavka.organizace,
+            akce="vstupenky.email_chyba",
+            objekt_typ="objednavka",
+            objekt_id=str(objednavka.id),
+            objekt_popis=objednavka.verejne_id,
+            poznamka="Odeslání vstupenek e-mailem skončilo chybou.",
+            data={"prijemce": objednavka.email_zakaznika, "chyba": str(error)},
+        )
         raise
 
     cas_doruceni = timezone.now()
@@ -123,5 +188,14 @@ def odeslat_vstupenky_objednavky(objednavka: Objednavka):
     zasilka.stav = EmailovaZasilka.Stav.ODESLANO
     zasilka.odeslano_v = cas_doruceni
     zasilka.save(update_fields=["stav", "odeslano_v", "upraveno"])
+    zaloguj_audit(
+        organizace=objednavka.organizace,
+        akce="vstupenky.email_odeslan",
+        objekt_typ="objednavka",
+        objekt_id=str(objednavka.id),
+        objekt_popis=objednavka.verejne_id,
+        poznamka="Vstupenky byly úspěšně doručeny e-mailem.",
+        data={"prijemce": objednavka.email_zakaznika, "pocet_vstupenek": len(vstupenky)},
+    )
 
     return objednavka
