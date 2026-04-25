@@ -65,3 +65,24 @@ def filtruj_queryset_podle_tenanta(queryset, request):
     if tenant_organizace is None:
         return queryset
     return queryset.filter(organizace=tenant_organizace)
+
+
+def ziskej_ids_organizaci_uzivatele(request) -> list[int] | None:
+    uzivatel = getattr(request, "user", None)
+    if not uzivatel or not uzivatel.is_authenticated or uzivatel.is_superuser:
+        return None
+    return list(
+        uzivatel.clenstvi_organizaci.filter(je_aktivni=True).values_list("organizace_id", flat=True)
+    )
+
+
+def filtruj_queryset_podle_pristupu(queryset, request, pole_organizace: str = "organizace"):
+    tenant_organizace = getattr(request, "tenant_organizace", None)
+    if tenant_organizace is not None:
+        return queryset.filter(**{pole_organizace: tenant_organizace})
+
+    organizace_ids = ziskej_ids_organizaci_uzivatele(request)
+    if organizace_ids is None:
+        return queryset
+
+    return queryset.filter(**{f"{pole_organizace}_id__in": organizace_ids})

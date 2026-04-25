@@ -18,6 +18,9 @@ class Organizace(CasovyModel):
     nazev_verejny = models.CharField(max_length=255, blank=True)
     verejny_popis = models.TextField(blank=True)
     logo_url = models.URLField(blank=True)
+    logo_soubor = models.FileField(upload_to="organizace/logo/", blank=True)
+    banner_soubor = models.FileField(upload_to="organizace/banner/", blank=True)
+    banner_popis = models.CharField(max_length=255, blank=True)
     typ_organizace = models.CharField(
         max_length=32,
         choices=TypOrganizace.choices,

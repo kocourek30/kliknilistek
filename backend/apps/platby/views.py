@@ -4,6 +4,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from apps.jadro.permissions import MuzeVidetFinance
+from apps.organizace.tenant import filtruj_queryset_podle_pristupu
 from apps.objednavky.models import Objednavka
 from apps.objednavky.serializery import ObjednavkaSerializer
 
@@ -28,14 +29,9 @@ class PlatbaViewSet(
 
     def get_queryset(self):
         queryset = Platba.objects.select_related("objednavka", "organizace").all().order_by("-vytvoreno")
-        if not self.request.user.is_superuser:
-            queryset = queryset.filter(
-                organizace_id__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(
-                    "organizace_id",
-                    flat=True,
-                )
-            )
-        return queryset
+        if self.action == "simulace":
+            return queryset
+        return filtruj_queryset_podle_pristupu(queryset, self.request)
 
     @action(detail=False, methods=["post"], url_path="simulace/(?P<verejne_id>[^/.]+)")
     def simulace(self, request, verejne_id=None):

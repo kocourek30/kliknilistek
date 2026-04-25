@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 import { Hlavicka } from "@/components/hlavicka";
 import { Paticka } from "@/components/paticka";
 import { VerejnyKatalog } from "@/components/verejny-katalog";
@@ -48,16 +50,33 @@ export default async function HomePage() {
     : "Přehled akcí, jasná cena, dostupnost i jednoduchá objednávka bez zbytečných kroků. KlikniListek je navržený pro běžné návštěvníky i starší uživatele, kteří chtějí mít vše srozumitelně na jednom místě.";
   const tenantNazev =
     tenantKontext.organizace?.nazev_verejny || tenantKontext.organizace?.nazev || null;
+  const tenantLogoUrl =
+    tenantKontext.organizace?.logo_soubor_url || tenantKontext.organizace?.logo_url || null;
+  const tenantBannerUrl = tenantKontext.organizace?.banner_soubor_url || null;
   const tenantPodtitulek = tenantKontext.organizace
     ? `Kulturní program a vstupenky · ${formatujTypOrganizace(tenantKontext.organizace.typ_organizace)}`
     : null;
+  const tenantStyl = tenantKontext.organizace
+    ? ({
+        ...(tenantKontext.organizace.hlavni_barva
+          ? { "--public-accent": tenantKontext.organizace.hlavni_barva }
+          : {}),
+        ...(tenantBannerUrl ? { "--tenant-banner-image": `url('${tenantBannerUrl}')` } : {}),
+      } as CSSProperties)
+    : undefined;
 
   return (
-    <main className="verejny-shell">
-      <Hlavicka tenantNazev={tenantNazev} tenantPodtitulek={tenantPodtitulek} />
+    <main className="verejny-shell" style={tenantStyl}>
+      <Hlavicka
+        tenantNazev={tenantNazev}
+        tenantPodtitulek={tenantPodtitulek}
+        tenantLogoUrl={tenantLogoUrl}
+      />
 
       <div className="verejny-page">
-        <section className="verejny-hero">
+        <section
+          className={`verejny-hero${tenantBannerUrl ? " verejny-hero-s-bannerem" : ""}`}
+        >
           <div className="verejny-hero-copy">
             <span className="section-eyebrow">
               {tenantKontext.organizace
@@ -209,7 +228,7 @@ export default async function HomePage() {
         </section>
       </div>
 
-      <Paticka tenantNazev={tenantNazev} />
+      <Paticka tenantNazev={tenantNazev} tenantLogoUrl={tenantLogoUrl} />
     </main>
   );
 }

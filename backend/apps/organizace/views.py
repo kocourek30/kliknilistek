@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 
 from apps.jadro.permissions import MuzeSpravovatObsah, MuzeVidetSpravuObsahu
+from apps.organizace.tenant import filtruj_queryset_podle_pristupu
 from .models import ClenstviOrganizace, Organizace
 from .serializery import ClenstviOrganizaceSerializer, OrganizaceSerializer
 
@@ -15,8 +16,15 @@ class OrganizaceViewSet(viewsets.ModelViewSet):
         queryset = Organizace.objects.all().order_by("nazev")
         tenant_organizace = getattr(self.request, "tenant_organizace", None)
         if tenant_organizace is not None:
-            queryset = queryset.filter(pk=tenant_organizace.pk)
-        return queryset
+            return queryset.filter(pk=tenant_organizace.pk)
+        if self.request.user.is_superuser:
+            return queryset
+        return queryset.filter(
+            pk__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(
+                "organizace_id",
+                flat=True,
+            )
+        )
 
 
 class ClenstviOrganizaceViewSet(viewsets.ModelViewSet):
@@ -29,14 +37,7 @@ class ClenstviOrganizaceViewSet(viewsets.ModelViewSet):
             "organizace__nazev",
             "uzivatel__username",
         )
-        if not self.request.user.is_superuser:
-            queryset = queryset.filter(
-                organizace_id__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(
-                    "organizace_id",
-                    flat=True,
-                )
-            )
-        return queryset
+        return filtruj_queryset_podle_pristupu(queryset, self.request)
 
     def get_permissions(self):
         if self.request.method == "GET":

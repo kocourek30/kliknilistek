@@ -238,3 +238,862 @@ Unauthorized: /api/nastaveni-systemu/
 [25/Apr/2026 21:26:45] "GET /api/tenant-kontekst/ HTTP/1.1" 200 58
 [25/Apr/2026 21:26:45] "GET /api/akce/jarni-koncert-2026/ HTTP/1.1" 200 10493
 [25/Apr/2026 21:26:45] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 21:30:32] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 21:30:32] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 21:30:32] "GET /api/organizace/ HTTP/1.1" 200 878
+[25/Apr/2026 21:30:32] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 21:30:32] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 21:30:32] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 21:30:32] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 21:30:32] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 21:30:32] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 21:30:32] "GET /api/nastaveni-systemu/ HTTP/1.1" 200 375
+[25/Apr/2026 21:30:32] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 21:30:36] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 21:30:36] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 21:30:36] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 21:30:36] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 21:30:36] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 21:30:36] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 21:30:37] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 21:30:37] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 21:30:37] "GET /api/organizace/ HTTP/1.1" 200 878
+[25/Apr/2026 21:30:37] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 21:45:17] "GET /api/tenant-kontekst/ HTTP/1.1" 200 58
+[25/Apr/2026 21:45:17] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 21:45:17] "GET /api/organizace/ HTTP/1.1" 200 878
+[25/Apr/2026 21:45:17] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 21:45:17] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 21:45:17] "GET /api/tenant-kontekst/ HTTP/1.1" 200 58
+[25/Apr/2026 21:45:17] "GET /api/organizace/ HTTP/1.1" 200 878
+[25/Apr/2026 21:45:17] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 21:45:17] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 21:45:17] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 21:45:17] "GET /api/tenant-kontekst/ HTTP/1.1" 200 58
+[25/Apr/2026 21:45:17] "GET /api/organizace/ HTTP/1.1" 200 878
+[25/Apr/2026 21:45:17] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 21:45:17] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 21:45:17] "GET /api/akce/ HTTP/1.1" 200 10495
+C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\organizace\models.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+April 25, 2026 - 19:44:22
+Django version 5.2.9, using settings 'config.settings'
+Starting development server at http://127.0.0.1:8001/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+Watching for file changes with StatReloader
+C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\organizace\tenant.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+April 25, 2026 - 21:52:50
+Django version 5.2.9, using settings 'config.settings'
+Starting development server at http://127.0.0.1:8001/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+Watching for file changes with StatReloader
+C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\organizace\serializery.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+April 25, 2026 - 21:53:01
+Django version 5.2.9, using settings 'config.settings'
+Starting development server at http://127.0.0.1:8001/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+Watching for file changes with StatReloader
+C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\organizace\views.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+April 25, 2026 - 21:53:28
+Django version 5.2.9, using settings 'config.settings'
+Starting development server at http://127.0.0.1:8001/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+Watching for file changes with StatReloader
+C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\akce\views.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+April 25, 2026 - 21:53:43
+Django version 5.2.9, using settings 'config.settings'
+Starting development server at http://127.0.0.1:8001/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+Watching for file changes with StatReloader
+C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\objednavky\views.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+April 25, 2026 - 21:53:56
+Django version 5.2.9, using settings 'config.settings'
+Starting development server at http://127.0.0.1:8001/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+Watching for file changes with StatReloader
+C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\fakturace\views.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+April 25, 2026 - 21:54:11
+Django version 5.2.9, using settings 'config.settings'
+Starting development server at http://127.0.0.1:8001/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+Watching for file changes with StatReloader
+C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\platby\views.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+April 25, 2026 - 21:54:26
+Django version 5.2.9, using settings 'config.settings'
+Starting development server at http://127.0.0.1:8001/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+Watching for file changes with StatReloader
+C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\vstupenky\views.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+April 25, 2026 - 21:54:53
+Django version 5.2.9, using settings 'config.settings'
+Starting development server at http://127.0.0.1:8001/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+Watching for file changes with StatReloader
+[25/Apr/2026 22:09:36] "GET /api/tenant-kontekst/ HTTP/1.1" 200 58
+[25/Apr/2026 22:09:36] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:09:36] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:09:36] "GET /api/akce/ HTTP/1.1" 200 10495
+Internal Server Error: /api/organizace/
+Traceback (most recent call last):
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+                                    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\organizace\views.py", line 23, in get_queryset
+    pk__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AnonymousUser' object has no attribute 'clenstvi_organizaci'
+[25/Apr/2026 22:09:36] "GET /api/organizace/ HTTP/1.1" 500 103321
+[25/Apr/2026 22:09:40] "GET /api/tenant-kontekst/ HTTP/1.1" 200 58
+[25/Apr/2026 22:09:40] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:09:40] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:09:40] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+Internal Server Error: /api/organizace/
+Traceback (most recent call last):
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+                                    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\organizace\views.py", line 23, in get_queryset
+    pk__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AnonymousUser' object has no attribute 'clenstvi_organizaci'
+[25/Apr/2026 22:09:40] "GET /api/organizace/ HTTP/1.1" 500 103321
+[25/Apr/2026 22:09:42] "GET /api/tenant-kontekst/ HTTP/1.1" 200 58
+Internal Server Error: /api/organizace/
+Traceback (most recent call last):
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+                                    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\organizace\views.py", line 23, in get_queryset
+    pk__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AnonymousUser' object has no attribute 'clenstvi_organizaci'
+[25/Apr/2026 22:09:42] "GET /api/organizace/ HTTP/1.1" 500 103321
+[25/Apr/2026 22:09:42] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:09:42] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:09:42] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:09:43] "GET /api/tenant-kontekst/ HTTP/1.1" 200 58
+[25/Apr/2026 22:09:43] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:09:43] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:09:43] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+Internal Server Error: /api/organizace/
+Traceback (most recent call last):
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+                                    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\organizace\views.py", line 23, in get_queryset
+    pk__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AnonymousUser' object has no attribute 'clenstvi_organizaci'
+[25/Apr/2026 22:09:43] "GET /api/organizace/ HTTP/1.1" 500 103321
+[25/Apr/2026 22:09:44] "GET /api/tenant-kontekst/ HTTP/1.1" 200 58
+[25/Apr/2026 22:09:44] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+Internal Server Error: /api/organizace/
+Traceback (most recent call last):
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+                                    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\organizace\views.py", line 23, in get_queryset
+    pk__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AnonymousUser' object has no attribute 'clenstvi_organizaci'
+[25/Apr/2026 22:09:44] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:09:44] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:09:44] "GET /api/organizace/ HTTP/1.1" 500 103321
+[25/Apr/2026 22:09:51] "GET /api/tenant-kontekst/ HTTP/1.1" 200 58
+[25/Apr/2026 22:09:51] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+Internal Server Error: /api/organizace/
+Traceback (most recent call last):
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+                                    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\organizace\views.py", line 23, in get_queryset
+    pk__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AnonymousUser' object has no attribute 'clenstvi_organizaci'
+[25/Apr/2026 22:09:51] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:09:51] "GET /api/organizace/ HTTP/1.1" 500 103321
+[25/Apr/2026 22:09:51] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:09:54] "GET /api/tenant-kontekst/ HTTP/1.1" 200 58
+[25/Apr/2026 22:09:54] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:09:54] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:09:54] "GET /api/akce/ HTTP/1.1" 200 10495
+Internal Server Error: /api/organizace/
+Traceback (most recent call last):
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+                                    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\organizace\views.py", line 23, in get_queryset
+    pk__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AnonymousUser' object has no attribute 'clenstvi_organizaci'
+[25/Apr/2026 22:09:54] "GET /api/organizace/ HTTP/1.1" 500 103321
+[25/Apr/2026 22:10:24] "GET /api/tenant-kontekst/ HTTP/1.1" 200 58
+[25/Apr/2026 22:10:24] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:10:24] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+Internal Server Error: /api/organizace/
+Traceback (most recent call last):
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+                                    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\organizace\views.py", line 23, in get_queryset
+    pk__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AnonymousUser' object has no attribute 'clenstvi_organizaci'
+[25/Apr/2026 22:10:24] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:10:24] "GET /api/organizace/ HTTP/1.1" 500 103321
+[25/Apr/2026 22:10:59] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:10:59] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:10:59] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:10:59] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:10:59] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:10:59] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:10:59] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:10:59] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:10:59] "GET /api/nastaveni-systemu/ HTTP/1.1" 200 375
+[25/Apr/2026 22:10:59] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:10:59] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:11:04] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:11:04] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:11:04] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:11:04] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:11:04] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:11:04] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:11:04] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:11:04] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:11:04] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:11:04] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:12:41] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:12:41] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:12:41] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:12:41] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:12:41] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:12:41] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:12:41] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:12:41] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:12:41] "GET /api/nastaveni-systemu/ HTTP/1.1" 200 375
+[25/Apr/2026 22:12:41] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:12:41] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:13:36] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:13:36] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:13:36] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:13:36] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:13:36] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:13:36] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:13:36] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:13:36] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:13:36] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:13:36] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:13:46] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:13:46] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:13:46] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:13:46] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:13:46] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:13:46] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:13:46] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:13:46] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:13:46] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:13:46] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:14:08] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:14:08] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:14:08] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:14:08] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:14:08] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:14:08] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:14:08] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:14:08] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:14:08] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:14:08] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:14:31] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:14:31] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:14:31] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:14:32] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:14:32] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:14:32] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:14:32] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:14:32] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:14:32] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:14:32] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:14:35] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:14:35] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:14:35] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:14:35] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:14:35] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:14:35] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:14:36] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:14:36] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:14:36] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:14:39] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:14:39] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:14:39] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:14:39] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:14:39] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:14:39] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:14:39] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:14:39] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:14:39] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:14:39] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:14:42] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:14:42] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:14:42] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:14:42] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:14:42] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:14:42] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:14:42] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:14:42] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:14:42] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:14:42] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:14:44] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:14:44] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:14:44] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:14:44] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:14:44] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:14:44] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:14:45] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:14:45] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:14:45] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:14:45] "GET /api/nastaveni-systemu/ HTTP/1.1" 200 375
+[25/Apr/2026 22:14:45] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:15:04] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:15:04] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:15:04] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:15:04] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:15:04] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:15:04] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:15:04] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:15:04] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:15:05] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:15:05] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:15:09] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:15:09] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:15:10] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:15:10] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:15:10] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:15:10] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:15:10] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:15:10] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:15:10] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:15:10] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:15:48] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:15:48] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:15:48] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:15:48] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:15:48] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:15:48] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:15:48] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:15:48] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:15:48] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:15:48] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:15:48] "GET /api/nastaveni-systemu/ HTTP/1.1" 200 375
+[25/Apr/2026 22:16:17] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:16:17] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:16:17] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:16:17] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:16:17] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:16:17] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:16:18] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:16:18] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:16:18] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:16:18] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:16:43] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:16:43] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:16:43] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:16:44] "GET /api/nastaveni-systemu/ HTTP/1.1" 200 375
+[25/Apr/2026 22:16:44] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:16:44] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:16:44] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:16:44] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:16:44] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:16:44] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:16:44] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:17:18] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:17:18] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:17:18] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:17:18] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:17:18] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:17:18] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:17:18] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:17:18] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:17:18] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:17:18] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:17:24] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:17:24] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:17:24] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:17:24] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:17:24] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:17:24] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:17:24] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:17:24] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:17:24] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:17:24] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:17:28] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:17:28] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:17:28] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:17:28] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:17:28] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:17:28] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:17:29] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:17:29] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:17:29] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:17:29] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:18:02] "GET /api/tenant-kontekst/ HTTP/1.1" 200 58
+[25/Apr/2026 22:18:02] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:18:02] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:18:02] "GET /api/akce/ HTTP/1.1" 200 10495
+Internal Server Error: /api/organizace/
+Traceback (most recent call last):
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+                                    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\organizace\views.py", line 23, in get_queryset
+    pk__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AnonymousUser' object has no attribute 'clenstvi_organizaci'
+[25/Apr/2026 22:18:02] "GET /api/organizace/ HTTP/1.1" 500 103321
+[25/Apr/2026 22:18:05] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:18:05] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:18:05] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:18:05] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:18:05] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:18:05] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:18:06] "GET /api/nastaveni-systemu/ HTTP/1.1" 200 375
+[25/Apr/2026 22:18:06] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:18:06] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:18:06] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:18:06] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:18:08] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:18:08] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:18:08] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:18:08] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:18:08] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:18:08] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:18:08] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:18:08] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:18:08] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:18:09] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:18:53] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:18:54] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:18:54] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:18:54] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:18:54] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:18:54] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:18:54] "GET /api/tenant-kontekst/ HTTP/1.1" 200 58
+[25/Apr/2026 22:18:54] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:18:54] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:18:54] "GET /api/akce/ HTTP/1.1" 200 10495
+Internal Server Error: /api/organizace/
+Traceback (most recent call last):
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+                                    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\organizace\views.py", line 23, in get_queryset
+    pk__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AnonymousUser' object has no attribute 'clenstvi_organizaci'
+[25/Apr/2026 22:18:54] "GET /api/organizace/ HTTP/1.1" 500 103321
+[25/Apr/2026 22:18:54] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:18:54] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:18:54] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:18:54] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:18:56] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:18:56] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:18:56] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:18:56] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:18:56] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:18:56] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:18:57] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:18:57] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:18:57] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:18:57] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:19:04] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:19:04] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:19:04] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:19:04] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:19:04] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:19:04] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:19:05] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:19:05] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:19:05] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:19:05] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:19:05] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:19:05] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:19:05] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:19:05] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:19:05] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:19:05] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:19:06] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:19:06] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:19:06] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:19:06] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:19:30] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:19:30] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:19:30] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:19:30] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:19:30] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:19:30] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:19:30] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:19:30] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:19:31] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:19:31] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:19:32] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:19:32] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:19:32] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:19:32] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:19:32] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:19:32] "GET /api/objednavky/ HTTP/1.1" 200 98126
+[25/Apr/2026 22:19:33] "GET /api/fakturace/proformy/ HTTP/1.1" 200 86551
+[25/Apr/2026 22:19:33] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:19:33] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:19:33] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:20:34] "GET /api/tenant-kontekst/ HTTP/1.1" 200 58
+[25/Apr/2026 22:20:34] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+Internal Server Error: /api/organizace/
+Traceback (most recent call last):
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+                                    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\organizace\views.py", line 23, in get_queryset
+    pk__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AnonymousUser' object has no attribute 'clenstvi_organizaci'
+[25/Apr/2026 22:20:34] "GET /api/organizace/ HTTP/1.1" 500 103321
+[25/Apr/2026 22:20:34] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:20:34] "GET /api/akce/ HTTP/1.1" 200 10495
+[25/Apr/2026 22:20:46] "GET /api/tenant-kontekst/ HTTP/1.1" 200 58
+[25/Apr/2026 22:20:46] "GET /api/akce/jarni-koncert-2026/ HTTP/1.1" 200 10493
+[25/Apr/2026 22:20:46] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:21:31] "POST /api/objednavky/ HTTP/1.1" 201 86297
+[25/Apr/2026 22:21:31] "GET /api/objednavky/DABA78CB6B53/ HTTP/1.1" 200 86297
+[25/Apr/2026 22:21:56] "GET /api/vstupenky/CE0AA6B29E4F42AEB0CC032955032BE0/ HTTP/1.1" 200 468
+[25/Apr/2026 22:22:22] "GET /api/tenant-kontekst/ HTTP/1.1" 200 58
+[25/Apr/2026 22:22:22] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:22:22] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+Internal Server Error: /api/organizace/
+Traceback (most recent call last):
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\TomßÜKocourek\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\mixins.py", line 38, in list
+    queryset = self.filter_queryset(self.get_queryset())
+                                    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\organizace\views.py", line 23, in get_queryset
+    pk__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AnonymousUser' object has no attribute 'clenstvi_organizaci'
+[25/Apr/2026 22:22:22] "GET /api/organizace/ HTTP/1.1" 500 103321
+[25/Apr/2026 22:22:22] "GET /api/akce/ HTTP/1.1" 200 10822
+[25/Apr/2026 22:23:00] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:23:00] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:23:00] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:23:00] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:23:00] "GET /api/nastaveni-systemu/ HTTP/1.1" 200 375
+[25/Apr/2026 22:23:00] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:23:00] "GET /api/fakturace/proformy/ HTTP/1.1" 200 171499
+[25/Apr/2026 22:23:00] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:23:00] "GET /api/akce/ HTTP/1.1" 200 10822
+[25/Apr/2026 22:23:00] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:23:00] "GET /api/objednavky/ HTTP/1.1" 200 184424
+[25/Apr/2026 22:23:03] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:23:03] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:23:03] "GET /api/akce/ HTTP/1.1" 200 10822
+[25/Apr/2026 22:23:03] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:23:03] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:23:03] "GET /api/fakturace/proformy/ HTTP/1.1" 200 171499
+[25/Apr/2026 22:23:03] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:23:03] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:23:03] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:23:03] "GET /api/objednavky/ HTTP/1.1" 200 184424
+[25/Apr/2026 22:23:10] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:23:10] "GET /api/akce/ HTTP/1.1" 200 10822
+[25/Apr/2026 22:23:10] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:23:11] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:23:11] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:23:11] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:23:11] "GET /api/fakturace/proformy/ HTTP/1.1" 200 171499
+[25/Apr/2026 22:23:11] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:23:11] "GET /api/objednavky/ HTTP/1.1" 200 184424
+[25/Apr/2026 22:23:46] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:23:46] "GET /api/akce/ HTTP/1.1" 200 10822
+[25/Apr/2026 22:23:46] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:23:46] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:23:46] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:23:46] "GET /api/objednavky/ HTTP/1.1" 200 184424
+[25/Apr/2026 22:23:46] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:23:46] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:23:46] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:23:46] "GET /api/fakturace/proformy/ HTTP/1.1" 200 171499
+[25/Apr/2026 22:23:52] "GET /api/organizace/ HTTP/1.1" 200 980
+[25/Apr/2026 22:23:52] "GET /api/akce/mista-konani/ HTTP/1.1" 200 7559
+[25/Apr/2026 22:23:52] "GET /api/uzivatele/profil/ HTTP/1.1" 200 250
+[25/Apr/2026 22:23:52] "GET /api/akce/ HTTP/1.1" 200 10822
+[25/Apr/2026 22:23:52] "GET /api/akce/kategorie-vstupenek/ HTTP/1.1" 200 1296
+[25/Apr/2026 22:23:52] "GET /api/objednavky/ HTTP/1.1" 200 184424
+[25/Apr/2026 22:23:53] "GET /api/prehledy/ HTTP/1.1" 200 993
+[25/Apr/2026 22:23:53] "GET /api/organizace/clenstvi/ HTTP/1.1" 200 1104
+[25/Apr/2026 22:23:53] "GET /api/platby/ HTTP/1.1" 200 2040
+[25/Apr/2026 22:23:53] "GET /api/fakturace/proformy/ HTTP/1.1" 200 171499

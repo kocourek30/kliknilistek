@@ -4,6 +4,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from apps.jadro.permissions import MuzeVidetFinance
+from apps.organizace.tenant import filtruj_queryset_podle_pristupu
 from .models import Objednavka
 from .serializery import (
     ObjednavkaSerializer,
@@ -62,17 +63,10 @@ class ObjednavkaViewSet(
             .select_related("organizace", "proforma_doklad")
             .all()
             .order_by("-vytvoreno")
-            )
-        tenant_organizace = getattr(self.request, "tenant_organizace", None)
-        if tenant_organizace is not None:
-            queryset = queryset.filter(organizace=tenant_organizace)
+        )
+        queryset = filtruj_queryset_podle_pristupu(queryset, self.request)
         if self.action not in {"create", "retrieve"} and not self.request.user.is_superuser:
-            queryset = queryset.filter(
-                organizace_id__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(
-                    "organizace_id",
-                    flat=True,
-                )
-            )
+            return queryset
         return queryset
 
     def get_serializer_class(self):

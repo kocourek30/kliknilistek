@@ -12,6 +12,7 @@ import {
   nactiSouhrnAdministrace,
   potvrditHotovostObjednavky,
   stornovatObjednavku,
+  upravOrganizaciSprava,
   upravClenstviSprava,
   vratitObjednavku,
   vytvorAkciSprava,
@@ -23,6 +24,7 @@ import {
   type Akce,
   type ClenstviOrganizace,
   type Objednavka,
+  type Organizace,
   type PrehledSpravy,
   type ProfilSpravy,
 } from "@/lib/api";
@@ -418,11 +420,22 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
   const [beziPrechod, spustPrechod] = useTransition();
   const [nahledFotkyMista, nastavNahledFotkyMista] = useState("");
   const [nahledFotkyAkce, nastavNahledFotkyAkce] = useState("");
+  const [nahledLogaOrganizace, nastavNahledLogaOrganizace] = useState("");
+  const [nahledBanneruOrganizace, nastavNahledBanneruOrganizace] = useState("");
   const [formularPrihlaseni, nastavFormularPrihlaseni] = useState(vytvorVychoziPrihlaseni("spravce"));
 
   const [formularOrganizace, nastavFormularOrganizace] = useState({
     nazev: "",
     slug: "",
+    slug_subdomeny: "",
+    vlastni_domena: "",
+    tenant_aktivni: false,
+    nazev_verejny: "",
+    verejny_popis: "",
+    logo_url: "",
+    logo_soubor: null as File | null,
+    banner_soubor: null as File | null,
+    banner_popis: "",
     typ_organizace: "obec",
     kontaktni_email: "",
     kontaktni_telefon: "",
@@ -507,6 +520,28 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
     nastavNahledFotkyAkce(url);
     return () => URL.revokeObjectURL(url);
   }, [formularAkce.hlavni_fotka]);
+
+  useEffect(() => {
+    if (!formularOrganizace.logo_soubor) {
+      nastavNahledLogaOrganizace("");
+      return;
+    }
+
+    const url = URL.createObjectURL(formularOrganizace.logo_soubor);
+    nastavNahledLogaOrganizace(url);
+    return () => URL.revokeObjectURL(url);
+  }, [formularOrganizace.logo_soubor]);
+
+  useEffect(() => {
+    if (!formularOrganizace.banner_soubor) {
+      nastavNahledBanneruOrganizace("");
+      return;
+    }
+
+    const url = URL.createObjectURL(formularOrganizace.banner_soubor);
+    nastavNahledBanneruOrganizace(url);
+    return () => URL.revokeObjectURL(url);
+  }, [formularOrganizace.banner_soubor]);
   const [pohledObjednavek, nastavPohledObjednavek] = useState<PohledObjednavek>("vse");
   const [filtrObjednavek, nastavFiltrObjednavek] = useState({ hledani: "", stav: "vse" });
   const [razeniObjednavek, nastavRazeniObjednavek] = useState<RazeniObjednavek>("nejnovejsi");
@@ -898,6 +933,20 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
     }
   }, [filtrovaneVstupenky, rychlyDetailVstupenky]);
 
+  const aktivniOrganizace = data && parametr
+    ? data.organizace.find((organizace) => String(organizace.id) === parametr) ?? null
+    : null;
+  const aktivniClen = data && parametr
+    ? data.clenstvi.find((clen) => String(clen.id) === parametr) ?? null
+    : null;
+  const aktivniVstupenka = parametr ? vstupenky.find((vstupenka) => vstupenka.kod === parametr) ?? null : null;
+
+  useEffect(() => {
+    if (sekce === "organizace-detail" && aktivniOrganizace) {
+      predvyplnFormularOrganizace(aktivniOrganizace);
+    }
+  }, [aktivniOrganizace, sekce]);
+
   async function provedHromadnouAkci(
     akce: Array<() => Promise<unknown>>,
     zpravaUspechu: string,
@@ -1194,6 +1243,46 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
     });
   }
 
+  function predvyplnFormularOrganizace(organizace: Organizace) {
+    nastavFormularOrganizace({
+      nazev: organizace.nazev || "",
+      slug: organizace.slug || "",
+      slug_subdomeny: organizace.slug_subdomeny || "",
+      vlastni_domena: organizace.vlastni_domena || "",
+      tenant_aktivni: Boolean(organizace.tenant_aktivni),
+      nazev_verejny: organizace.nazev_verejny || "",
+      verejny_popis: organizace.verejny_popis || "",
+      logo_url: organizace.logo_url || "",
+      logo_soubor: null,
+      banner_soubor: null,
+      banner_popis: organizace.banner_popis || "",
+      typ_organizace: organizace.typ_organizace || "obec",
+      kontaktni_email: organizace.kontaktni_email || "",
+      kontaktni_telefon: organizace.kontaktni_telefon || "",
+      hlavni_barva: organizace.hlavni_barva || "#73E0BA",
+      fakturacni_nazev: organizace.fakturacni_nazev || "",
+      ico: organizace.ico || "",
+      dic: organizace.dic || "",
+      fakturacni_ulice: organizace.fakturacni_ulice || "",
+      fakturacni_mesto: organizace.fakturacni_mesto || "",
+      fakturacni_psc: organizace.fakturacni_psc || "",
+      cislo_uctu: organizace.cislo_uctu || "",
+      kod_banky: organizace.kod_banky || "",
+      iban: organizace.iban || "",
+      swift: organizace.swift || "",
+      smtp_aktivni: Boolean(organizace.smtp_aktivni),
+      smtp_host: organizace.smtp_host || "",
+      smtp_port: String(organizace.smtp_port || 587),
+      smtp_uzivatel: organizace.smtp_uzivatel || "",
+      smtp_heslo: "",
+      smtp_use_tls: Boolean(organizace.smtp_use_tls),
+      smtp_use_ssl: Boolean(organizace.smtp_use_ssl),
+      smtp_od_email: organizace.smtp_od_email || "",
+      smtp_od_jmeno: organizace.smtp_od_jmeno || "",
+      smtp_timeout: String(organizace.smtp_timeout || 20),
+    });
+  }
+
   if (stav === "cekam" || stav === "nacitani") {
     return (
       <PanelSekce
@@ -1259,13 +1348,13 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
     return null;
   }
 
-  const aktivniOrganizace = parametr
-    ? data.organizace.find((organizace) => String(organizace.id) === parametr)
-    : null;
-  const aktivniClen = parametr
-    ? data.clenstvi.find((clen) => String(clen.id) === parametr)
-    : null;
-  const aktivniVstupenka = parametr ? vstupenky.find((vstupenka) => vstupenka.kod === parametr) : null;
+  const aktualniLogoOrganizace =
+    nahledLogaOrganizace ||
+    aktivniOrganizace?.logo_soubor_url ||
+    aktivniOrganizace?.logo_url ||
+    "";
+  const aktualniBannerOrganizace =
+    nahledBanneruOrganizace || aktivniOrganizace?.banner_soubor_url || "";
 
   return (
     <div className="stack">
@@ -1387,6 +1476,8 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
                           {
                             ...formularOrganizace,
                             slug: formularOrganizace.slug || vytvorSlug(formularOrganizace.nazev),
+                            slug_subdomeny:
+                              formularOrganizace.slug_subdomeny || vytvorSlug(formularOrganizace.nazev),
                             smtp_port: Number(formularOrganizace.smtp_port || 587),
                             smtp_timeout: Number(formularOrganizace.smtp_timeout || 20),
                             je_aktivni: true,
@@ -1425,6 +1516,32 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
                     />
                   </label>
                   <label className="pole">
+                    <span className="pole-label">Subdoména</span>
+                    <input
+                      value={formularOrganizace.slug_subdomeny}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          slug_subdomeny: vytvorSlug(event.target.value),
+                        }))
+                      }
+                      placeholder="dolni-kralovice"
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Vlastní doména</span>
+                    <input
+                      value={formularOrganizace.vlastni_domena}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          vlastni_domena: event.target.value,
+                        }))
+                      }
+                      placeholder="kultura.obec.cz"
+                    />
+                  </label>
+                  <label className="pole">
                     <span className="pole-label">Typ</span>
                     <select
                       value={formularOrganizace.typ_organizace}
@@ -1440,6 +1557,109 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
                       <option value="poradatel">Pořadatel</option>
                     </select>
                   </label>
+                  <label className="pole pole-cela check-line">
+                    <input
+                      type="checkbox"
+                      checked={formularOrganizace.tenant_aktivni}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          tenant_aktivni: event.target.checked,
+                        }))
+                      }
+                    />
+                    <span>Veřejný tenant web je aktivní</span>
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Veřejný název</span>
+                    <input
+                      value={formularOrganizace.nazev_verejny}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          nazev_verejny: event.target.value,
+                        }))
+                      }
+                      placeholder="Kulturní dům Dolní Kralovice"
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Logo URL</span>
+                    <input
+                      value={formularOrganizace.logo_url}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          logo_url: event.target.value,
+                        }))
+                      }
+                      placeholder="https://..."
+                    />
+                  </label>
+                  <label className="pole pole-cela">
+                    <span className="pole-label">Veřejný popis</span>
+                    <textarea
+                      value={formularOrganizace.verejny_popis}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          verejny_popis: event.target.value,
+                        }))
+                      }
+                      rows={4}
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Logo organizace</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          logo_soubor: event.target.files?.[0] ?? null,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Banner organizace</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          banner_soubor: event.target.files?.[0] ?? null,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole pole-cela">
+                    <span className="pole-label">Popis banneru</span>
+                    <input
+                      value={formularOrganizace.banner_popis}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          banner_popis: event.target.value,
+                        }))
+                      }
+                      placeholder="Večer v kulturním domě"
+                    />
+                  </label>
+                  {nahledLogaOrganizace ? (
+                    <div
+                      className="admin-form-photo-preview admin-form-photo-preview-logo"
+                      style={{ backgroundImage: `url('${nahledLogaOrganizace}')` }}
+                    />
+                  ) : null}
+                  {nahledBanneruOrganizace ? (
+                    <div
+                      className="admin-form-photo-preview pole-cela"
+                      style={{ backgroundImage: `url('${nahledBanneruOrganizace}')` }}
+                    />
+                  ) : null}
                   <label className="pole">
                     <span className="pole-label">Kontaktní e-mail</span>
                     <input
@@ -1743,12 +1963,16 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
           <HeroSekce
             stitek="Detail organizace"
             nadpis={aktivniOrganizace.nazev}
-            popis="Kontakty, místa, akce a tým na jednom místě."
+            popis="Tenant, branding, kontakty a provoz na jednom místě."
             detaily={
               <div className="sprava-panel-body stack-mini">
                 <div className="detail-pole">
                   <span>Typ</span>
                   <strong>{formatujTypOrganizace(aktivniOrganizace.typ_organizace)}</strong>
+                </div>
+                <div className="detail-pole">
+                  <span>Tenant</span>
+                  <strong>{aktivniOrganizace.tenant_aktivni ? "Aktivní" : "Jen centrální katalog"}</strong>
                 </div>
                 <div className="detail-pole">
                   <span>Odesílání</span>
@@ -1763,7 +1987,518 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
             }
           />
           <div className="admin-sekce-grid">
-            <PanelSekce nadpis="Kontakty" popis="Základní údaje o organizaci.">
+            <PanelSekce nadpis="Tenant a branding" popis="Subdoména, veřejný název, banner a kontaktní údaje.">
+              <div className="stack">
+                <div className="detail-grid">
+                  <div className="detail-pole">
+                    <span>Subdoména</span>
+                    <strong>
+                      {aktivniOrganizace.slug_subdomeny
+                        ? `${aktivniOrganizace.slug_subdomeny}.kliknilistek.online`
+                        : "Nepřiřazeno"}
+                    </strong>
+                  </div>
+                  <div className="detail-pole">
+                    <span>Vlastní doména</span>
+                    <strong>{aktivniOrganizace.vlastni_domena || "Nepřiřazeno"}</strong>
+                  </div>
+                  <div className="detail-pole">
+                    <span>Veřejný název</span>
+                    <strong>{aktivniOrganizace.nazev_verejny || aktivniOrganizace.nazev}</strong>
+                  </div>
+                  <div className="detail-pole">
+                    <span>Akcent</span>
+                    <strong>{aktivniOrganizace.hlavni_barva || "#73E0BA"}</strong>
+                  </div>
+                </div>
+                <form
+                  className="form-grid"
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    void sObnovou(
+                      () =>
+                        upravOrganizaciSprava(
+                          aktivniOrganizace.slug,
+                          {
+                            ...formularOrganizace,
+                            slug: formularOrganizace.slug || vytvorSlug(formularOrganizace.nazev),
+                            slug_subdomeny:
+                              formularOrganizace.slug_subdomeny || vytvorSlug(formularOrganizace.nazev),
+                            smtp_port: Number(formularOrganizace.smtp_port || 587),
+                            smtp_timeout: Number(formularOrganizace.smtp_timeout || 20),
+                          },
+                          tokenSpravy,
+                        ),
+                      "Organizace byla upravena.",
+                    );
+                  }}
+                >
+                  <label className="pole">
+                    <span className="pole-label">Název</span>
+                    <input
+                      value={formularOrganizace.nazev}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          nazev: event.target.value,
+                        }))
+                      }
+                      required
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Slug</span>
+                    <input
+                      value={formularOrganizace.slug}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          slug: event.target.value,
+                        }))
+                      }
+                      required
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Subdoména</span>
+                    <input
+                      value={formularOrganizace.slug_subdomeny}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          slug_subdomeny: vytvorSlug(event.target.value),
+                        }))
+                      }
+                      placeholder="dolni-kralovice"
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Vlastní doména</span>
+                    <input
+                      value={formularOrganizace.vlastni_domena}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          vlastni_domena: event.target.value,
+                        }))
+                      }
+                      placeholder="kultura.obec.cz"
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Typ</span>
+                    <select
+                      value={formularOrganizace.typ_organizace}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          typ_organizace: event.target.value,
+                        }))
+                      }
+                    >
+                      <option value="obec">Obec</option>
+                      <option value="kulturni_dum">Kulturní dům</option>
+                      <option value="poradatel">Pořadatel</option>
+                    </select>
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Hlavní barva</span>
+                    <input
+                      type="color"
+                      value={formularOrganizace.hlavni_barva}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          hlavni_barva: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole pole-cela check-line">
+                    <input
+                      type="checkbox"
+                      checked={formularOrganizace.tenant_aktivni}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          tenant_aktivni: event.target.checked,
+                        }))
+                      }
+                    />
+                    <span>Organizace má vlastní veřejný tenant web</span>
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Veřejný název</span>
+                    <input
+                      value={formularOrganizace.nazev_verejny}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          nazev_verejny: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Logo URL</span>
+                    <input
+                      value={formularOrganizace.logo_url}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          logo_url: event.target.value,
+                        }))
+                      }
+                      placeholder="https://..."
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Kontaktní e-mail</span>
+                    <input
+                      type="email"
+                      value={formularOrganizace.kontaktni_email}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          kontaktni_email: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Telefon</span>
+                    <input
+                      value={formularOrganizace.kontaktni_telefon}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          kontaktni_telefon: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole pole-cela">
+                    <span className="pole-label">Veřejný popis</span>
+                    <textarea
+                      rows={4}
+                      value={formularOrganizace.verejny_popis}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          verejny_popis: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Logo soubor</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          logo_soubor: event.target.files?.[0] ?? null,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Banner soubor</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          banner_soubor: event.target.files?.[0] ?? null,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole pole-cela">
+                    <span className="pole-label">Popis banneru</span>
+                    <input
+                      value={formularOrganizace.banner_popis}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          banner_popis: event.target.value,
+                        }))
+                      }
+                      placeholder="Kulturní dům při večerní akci"
+                    />
+                  </label>
+                  {aktualniLogoOrganizace ? (
+                    <div
+                      className="admin-form-photo-preview admin-form-photo-preview-logo"
+                      style={{ backgroundImage: `url('${aktualniLogoOrganizace}')` }}
+                    />
+                  ) : null}
+                  {aktualniBannerOrganizace ? (
+                    <div
+                      className="admin-form-photo-preview pole-cela"
+                      style={{ backgroundImage: `url('${aktualniBannerOrganizace}')` }}
+                    />
+                  ) : null}
+                  <label className="pole">
+                    <span className="pole-label">Fakturační název</span>
+                    <input
+                      value={formularOrganizace.fakturacni_nazev}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          fakturacni_nazev: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">IČO</span>
+                    <input
+                      value={formularOrganizace.ico}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          ico: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">DIČ</span>
+                    <input
+                      value={formularOrganizace.dic}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          dic: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Číslo účtu</span>
+                    <input
+                      value={formularOrganizace.cislo_uctu}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          cislo_uctu: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Kód banky</span>
+                    <input
+                      value={formularOrganizace.kod_banky}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          kod_banky: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">IBAN</span>
+                    <input
+                      value={formularOrganizace.iban}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          iban: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">SWIFT</span>
+                    <input
+                      value={formularOrganizace.swift}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          swift: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole pole-cela">
+                    <span className="pole-label">Fakturační ulice</span>
+                    <input
+                      value={formularOrganizace.fakturacni_ulice}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          fakturacni_ulice: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Město</span>
+                    <input
+                      value={formularOrganizace.fakturacni_mesto}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          fakturacni_mesto: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">PSČ</span>
+                    <input
+                      value={formularOrganizace.fakturacni_psc}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          fakturacni_psc: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole pole-cela check-line">
+                    <input
+                      type="checkbox"
+                      checked={formularOrganizace.smtp_aktivni}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_aktivni: event.target.checked,
+                        }))
+                      }
+                    />
+                    <span>Organizace používá vlastní SMTP</span>
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">SMTP host</span>
+                    <input
+                      value={formularOrganizace.smtp_host}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_host: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Port</span>
+                    <input
+                      type="number"
+                      min={1}
+                      value={formularOrganizace.smtp_port}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_port: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">SMTP uživatel</span>
+                    <input
+                      value={formularOrganizace.smtp_uzivatel}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_uzivatel: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Nové SMTP heslo</span>
+                    <input
+                      type="password"
+                      value={formularOrganizace.smtp_heslo}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_heslo: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Odesílací e-mail</span>
+                    <input
+                      type="email"
+                      value={formularOrganizace.smtp_od_email}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_od_email: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Jméno odesílatele</span>
+                    <input
+                      value={formularOrganizace.smtp_od_jmeno}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_od_jmeno: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole">
+                    <span className="pole-label">Timeout</span>
+                    <input
+                      type="number"
+                      min={1}
+                      value={formularOrganizace.smtp_timeout}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_timeout: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="pole check-line">
+                    <input
+                      type="checkbox"
+                      checked={formularOrganizace.smtp_use_tls}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_use_tls: event.target.checked,
+                        }))
+                      }
+                    />
+                    <span>TLS</span>
+                  </label>
+                  <label className="pole check-line">
+                    <input
+                      type="checkbox"
+                      checked={formularOrganizace.smtp_use_ssl}
+                      onChange={(event) =>
+                        nastavFormularOrganizace((aktualni) => ({
+                          ...aktualni,
+                          smtp_use_ssl: event.target.checked,
+                        }))
+                      }
+                    />
+                    <span>SSL</span>
+                  </label>
+                  <div className="actions-end pole-cela">
+                    <button className="button primary" disabled={beziPrechod} type="submit">
+                      {beziPrechod ? "Ukládám…" : "Uložit organizaci"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </PanelSekce>
+            <PanelSekce nadpis="Přehled organizace" popis="Co je teď napojené na tenant a veřejný web.">
               <div className="detail-grid">
                 <div className="detail-pole">
                   <span>E-mail</span>
@@ -1774,15 +2509,13 @@ export function SpravaSekceBrana({ sekce, parametr }: Vlastnosti) {
                   <strong>{aktivniOrganizace.kontaktni_telefon || "Neuvedeno"}</strong>
                 </div>
                 <div className="detail-pole">
-                  <span>IČO</span>
-                  <strong>{aktivniOrganizace.ico || "Neuvedeno"}</strong>
+                  <span>Logo</span>
+                  <strong>{aktualniLogoOrganizace ? "Nahrané" : aktivniOrganizace.logo_url ? "Externí URL" : "Chybí"}</strong>
                 </div>
                 <div className="detail-pole">
-                  <span>Účet</span>
+                  <span>Banner</span>
                   <strong>
-                    {[aktivniOrganizace.cislo_uctu, aktivniOrganizace.kod_banky]
-                      .filter(Boolean)
-                      .join("/") || "Neuvedeno"}
+                    {aktualniBannerOrganizace ? "Nahraný banner" : "Banner zatím chybí"}
                   </strong>
                 </div>
                 <div className="detail-pole">

@@ -2,12 +2,14 @@ type HlavickaProps = {
   varianta?: "verejna" | "sprava";
   tenantNazev?: string | null;
   tenantPodtitulek?: string | null;
+  tenantLogoUrl?: string | null;
 };
 
 export function Hlavicka({
   varianta = "verejna",
   tenantNazev,
   tenantPodtitulek,
+  tenantLogoUrl,
 }: HlavickaProps) {
   if (varianta === "sprava") {
     return (
@@ -40,7 +42,11 @@ export function Hlavicka({
     <header className="verejny-topbar">
       <div className="verejny-topbar-inner">
         <a className="verejny-brand" href="/" aria-label="KlikniListek domů">
-          <div className="verejny-brand-mark">K</div>
+          {tenantLogoUrl ? (
+            <img alt={tenantNazev || "Logo organizace"} className="verejny-brand-logo" src={tenantLogoUrl} />
+          ) : (
+            <div className="verejny-brand-mark">K</div>
+          )}
           <div className="verejny-brand-copy">
             <div className="verejny-brand-title">{tenantNazev || "KlikniListek"}</div>
             <div className="verejny-brand-subtitle">

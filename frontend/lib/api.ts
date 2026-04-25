@@ -8,6 +8,11 @@ export type Organizace = {
   nazev_verejny?: string;
   verejny_popis?: string;
   logo_url?: string;
+  logo_soubor?: string;
+  logo_soubor_url?: string;
+  banner_soubor?: string;
+  banner_soubor_url?: string;
+  banner_popis?: string;
   typ_organizace: string;
   kontaktni_email: string;
   kontaktni_telefon: string;
@@ -439,6 +444,15 @@ type UpravaNastaveniSystemu = Partial<NastaveniSystemu> & {
 type NovaOrganizace = {
   nazev: string;
   slug: string;
+  slug_subdomeny?: string | null;
+  vlastni_domena?: string;
+  tenant_aktivni?: boolean;
+  nazev_verejny?: string;
+  verejny_popis?: string;
+  logo_url?: string;
+  logo_soubor?: File | null;
+  banner_soubor?: File | null;
+  banner_popis?: string;
   typ_organizace: string;
   kontaktni_email: string;
   kontaktni_telefon: string;
@@ -719,7 +733,120 @@ export async function vytvorOrganizaciSprava(
   data: NovaOrganizace,
   token: string,
 ): Promise<Organizace> {
-  return odesliJson<Organizace>("/organizace/", data, token);
+  return odesliFormData<Organizace>(
+    "/organizace/",
+    {
+      nazev: data.nazev,
+      slug: data.slug,
+      slug_subdomeny: data.slug_subdomeny ?? undefined,
+      vlastni_domena: data.vlastni_domena,
+      tenant_aktivni: data.tenant_aktivni !== undefined ? (data.tenant_aktivni ? "true" : "false") : undefined,
+      nazev_verejny: data.nazev_verejny,
+      verejny_popis: data.verejny_popis,
+      logo_url: data.logo_url,
+      logo_soubor: data.logo_soubor ?? undefined,
+      banner_soubor: data.banner_soubor ?? undefined,
+      banner_popis: data.banner_popis,
+      typ_organizace: data.typ_organizace,
+      kontaktni_email: data.kontaktni_email,
+      kontaktni_telefon: data.kontaktni_telefon,
+      hlavni_barva: data.hlavni_barva,
+      fakturacni_nazev: data.fakturacni_nazev,
+      ico: data.ico,
+      dic: data.dic,
+      fakturacni_ulice: data.fakturacni_ulice,
+      fakturacni_mesto: data.fakturacni_mesto,
+      fakturacni_psc: data.fakturacni_psc,
+      cislo_uctu: data.cislo_uctu,
+      kod_banky: data.kod_banky,
+      iban: data.iban,
+      swift: data.swift,
+      smtp_aktivni: data.smtp_aktivni ? "true" : "false",
+      smtp_host: data.smtp_host,
+      smtp_port: String(data.smtp_port),
+      smtp_uzivatel: data.smtp_uzivatel,
+      smtp_heslo: data.smtp_heslo,
+      smtp_use_tls: data.smtp_use_tls ? "true" : "false",
+      smtp_use_ssl: data.smtp_use_ssl ? "true" : "false",
+      smtp_od_email: data.smtp_od_email,
+      smtp_od_jmeno: data.smtp_od_jmeno,
+      smtp_timeout: String(data.smtp_timeout),
+      je_aktivni: data.je_aktivni ? "true" : "false",
+    },
+    token,
+  );
+}
+
+export async function upravOrganizaciSprava(
+  slug: string,
+  data: Partial<NovaOrganizace>,
+  token: string,
+): Promise<Organizace> {
+  const obsahujeSoubor =
+    (typeof File !== "undefined" && data.logo_soubor instanceof File) ||
+    (typeof File !== "undefined" && data.banner_soubor instanceof File);
+
+  if (obsahujeSoubor) {
+    return odesliFormData<Organizace>(
+      `/organizace/${slug}/`,
+      {
+        nazev: data.nazev,
+        slug: data.slug,
+        slug_subdomeny: data.slug_subdomeny ?? undefined,
+        vlastni_domena: data.vlastni_domena,
+        tenant_aktivni: data.tenant_aktivni !== undefined ? (data.tenant_aktivni ? "true" : "false") : undefined,
+        nazev_verejny: data.nazev_verejny,
+        verejny_popis: data.verejny_popis,
+        logo_url: data.logo_url,
+        logo_soubor: data.logo_soubor ?? undefined,
+        banner_soubor: data.banner_soubor ?? undefined,
+        banner_popis: data.banner_popis,
+        typ_organizace: data.typ_organizace,
+        kontaktni_email: data.kontaktni_email,
+        kontaktni_telefon: data.kontaktni_telefon,
+        hlavni_barva: data.hlavni_barva,
+        fakturacni_nazev: data.fakturacni_nazev,
+        ico: data.ico,
+        dic: data.dic,
+        fakturacni_ulice: data.fakturacni_ulice,
+        fakturacni_mesto: data.fakturacni_mesto,
+        fakturacni_psc: data.fakturacni_psc,
+        cislo_uctu: data.cislo_uctu,
+        kod_banky: data.kod_banky,
+        iban: data.iban,
+        swift: data.swift,
+        smtp_aktivni: data.smtp_aktivni !== undefined ? (data.smtp_aktivni ? "true" : "false") : undefined,
+        smtp_host: data.smtp_host,
+        smtp_port: data.smtp_port !== undefined ? String(data.smtp_port) : undefined,
+        smtp_uzivatel: data.smtp_uzivatel,
+        smtp_heslo: data.smtp_heslo,
+        smtp_use_tls: data.smtp_use_tls !== undefined ? (data.smtp_use_tls ? "true" : "false") : undefined,
+        smtp_use_ssl: data.smtp_use_ssl !== undefined ? (data.smtp_use_ssl ? "true" : "false") : undefined,
+        smtp_od_email: data.smtp_od_email,
+        smtp_od_jmeno: data.smtp_od_jmeno,
+        smtp_timeout: data.smtp_timeout !== undefined ? String(data.smtp_timeout) : undefined,
+        je_aktivni: data.je_aktivni !== undefined ? (data.je_aktivni ? "true" : "false") : undefined,
+      },
+      token,
+      "PATCH",
+    );
+  }
+
+  const odpoved = await fetch(`${zakladApi}/organizace/${slug}/`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...(vytvorHlavicky(token) ?? {}),
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!odpoved.ok) {
+    const text = await odpoved.text();
+    throw new Error(text || `Nepodarilo se upravit organizaci ${slug}: ${odpoved.status}`);
+  }
+
+  return (await odpoved.json()) as Organizace;
 }
 
 export async function vytvorMistoKonani(data: NoveMistoKonani): Promise<MistoKonani> {

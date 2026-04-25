@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.db import models
 
 from apps.jadro.permissions import MuzeSpravovatObsah
-from apps.organizace.tenant import filtruj_queryset_podle_tenanta
+from apps.organizace.tenant import filtruj_queryset_podle_pristupu
 from .models import Akce, FotkaAkce, KategorieVstupenky, MistoKonani
 from .sluzby import (
     blokovat_misto_na_akci,
@@ -22,7 +22,7 @@ class MistoKonaniViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = MistoKonani.objects.select_related("organizace").all().order_by("nazev")
-        return filtruj_queryset_podle_tenanta(queryset, self.request)
+        return filtruj_queryset_podle_pristupu(queryset, self.request)
 
 
 class AkceViewSet(viewsets.ModelViewSet):
@@ -43,7 +43,7 @@ class AkceViewSet(viewsets.ModelViewSet):
             .all()
             .order_by("zacatek")
         )
-        return filtruj_queryset_podle_tenanta(queryset, self.request)
+        return filtruj_queryset_podle_pristupu(queryset, self.request)
 
     def _vrat_detail_akce(self, akce, request):
         akce.refresh_from_db()
@@ -210,4 +210,4 @@ class KategorieVstupenkyViewSet(viewsets.ModelViewSet):
             .all()
             .order_by("akce__zacatek", "nazev")
         )
-        return filtruj_queryset_podle_tenanta(queryset, self.request)
+        return filtruj_queryset_podle_pristupu(queryset, self.request)

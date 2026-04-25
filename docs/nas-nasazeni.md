@@ -27,26 +27,33 @@ ssh uzivatel@10.0.0.108
 ## 2. Vytvoření složky projektu
 
 ```bash
-mkdir -p /volume1/docker/kliknilistek
-cd /volume1/docker/kliknilistek
+mkdir -p /volume1/docker
+cd /volume1/docker
 ```
 
-## 3. Nahrání projektu na NAS
+## 3. Klon projektu z GitHubu
 
-Z tvého počítače:
+Nejčistší je držet NAS jako běžný git checkout:
 
 ```bash
-scp -r "C:\Users\TomášKocourek\Documents\Kliknilistek_v2\*" uzivatel@10.0.0.108:/volume1/docker/kliknilistek/
+git clone https://github.com/kocourek30/kliknilistek.git Kliknilistek_v2
+cd /volume1/docker/Kliknilistek_v2
 ```
 
-Pokud používáš Git na NAS, je ještě lepší repozitář tam rovnou klonovat.
+Pokud na NASu už stará složka je, je lepší ji nejdřív zazálohovat:
+
+```bash
+cd /volume1/docker
+mv Kliknilistek_v2 Kliknilistek_v2_backup
+git clone https://github.com/kocourek30/kliknilistek.git Kliknilistek_v2
+```
 
 ## 4. Vytvoření `.env.nas`
 
 Na NAS:
 
 ```bash
-cd /volume1/docker/kliknilistek
+cd /volume1/docker/Kliknilistek_v2
 cp .env.nas.example .env.nas
 ```
 
@@ -74,7 +81,7 @@ Pokud budeš chtít i `www`, přidej:
 Na NAS:
 
 ```bash
-cd /volume1/docker/kliknilistek
+cd /volume1/docker/Kliknilistek_v2
 docker compose -f docker-compose.nas.yml --env-file .env.nas build
 docker compose -f docker-compose.nas.yml --env-file .env.nas up -d
 ```
@@ -106,9 +113,15 @@ docker compose -f docker-compose.nas.yml --env-file .env.nas exec backend python
 Po nahrání nové verze:
 
 ```bash
-cd /volume1/docker/kliknilistek
+cd /volume1/docker/Kliknilistek_v2
 docker compose -f docker-compose.nas.yml --env-file .env.nas build
 docker compose -f docker-compose.nas.yml --env-file .env.nas up -d
+```
+
+Pro kontrolu stejného commitu jako lokálně:
+
+```bash
+git rev-parse HEAD
 ```
 
 ## Poznámky

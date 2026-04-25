@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from apps.jadro.permissions import MuzeVidetFinance
+from apps.organizace.tenant import filtruj_queryset_podle_pristupu
 from apps.objednavky.models import Objednavka
 from apps.objednavky.serializery import ObjednavkaSerializer
 
@@ -33,13 +34,8 @@ class VstupenkaViewSet(
             .all()
             .order_by("id")
         )
-        if self.action == "list" and not self.request.user.is_superuser:
-            queryset = queryset.filter(
-                organizace_id__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(
-                    "organizace_id",
-                    flat=True,
-                )
-            )
+        if self.action == "list":
+            queryset = filtruj_queryset_podle_pristupu(queryset, self.request)
         objednavka_id = self.request.query_params.get("objednavka")
         if objednavka_id:
             queryset = queryset.filter(objednavka__verejne_id=objednavka_id)

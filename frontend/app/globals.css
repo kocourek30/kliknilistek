@@ -3129,6 +3129,15 @@ html[data-admin-theme="dark"] .detail-akce-spravy-hero-copy p {
   font-weight: 800;
 }
 
+.verejny-brand-logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid rgba(18, 38, 55, 0.12);
+  background: #fff;
+}
+
 .verejny-brand-copy {
   display: grid;
   gap: 2px;
@@ -3177,6 +3186,18 @@ html[data-admin-theme="dark"] .detail-akce-spravy-hero-copy p {
   grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.7fr);
   gap: 24px;
   align-items: stretch;
+}
+
+.verejny-hero-s-bannerem .verejny-hero-copy {
+  background:
+    linear-gradient(180deg, rgba(18, 33, 51, 0.26), rgba(18, 33, 51, 0.56)),
+    var(--tenant-banner-image) center/cover no-repeat;
+  color: #fefcf8;
+}
+
+.verejny-hero-s-bannerem .verejny-hero-copy p,
+.verejny-hero-s-bannerem .section-eyebrow {
+  color: rgba(254, 252, 248, 0.9);
 }
 
 .verejny-hero-copy,
@@ -4103,6 +4124,21 @@ html[data-admin-theme="dark"] .detail-akce-spravy-hero-copy p {
 .verejna-paticka-blok {
   display: grid;
   gap: 8px;
+}
+
+.verejna-paticka-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.verejna-paticka-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid rgba(18, 38, 55, 0.12);
+  background: #fff;
 }
 
 .verejna-paticka-blok p,

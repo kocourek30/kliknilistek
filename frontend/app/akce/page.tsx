@@ -4,6 +4,7 @@ import { VerejnyKatalog } from "@/components/verejny-katalog";
 import { nactiSouhrnAdministrace, nactiTenantKontext } from "@/lib/api";
 import { nactiAktualniHost } from "@/lib/tenant-server";
 import { formatujTypOrganizace } from "@/lib/formatovani";
+import type { CSSProperties } from "react";
 
 export default async function VypisAkciPage() {
   const host = await nactiAktualniHost();
@@ -11,16 +12,25 @@ export default async function VypisAkciPage() {
   const data = await nactiSouhrnAdministrace(undefined, host);
   const tenantNazev =
     tenantKontext.organizace?.nazev_verejny || tenantKontext.organizace?.nazev || null;
+  const tenantLogoUrl =
+    tenantKontext.organizace?.logo_soubor_url || tenantKontext.organizace?.logo_url || null;
   const tenantPodtitulek = tenantKontext.organizace
     ? `Kulturní program a vstupenky · ${formatujTypOrganizace(tenantKontext.organizace.typ_organizace)}`
     : null;
+  const tenantStyl = tenantKontext.organizace?.hlavni_barva
+    ? ({ "--public-accent": tenantKontext.organizace.hlavni_barva } as CSSProperties)
+    : undefined;
   const akce = [...data.akce].sort(
     (a, b) => new Date(a.zacatek).getTime() - new Date(b.zacatek).getTime(),
   );
 
   return (
-    <main className="verejny-shell">
-      <Hlavicka tenantNazev={tenantNazev} tenantPodtitulek={tenantPodtitulek} />
+    <main className="verejny-shell" style={tenantStyl}>
+      <Hlavicka
+        tenantNazev={tenantNazev}
+        tenantPodtitulek={tenantPodtitulek}
+        tenantLogoUrl={tenantLogoUrl}
+      />
 
       <div className="verejny-page">
         <section className="page-intro">
@@ -62,7 +72,7 @@ export default async function VypisAkciPage() {
         </section>
       </div>
 
-      <Paticka tenantNazev={tenantNazev} />
+      <Paticka tenantNazev={tenantNazev} tenantLogoUrl={tenantLogoUrl} />
     </main>
   );
 }

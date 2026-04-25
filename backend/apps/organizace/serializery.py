@@ -7,6 +7,10 @@ from .models import ClenstviOrganizace, Organizace
 class OrganizaceSerializer(serializers.ModelSerializer):
     ma_vlastni_smtp = serializers.SerializerMethodField(read_only=True)
     smtp_heslo = serializers.CharField(write_only=True, required=False, allow_blank=True)
+    logo_soubor = serializers.FileField(required=False, allow_null=True)
+    logo_soubor_url = serializers.SerializerMethodField(read_only=True)
+    banner_soubor = serializers.FileField(required=False, allow_null=True)
+    banner_soubor_url = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Organizace
@@ -20,6 +24,11 @@ class OrganizaceSerializer(serializers.ModelSerializer):
             "nazev_verejny",
             "verejny_popis",
             "logo_url",
+            "logo_soubor",
+            "logo_soubor_url",
+            "banner_soubor",
+            "banner_soubor_url",
+            "banner_popis",
             "typ_organizace",
             "kontaktni_email",
             "kontaktni_telefon",
@@ -53,6 +62,20 @@ class OrganizaceSerializer(serializers.ModelSerializer):
 
     def get_ma_vlastni_smtp(self, obj):
         return bool(obj.smtp_aktivni and obj.smtp_host)
+
+    def get_logo_soubor_url(self, obj):
+        request = self.context.get("request")
+        if obj.logo_soubor:
+            url = obj.logo_soubor.url
+            return request.build_absolute_uri(url) if request else url
+        return ""
+
+    def get_banner_soubor_url(self, obj):
+        request = self.context.get("request")
+        if obj.banner_soubor:
+            url = obj.banner_soubor.url
+            return request.build_absolute_uri(url) if request else url
+        return ""
 
     def validate(self, attrs):
         attrs = super().validate(attrs)

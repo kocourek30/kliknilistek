@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from apps.jadro.permissions import MuzeVidetFinance
+from apps.organizace.tenant import filtruj_queryset_podle_pristupu
 
 from .models import ProformaDoklad
 from .serializery import ProformaDokladSerializer
@@ -24,14 +25,9 @@ class ProformaDokladViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, vi
 
     def get_queryset(self):
         queryset = ProformaDoklad.objects.select_related("objednavka", "organizace").all().order_by("-vytvoreno")
-        if not self.request.user.is_authenticated or self.request.user.is_superuser:
+        if self.action == "verejne_pdf":
             return queryset
-        return queryset.filter(
-            organizace_id__in=self.request.user.clenstvi_organizaci.filter(je_aktivni=True).values_list(
-                "organizace_id",
-                flat=True,
-            )
-        )
+        return filtruj_queryset_podle_pristupu(queryset, self.request)
 
     @action(detail=True, methods=["post"], url_path="oznacit-jako-zaplacene")
     def oznacit_jako_zaplacene(self, request, cislo_dokladu=None):
