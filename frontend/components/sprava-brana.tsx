@@ -658,9 +658,6 @@ export function SpravaBrana() {
               </Box>
               <Box>
                 <Typography sx={{ fontWeight: 700 }}>{prechod.nazev}</Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.75, lineHeight: 1.6 }}>
-                  {prechod.popis}
-                </Typography>
               </Box>
               <Stack direction="row" spacing={1} sx={{ alignItems: "center", color: "primary.main", fontWeight: 700 }}>
                 <Typography variant="body2" color="inherit">
