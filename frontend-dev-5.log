@@ -46,3 +46,38 @@
  GET /api_proxy/fakturace/proformy 200 in 483ms
  GET /api_proxy/akce/kategorie-vstupenek 200 in 445ms
  GET /api_proxy/objednavky 200 in 527ms
+ GET /akce/jarni-koncert-2026 200 in 204ms
+ ÔŚő Compiling /sprava ...
+ Ôťô Compiled /sprava in 2.7s (2092 modules)
+ GET /sprava 200 in 3255ms
+ Ôťô Compiled /api_proxy/[...cesta] in 236ms (1294 modules)
+ GET /api_proxy/organizace/clenstvi 200 in 1135ms
+ GET /api_proxy/akce/kategorie-vstupenek 200 in 1169ms
+ GET /api_proxy/organizace 200 in 1284ms
+ GET /api_proxy/akce 200 in 1286ms
+ GET /api_proxy/akce/mista-konani 200 in 1235ms
+ GET /api_proxy/prehledy 200 in 1344ms
+ GET /api_proxy/fakturace/proformy 200 in 822ms
+ GET /api_proxy/uzivatele/profil 200 in 713ms
+ GET /api_proxy/platby 200 in 749ms
+ GET /api_proxy/nastaveni-systemu 200 in 726ms
+ GET /api_proxy/objednavky 200 in 789ms
+ PATCH /api_proxy/nastaveni-systemu 401 in 35ms
+ GET /akce/jarni-koncert-2026 200 in 239ms
+ GET /sprava 200 in 463ms
+ GET /api_proxy/organizace 200 in 776ms
+ GET /api_proxy/uzivatele/profil 200 in 803ms
+ GET /api_proxy/akce 200 in 803ms
+ GET /api_proxy/akce/mista-konani 200 in 842ms
+ GET /api_proxy/organizace/clenstvi 200 in 890ms
+ GET /api_proxy/akce/kategorie-vstupenek 200 in 1001ms
+ GET /api_proxy/fakturace/proformy 200 in 798ms
+ GET /api_proxy/nastaveni-systemu 200 in 820ms
+ GET /api_proxy/platby 200 in 706ms
+ GET /api_proxy/prehledy 200 in 912ms
+ GET /api_proxy/objednavky 200 in 947ms
+ GET / 200 in 67ms
+ GET / 200 in 88ms
+ GET / 200 in 83ms
+ Ôťô Compiled in 821ms (2092 modules)
+[?25h
