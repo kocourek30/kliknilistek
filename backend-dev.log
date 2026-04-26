@@ -2143,3 +2143,27 @@ Quit the server with CTRL-BREAK.
 WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
 For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
 Watching for file changes with StatReloader
+C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\organizace\serializery.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+April 26, 2026 - 10:21:25
+Django version 5.2.9, using settings 'config.settings'
+Starting development server at http://127.0.0.1:8001/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+Watching for file changes with StatReloader
+C:\Users\TomßÜKocourek\Documents\Kliknilistek_v2\backend\apps\organizace\serializery.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+April 26, 2026 - 10:29:18
+Django version 5.2.9, using settings 'config.settings'
+Starting development server at http://127.0.0.1:8001/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+Watching for file changes with StatReloader

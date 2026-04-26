@@ -79,10 +79,36 @@ class OrganizaceSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
+        smtp_aktivni = attrs.get("smtp_aktivni")
+        smtp_host = (attrs.get("smtp_host") or "").strip()
+        smtp_uzivatel = (attrs.get("smtp_uzivatel") or "").strip()
+        smtp_heslo = (attrs.get("smtp_heslo") or "").strip()
+
         for pole in ["slug_subdomeny", "vlastni_domena", "nazev_verejny"]:
             if pole in attrs and isinstance(attrs[pole], str):
                 hodnota = attrs[pole].strip()
                 attrs[pole] = (hodnota or None) if pole == "slug_subdomeny" else hodnota
+
+        if "smtp_host" in attrs:
+            attrs["smtp_host"] = smtp_host
+        if "smtp_uzivatel" in attrs:
+            attrs["smtp_uzivatel"] = smtp_uzivatel
+        if "smtp_heslo" in attrs and smtp_heslo == "":
+            attrs.pop("smtp_heslo", None)
+
+        if smtp_aktivni:
+            chybejici = []
+            if not smtp_host:
+                chybejici.append("SMTP host")
+            if not smtp_uzivatel:
+                chybejici.append("SMTP uživatel")
+            if not smtp_heslo and self.instance is None:
+                chybejici.append("SMTP heslo")
+            if chybejici:
+                raise serializers.ValidationError(
+                    "Pro aktivní SMTP doplň: " + ", ".join(chybejici).replace("SMTP ", "").lower() + "."
+                )
+
         return attrs
 
 
