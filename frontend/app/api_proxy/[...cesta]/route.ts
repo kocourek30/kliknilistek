@@ -37,7 +37,6 @@ async function preposliNaBackend(request: NextRequest, context: { params: Promis
           : {}),
       },
       body: maTelo ? request.body : undefined,
-      duplex: maTelo ? "half" : undefined,
       cache: "no-store",
     });
 
