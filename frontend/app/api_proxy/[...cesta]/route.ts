@@ -17,7 +17,13 @@ async function preposliNaBackend(request: NextRequest, context: { params: Promis
   const maTelo = !["GET", "HEAD"].includes(request.method);
 
   try {
-    const odpoved = await fetch(cilovaUrl, {
+    const contentType = request.headers.get("content-type") ?? "";
+    const requestBody = !maTelo
+      ? undefined
+      : contentType.includes("application/json")
+        ? await request.text()
+        : await request.arrayBuffer();
+    const init: RequestInit = {
       method: request.method,
       headers: {
         Accept: request.headers.get("accept") ?? "application/json",
@@ -36,9 +42,11 @@ async function preposliNaBackend(request: NextRequest, context: { params: Promis
           ? { "Content-Type": request.headers.get("content-type") as string }
           : {}),
       },
-      body: maTelo ? request.body : undefined,
+      body: requestBody,
       cache: "no-store",
-    });
+    };
+
+    const odpoved = await fetch(cilovaUrl, init);
 
     const telo = await odpoved.arrayBuffer();
 

@@ -557,18 +557,53 @@ type OdpovedApiChyby = {
   [klic: string]: unknown;
 };
 
+function prevedHodnotuChybyNaText(hodnota: unknown): string {
+  if (typeof hodnota === "string") {
+    return hodnota;
+  }
+
+  if (Array.isArray(hodnota)) {
+    return hodnota.map(prevedHodnotuChybyNaText).filter(Boolean).join(", ");
+  }
+
+  if (hodnota && typeof hodnota === "object") {
+    return Object.entries(hodnota)
+      .map(([klic, vnorenaHodnota]) => `${klic}: ${prevedHodnotuChybyNaText(vnorenaHodnota)}`)
+      .filter(Boolean)
+      .join("; ");
+  }
+
+  return "";
+}
+
+function vytvorZpravuZApiChyby(data: OdpovedApiChyby): string {
+  if (typeof data.detail === "string" && data.detail.trim()) {
+    return data.detail;
+  }
+
+  return Object.entries(data)
+    .map(([klic, hodnota]) => {
+      const text = prevedHodnotuChybyNaText(hodnota);
+      return text ? `${klic}: ${text}` : "";
+    })
+    .filter(Boolean)
+    .join("; ");
+}
+
 function vytvorHlavicky(token?: string, extraHlavicky?: HeadersInit): HeadersInit | undefined {
   const hlavicky = new Headers(extraHlavicky);
 
   if (token) {
     if (typeof window !== "undefined") {
       hlavicky.set("X-Sprava-Token", token);
+      hlavicky.set("Authorization", token);
     } else {
       hlavicky.set("Authorization", token);
     }
   }
 
-  return Array.from(hlavicky.keys()).length > 0 ? hlavicky : undefined;
+  const polozky = Array.from(hlavicky.entries());
+  return polozky.length > 0 ? Object.fromEntries(polozky) : undefined;
 }
 
 async function vytvorApiChybu(odpoved: Response, cesta: string, akce: "nacist" | "odeslat") {
@@ -576,8 +611,9 @@ async function vytvorApiChybu(odpoved: Response, cesta: string, akce: "nacist" |
 
   try {
     const data = (await odpoved.json()) as OdpovedApiChyby;
-    if (typeof data.detail === "string" && data.detail.trim()) {
-      zprava = data.detail;
+    const apiZprava = vytvorZpravuZApiChyby(data);
+    if (apiZprava) {
+      zprava = apiZprava;
     }
   } catch {
     try {
@@ -733,19 +769,66 @@ export async function vytvorOrganizaciSprava(
   data: NovaOrganizace,
   token: string,
 ): Promise<Organizace> {
-  return odesliFormData<Organizace>(
+  const obsahujeSoubor =
+    (typeof File !== "undefined" && data.logo_soubor instanceof File) ||
+    (typeof File !== "undefined" && data.banner_soubor instanceof File);
+
+  if (obsahujeSoubor) {
+    return odesliFormData<Organizace>(
+      "/organizace/",
+      {
+        nazev: data.nazev,
+        slug: data.slug,
+        slug_subdomeny: data.slug_subdomeny ?? undefined,
+        vlastni_domena: data.vlastni_domena,
+        tenant_aktivni: data.tenant_aktivni !== undefined ? (data.tenant_aktivni ? "true" : "false") : undefined,
+        nazev_verejny: data.nazev_verejny,
+        verejny_popis: data.verejny_popis,
+        logo_url: data.logo_url,
+        logo_soubor: data.logo_soubor ?? undefined,
+        banner_soubor: data.banner_soubor ?? undefined,
+        banner_popis: data.banner_popis,
+        typ_organizace: data.typ_organizace,
+        kontaktni_email: data.kontaktni_email,
+        kontaktni_telefon: data.kontaktni_telefon,
+        hlavni_barva: data.hlavni_barva,
+        fakturacni_nazev: data.fakturacni_nazev,
+        ico: data.ico,
+        dic: data.dic,
+        fakturacni_ulice: data.fakturacni_ulice,
+        fakturacni_mesto: data.fakturacni_mesto,
+        fakturacni_psc: data.fakturacni_psc,
+        cislo_uctu: data.cislo_uctu,
+        kod_banky: data.kod_banky,
+        iban: data.iban,
+        swift: data.swift,
+        smtp_aktivni: data.smtp_aktivni ? "true" : "false",
+        smtp_host: data.smtp_host,
+        smtp_port: String(data.smtp_port),
+        smtp_uzivatel: data.smtp_uzivatel,
+        smtp_heslo: data.smtp_heslo,
+        smtp_use_tls: data.smtp_use_tls ? "true" : "false",
+        smtp_use_ssl: data.smtp_use_ssl ? "true" : "false",
+        smtp_od_email: data.smtp_od_email,
+        smtp_od_jmeno: data.smtp_od_jmeno,
+        smtp_timeout: String(data.smtp_timeout),
+        je_aktivni: data.je_aktivni ? "true" : "false",
+      },
+      token,
+    );
+  }
+
+  return odesliJson<Organizace>(
     "/organizace/",
     {
       nazev: data.nazev,
       slug: data.slug,
       slug_subdomeny: data.slug_subdomeny ?? undefined,
       vlastni_domena: data.vlastni_domena,
-      tenant_aktivni: data.tenant_aktivni !== undefined ? (data.tenant_aktivni ? "true" : "false") : undefined,
+      tenant_aktivni: data.tenant_aktivni ?? false,
       nazev_verejny: data.nazev_verejny,
       verejny_popis: data.verejny_popis,
       logo_url: data.logo_url,
-      logo_soubor: data.logo_soubor ?? undefined,
-      banner_soubor: data.banner_soubor ?? undefined,
       banner_popis: data.banner_popis,
       typ_organizace: data.typ_organizace,
       kontaktni_email: data.kontaktni_email,
@@ -761,17 +844,17 @@ export async function vytvorOrganizaciSprava(
       kod_banky: data.kod_banky,
       iban: data.iban,
       swift: data.swift,
-      smtp_aktivni: data.smtp_aktivni ? "true" : "false",
+      smtp_aktivni: data.smtp_aktivni ?? false,
       smtp_host: data.smtp_host,
-      smtp_port: String(data.smtp_port),
+      smtp_port: data.smtp_port,
       smtp_uzivatel: data.smtp_uzivatel,
       smtp_heslo: data.smtp_heslo,
-      smtp_use_tls: data.smtp_use_tls ? "true" : "false",
-      smtp_use_ssl: data.smtp_use_ssl ? "true" : "false",
+      smtp_use_tls: data.smtp_use_tls ?? true,
+      smtp_use_ssl: data.smtp_use_ssl ?? false,
       smtp_od_email: data.smtp_od_email,
       smtp_od_jmeno: data.smtp_od_jmeno,
-      smtp_timeout: String(data.smtp_timeout),
-      je_aktivni: data.je_aktivni ? "true" : "false",
+      smtp_timeout: data.smtp_timeout,
+      je_aktivni: data.je_aktivni ?? true,
     },
     token,
   );
@@ -1347,7 +1430,7 @@ export function vytvorTokenSpravy(uzivatel: string, heslo: string): string {
   return `Basic ${Buffer.from(`${uzivatel}:${heslo}`).toString("base64")}`;
 }
 
-const ukazkovaData: SouhrnAdministrace = {
+export const ukazkovaData: SouhrnAdministrace = {
   organizace: [
     {
       id: 1,
@@ -1576,7 +1659,7 @@ const ukazkovaData: SouhrnAdministrace = {
   proformy: [],
 };
 
-const ukazkovyPrehledSpravy: PrehledSpravy = {
+export const ukazkovyPrehledSpravy: PrehledSpravy = {
   souhrn: {
     organizace_celkem: 1,
     akce_celkem: 1,

@@ -1974,6 +1974,34 @@ html[data-admin-theme="dark"] .detail-pole {
   padding: 10px 12px;
 }
 
+.pole input[type="checkbox"],
+.pole-checkbox input[type="checkbox"],
+.check-line input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  min-height: 18px;
+  min-width: 18px;
+  padding: 0;
+  margin: 0;
+  flex: 0 0 auto;
+  accent-color: var(--akcent);
+}
+
+.pole-checkbox,
+.check-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.check-line {
+  grid-column: 1 / -1;
+}
+
+.check-line span {
+  line-height: 1.35;
+}
+
 .pole textarea {
   min-height: 116px;
   resize: vertical;

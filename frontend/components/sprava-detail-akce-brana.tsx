@@ -390,6 +390,8 @@ export function SpravaDetailAkceBrana({ slug }: Vlastnosti) {
           className="detail-akce-spravy-hero-copy"
           style={{
             backgroundImage: `linear-gradient(180deg, rgba(14, 25, 38, 0.78), rgba(10, 18, 28, 0.96)), url('${obrazekPozadi}')`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
         >
           <div className="hero-meta">

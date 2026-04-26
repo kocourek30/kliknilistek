@@ -17,6 +17,8 @@ class OrganizaceViewSet(viewsets.ModelViewSet):
         tenant_organizace = getattr(self.request, "tenant_organizace", None)
         if tenant_organizace is not None:
             return queryset.filter(pk=tenant_organizace.pk)
+        if not self.request.user.is_authenticated:
+            return queryset.none()
         if self.request.user.is_superuser:
             return queryset
         return queryset.filter(

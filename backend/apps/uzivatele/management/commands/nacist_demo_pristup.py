@@ -10,6 +10,16 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         uzivatel_model = get_user_model()
         organizace = Organizace.objects.order_by("id").first()
+        if organizace is None:
+            organizace = Organizace.objects.create(
+                nazev="Dolni Kralovice",
+                slug="dolni-kralovice",
+                typ_organizace=Organizace.TypOrganizace.OBEC,
+                kontaktni_email="kultura@dolni-kralovice.cz",
+                kontaktni_telefon="+420 777 123 456",
+                hlavni_barva="#57C7A5",
+                je_aktivni=True,
+            )
         definice_uctu = [
             {
                 "username": "spravce",
@@ -52,12 +62,13 @@ class Command(BaseCommand):
             uzivatel.is_superuser = definice["is_superuser"]
             uzivatel.save(update_fields=["password", "email", "is_staff", "is_superuser"])
 
-            if organizace is not None:
-                ClenstviOrganizace.objects.get_or_create(
-                    organizace=organizace,
-                    uzivatel=uzivatel,
-                    role=definice["role"],
-                    defaults={"je_aktivni": True},
-                )
+            ClenstviOrganizace.objects.update_or_create(
+                organizace=organizace,
+                uzivatel=uzivatel,
+                role=definice["role"],
+                defaults={"je_aktivni": True},
+            )
 
-        self.stdout.write(self.style.SUCCESS("Demo uzivatele spravy byli pripraveny.")) 
+        self.stdout.write(
+            self.style.SUCCESS(f"Demo uzivatele spravy byli pripraveny pro organizaci {organizace.nazev}.")
+        )
