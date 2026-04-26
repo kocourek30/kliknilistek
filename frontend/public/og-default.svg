@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#8ee5d2"/>
+      <stop offset="100%" stop-color="#7db9ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#f6f3ee"/>
+  <rect x="36" y="36" width="1128" height="558" rx="30" fill="#fffdfa" stroke="rgba(18,33,51,0.08)"/>
+  <rect x="84" y="84" width="84" height="84" rx="20" fill="url(#g)"/>
+  <text x="126" y="140" text-anchor="middle" font-size="42" font-family="Arial, sans-serif" font-weight="800" fill="#102132">K</text>
+  <text x="198" y="138" font-size="34" font-family="Arial, sans-serif" font-weight="800" fill="#122133">KlikniListek</text>
+  <text x="84" y="270" font-size="70" font-family="Arial, sans-serif" font-weight="800" fill="#122133">
+    <tspan x="84" dy="0">Kulturní akce a vstupenky</tspan>
+    <tspan x="84" dy="86">pro obce a místní pořadatele</tspan>
+  </text>
+  <text x="84" y="478" font-size="30" font-family="Arial, sans-serif" fill="#314659">
+    <tspan x="84" dy="0">Přehledný program, detail akce, výběr vstupenek</tspan>
+    <tspan x="84" dy="44">a rychlá objednávka na jednom místě.</tspan>
+  </text>
+</svg>

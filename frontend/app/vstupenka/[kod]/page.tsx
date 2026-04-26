@@ -1,8 +1,22 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 
 import { Hlavicka } from "@/components/hlavicka";
 import { nactiVstupenku } from "@/lib/api";
 import { formatujDatum } from "@/lib/formatovani";
+
+export const metadata: Metadata = {
+  title: "Digitální vstupenka",
+  description: "Soukromý detail digitální vstupenky pro vstup na akci.",
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
+};
 
 type DetailVstupenkyPageProps = {
   params: Promise<{

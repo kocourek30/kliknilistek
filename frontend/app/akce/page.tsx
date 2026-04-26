@@ -5,6 +5,8 @@ import { nactiSouhrnAdministrace, nactiTenantKontext } from "@/lib/api";
 import { nactiAktualniHost } from "@/lib/tenant-server";
 import { formatujTypOrganizace } from "@/lib/formatovani";
 import type { CSSProperties } from "react";
+import type { Metadata } from "next";
+import { vytvorAbsolutniUrl, vytvorSeoTitulek } from "@/lib/seo";
 
 export default async function VypisAkciPage() {
   const host = await nactiAktualniHost();
@@ -75,4 +77,35 @@ export default async function VypisAkciPage() {
       <Paticka tenantNazev={tenantNazev} tenantLogoUrl={tenantLogoUrl} />
     </main>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const host = await nactiAktualniHost();
+  const tenantKontext = await nactiTenantKontext(host);
+  const tenant = tenantKontext.organizace;
+  const nazev = tenant
+    ? `Program organizace ${tenant.nazev_verejny || tenant.nazev}`
+    : "Přehled kulturních akcí";
+  const popis = tenant
+    ? `Program, termíny a vstupenky pro ${tenant.nazev_verejny || tenant.nazev}.`
+    : "Přehled kulturních akcí, koncertů, divadel a místních programů s online rezervací a nákupem vstupenek.";
+
+  return {
+    title: vytvorSeoTitulek(nazev),
+    description: popis,
+    alternates: {
+      canonical: vytvorAbsolutniUrl("/akce", host),
+    },
+    openGraph: {
+      title: nazev,
+      description: popis,
+      url: vytvorAbsolutniUrl("/akce", host),
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title: nazev,
+      description: popis,
+    },
+  };
 }

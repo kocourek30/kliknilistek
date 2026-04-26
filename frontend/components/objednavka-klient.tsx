@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { IconClockHour4, IconReceipt2, IconTicket } from "@tabler/icons-react";
 
 import { PlanSalu } from "@/components/plan-salu";
 import type { Akce, KategorieVstupenky } from "@/lib/api";
@@ -159,6 +160,7 @@ export function ObjednavkaKlient({ akce, kategorieVstupenek }: Vlastnosti) {
     0,
   );
   const mena = polozkyObjednavky[0]?.mena ?? aktivniKategorie[0]?.mena ?? "CZK";
+  const maFluidniRozlozeni = maSchemaMist;
 
   function zmenMnozstvi(kategorieId: number, delta: number) {
     nastavMnozstvi((aktualni) => {
@@ -254,7 +256,36 @@ export function ObjednavkaKlient({ akce, kategorieVstupenek }: Vlastnosti) {
         </div>
       </div>
 
-      <form className="checkout-layout" onSubmit={odesliObjednavku}>
+      {maFluidniRozlozeni ? (
+        <div className="checkout-selection-bar" aria-label="Průběžný stav výběru">
+          <div className="checkout-selection-pill">
+            <div className="checkout-selection-pill-heading">
+              <IconTicket aria-hidden="true" size={16} stroke={1.8} />
+              <strong>{celkemKusu}</strong>
+            </div>
+            <span>{celkemKusu === 1 ? "vybrané místo" : "vybraných míst / vstupenek"}</span>
+          </div>
+          <div className="checkout-selection-pill">
+            <div className="checkout-selection-pill-heading">
+              <IconReceipt2 aria-hidden="true" size={16} stroke={1.8} />
+              <strong>{formatujCastku(String(celkemCena), mena)}</strong>
+            </div>
+            <span>průběžný součet</span>
+          </div>
+          <div className="checkout-selection-pill">
+            <div className="checkout-selection-pill-heading">
+              <IconClockHour4 aria-hidden="true" size={16} stroke={1.8} />
+              <strong>{akce.rezervace_platnost_minuty} min</strong>
+            </div>
+            <span>čas na dokončení</span>
+          </div>
+        </div>
+      ) : null}
+
+      <form
+        className={`checkout-layout${maFluidniRozlozeni ? " checkout-layout-fluid" : ""}`}
+        onSubmit={odesliObjednavku}
+      >
         <div className="checkout-main">
           <section className="verejny-surface verejny-surface-spacious">
             <div className="section-heading">
@@ -425,8 +456,77 @@ export function ObjednavkaKlient({ akce, kategorieVstupenek }: Vlastnosti) {
 
             {chyba ? <div className="public-alert public-alert-error">{chyba}</div> : null}
           </section>
+
+          {maFluidniRozlozeni ? (
+            <section className="verejny-surface verejny-surface-spacious checkout-summary checkout-summary-inline">
+              <div className="section-heading">
+                <div>
+                  <span className="section-eyebrow">Shrnutí</span>
+                  <h3>Tvoje objednávka</h3>
+                  <p>Nejdřív vyber místa a údaje, potvrzení objednávky je až pod celým výběrem.</p>
+                </div>
+              </div>
+
+              <div className="summary-event-card">
+                <strong>{akce.nazev}</strong>
+                <span>{akce.misto_konani_nazev}</span>
+              </div>
+
+              <div className="summary-list">
+                {polozkyObjednavky.length ? (
+                  polozkyObjednavky.map((polozka) => (
+                    <div key={polozka.id} className="summary-row">
+                      <div>
+                        <strong>{polozka.nazev}</strong>
+                        <small>
+                          {polozka.pocet} × {formatujCastku(polozka.cena, polozka.mena)}
+                        </small>
+                        {"vybrana_mista" in polozka && polozka.vybrana_mista?.length ? (
+                          <div className="summary-tags">
+                            {polozka.vybrana_mista.map((misto) => (
+                              <span key={misto}>{formatujKratkeOznaceniMista(misto)}</span>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
+                      <strong>{formatujCastku(String(Number(polozka.cena) * polozka.pocet), polozka.mena)}</strong>
+                    </div>
+                  ))
+                ) : (
+                  <div className="empty-inline-state">
+                    Zatím nemáš vybranou žádnou vstupenku.
+                  </div>
+                )}
+              </div>
+
+              <div className="summary-total">
+                <span>Celkem</span>
+                <strong>{formatujCastku(String(celkemCena), mena)}</strong>
+              </div>
+
+              <div className="summary-note-list">
+                <div>
+                  <strong>{celkemKusu}</strong>
+                  <span>{celkemKusu === 1 ? "položka" : "položek"} v objednávce</span>
+                </div>
+                <div>
+                  <strong>{akce.rezervace_platnost_minuty} min</strong>
+                  <span>čas na dokončení objednávky</span>
+                </div>
+              </div>
+
+              <button
+                className="kulturni-button kulturni-button-primary checkout-submit"
+                disabled={odesilaSe}
+                type="submit"
+              >
+                {odesilaSe ? "Zakládám objednávku..." : "Pokračovat k potvrzení"}
+              </button>
+            </section>
+          ) : null}
         </div>
 
+        {!maFluidniRozlozeni ? (
         <aside className="checkout-summary">
           <div className="verejny-surface verejny-surface-sticky">
             <div className="section-heading">
@@ -490,6 +590,7 @@ export function ObjednavkaKlient({ akce, kategorieVstupenek }: Vlastnosti) {
             </button>
           </div>
         </aside>
+        ) : null}
       </form>
     </div>
   );

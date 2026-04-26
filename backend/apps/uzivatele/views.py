@@ -2,7 +2,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.jadro.permissions import ziskej_opravneni_uzivatele
+from apps.jadro.permissions import uzivatel_je_superuser, ziskej_opravneni_uzivatele
 
 
 class ProfilSpravyView(APIView):
@@ -21,10 +21,10 @@ class ProfilSpravyView(APIView):
         return Response(
             {
                 "uzivatel": request.user.get_username(),
-                "je_spravce": any(
-                    polozka["role"] in {"vlastnik", "spravce"} for polozka in clenstvi
-                ),
-                "ma_pristup_do_spravy": any(True for _ in clenstvi),
+                "je_spravce": uzivatel_je_superuser(request.user)
+                or any(polozka["role"] in {"vlastnik", "spravce"} for polozka in clenstvi),
+                "ma_pristup_do_spravy": uzivatel_je_superuser(request.user)
+                or any(True for _ in clenstvi),
                 "opravneni": ziskej_opravneni_uzivatele(request.user),
                 "clenstvi": [
                     {

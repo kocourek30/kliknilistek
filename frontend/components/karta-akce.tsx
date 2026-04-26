@@ -1,4 +1,13 @@
+import {
+  IconArrowRight,
+  IconCalendarEvent,
+  IconMapPin,
+  IconTicket,
+  IconUsers,
+} from "@tabler/icons-react";
+
 import type { Akce, KategorieVstupenky } from "@/lib/api";
+import { ziskejHlavniObrazekAkce } from "@/lib/obrazky";
 import { formatujCastku, formatujDatum, formatujTypAkce } from "@/lib/formatovani";
 
 type Vlastnosti = {
@@ -14,6 +23,10 @@ export function KartaAkce({ akce, kategorieVstupenek }: Vlastnosti) {
 
   const jeVyprodano = akce.stav === "vyprodano";
   const datum = formatujDatum(akce.zacatek);
+  const obrazekAkce = ziskejHlavniObrazekAkce(
+    akce,
+    "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80",
+  );
 
   return (
     <article className="event-card">
@@ -21,12 +34,7 @@ export function KartaAkce({ akce, kategorieVstupenek }: Vlastnosti) {
         <img
           alt={akce.nazev}
           className="event-card-image"
-          src={
-            akce.hlavni_fotka_soubor_url ||
-            akce.hlavni_fotka_url ||
-            akce.misto_konani_hlavni_fotka_url ||
-            "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80"
-          }
+          src={obrazekAkce}
         />
         <div className="event-card-overlay">
           <span className="event-date-badge">{datum}</span>
@@ -50,19 +58,19 @@ export function KartaAkce({ akce, kategorieVstupenek }: Vlastnosti) {
         </div>
         <dl className="event-card-meta">
           <div>
-            <dt>Termín</dt>
+            <dt><IconCalendarEvent aria-hidden="true" size={14} stroke={1.8} /> Termín</dt>
             <dd>{datum}</dd>
           </div>
           <div>
-            <dt>Místo</dt>
+            <dt><IconMapPin aria-hidden="true" size={14} stroke={1.8} /> Místo</dt>
             <dd>{akce.misto_konani_nazev}</dd>
           </div>
           <div>
-            <dt>Obec</dt>
+            <dt><IconTicket aria-hidden="true" size={14} stroke={1.8} /> Obec</dt>
             <dd>{akce.organizace_nazev}</dd>
           </div>
           <div>
-            <dt>Dostupnost</dt>
+            <dt><IconUsers aria-hidden="true" size={14} stroke={1.8} /> Dostupnost</dt>
             <dd>{jeVyprodano ? "Bez volných míst" : `${akce.kapacita} míst v kapacitě`}</dd>
           </div>
         </dl>
@@ -77,7 +85,8 @@ export function KartaAkce({ akce, kategorieVstupenek }: Vlastnosti) {
           </span>
         </div>
         <a className="kulturni-button kulturni-button-primary" href={`/akce/${akce.slug}`}>
-          {jeVyprodano ? "Zobrazit detail" : "Vybrat vstupenky"}
+          <span>{jeVyprodano ? "Zobrazit detail" : "Vybrat vstupenky"}</span>
+          <IconArrowRight aria-hidden="true" size={18} stroke={2} />
         </a>
       </div>
     </article>

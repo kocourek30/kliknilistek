@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 
 import { Hlavicka } from "@/components/hlavicka";
 import { Paticka } from "@/components/paticka";
@@ -13,6 +14,19 @@ import {
   formatujZpusobUhrady,
 } from "@/lib/formatovani";
 import { formatujKratkeOznaceniMista } from "@/lib/plan-salu";
+
+export const metadata: Metadata = {
+  title: "Potvrzení objednávky",
+  description: "Soukromé shrnutí objednávky, stav platby a doručení vstupenek.",
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
+};
 
 type DetailObjednavkyPageProps = {
   params: Promise<{

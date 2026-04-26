@@ -1,3 +1,11 @@
+import {
+  IconCalendarEvent,
+  IconInfoCircle,
+  IconLogin2,
+  IconScan,
+  IconTicket,
+} from "@tabler/icons-react";
+
 type HlavickaProps = {
   varianta?: "verejna" | "sprava";
   tenantNazev?: string | null;
@@ -55,21 +63,34 @@ export function Hlavicka({
           </div>
         </a>
 
-        <nav className="verejny-nav" aria-label="Hlavní navigace">
+          <nav className="verejny-nav" aria-label="Hlavní navigace">
           <a className="verejny-nav-link" href="/">
-            Program
+            <span className="nav-link-content">
+              <IconCalendarEvent aria-hidden="true" size={16} stroke={1.8} />
+              <span>Program</span>
+            </span>
           </a>
           <a className="verejny-nav-link" href="/akce">
-            {tenantNazev ? "Akce organizace" : "Všechny akce"}
+            <span className="nav-link-content">
+              <IconTicket aria-hidden="true" size={16} stroke={1.8} />
+              <span>{tenantNazev ? "Akce organizace" : "Všechny akce"}</span>
+            </span>
           </a>
           <a className="verejny-nav-link" href="/#jak-to-funguje">
-            Jak to funguje
+            <span className="nav-link-content">
+              <IconInfoCircle aria-hidden="true" size={16} stroke={1.8} />
+              <span>Jak to funguje</span>
+            </span>
           </a>
           <a className="verejny-nav-link verejny-nav-link-utility" href="/odbaveni">
-            Odbavení
+            <span className="nav-link-content">
+              <IconScan aria-hidden="true" size={16} stroke={1.8} />
+              <span>Odbavení</span>
+            </span>
           </a>
           <a className="kulturni-button kulturni-button-secondary" href="/sprava">
-            Přihlášení správce
+            <IconLogin2 aria-hidden="true" size={18} stroke={1.8} />
+            <span>Přihlášení správce</span>
           </a>
         </nav>
       </div>

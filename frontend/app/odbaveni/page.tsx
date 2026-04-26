@@ -1,5 +1,19 @@
 import { Hlavicka } from "@/components/hlavicka";
 import { OdbaveniBrana } from "@/components/odbaveni-brana";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Odbavení",
+  description: "Interní režim pro rychlou kontrolu a odbavení vstupenek u vstupu.",
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
+};
 
 export default function OdbaveniPage() {
   return (

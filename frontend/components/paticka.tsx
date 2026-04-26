@@ -1,3 +1,11 @@
+import {
+  IconArrowUpRight,
+  IconBuildingCommunity,
+  IconCalendarEvent,
+  IconLogin2,
+  IconScan,
+} from "@tabler/icons-react";
+
 type PatickaProps = {
   tenantNazev?: string | null;
   tenantLogoUrl?: string | null;
@@ -22,13 +30,29 @@ export function Paticka({ tenantNazev, tenantLogoUrl }: PatickaProps) {
         </div>
         <div className="verejna-paticka-blok">
           <strong>Pro návštěvníky</strong>
-          <a href="/akce">Přehled akcí</a>
-          <a href="/#jak-to-funguje">Jak funguje nákup</a>
+          <a className="footer-link" href="/akce">
+            <IconCalendarEvent aria-hidden="true" size={16} stroke={1.8} />
+            <span>Přehled akcí</span>
+            <IconArrowUpRight aria-hidden="true" size={14} stroke={1.8} />
+          </a>
+          <a className="footer-link" href="/#jak-to-funguje">
+            <IconBuildingCommunity aria-hidden="true" size={16} stroke={1.8} />
+            <span>Jak funguje nákup</span>
+            <IconArrowUpRight aria-hidden="true" size={14} stroke={1.8} />
+          </a>
         </div>
         <div className="verejna-paticka-blok">
           <strong>Pro pořadatele</strong>
-          <a href="/sprava">Přihlášení do správy</a>
-          <a href="/odbaveni">Odbavení</a>
+          <a className="footer-link" href="/sprava">
+            <IconLogin2 aria-hidden="true" size={16} stroke={1.8} />
+            <span>Přihlášení do správy</span>
+            <IconArrowUpRight aria-hidden="true" size={14} stroke={1.8} />
+          </a>
+          <a className="footer-link" href="/odbaveni">
+            <IconScan aria-hidden="true" size={16} stroke={1.8} />
+            <span>Odbavení</span>
+            <IconArrowUpRight aria-hidden="true" size={14} stroke={1.8} />
+          </a>
         </div>
       </div>
     </footer>

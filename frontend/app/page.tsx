@@ -1,4 +1,12 @@
 import type { CSSProperties } from "react";
+import type { Metadata } from "next";
+import {
+  IconArrowRight,
+  IconBuildingCommunity,
+  IconCalendarEvent,
+  IconMap2,
+  IconTicket,
+} from "@tabler/icons-react";
 
 import { Hlavicka } from "@/components/hlavicka";
 import { Paticka } from "@/components/paticka";
@@ -11,6 +19,11 @@ import {
   formatujTypAkce,
   formatujTypOrganizace,
 } from "@/lib/formatovani";
+import {
+  vytvorAbsolutniUrl,
+  vytvorOrganizacniSchema,
+  vytvorSeoTitulek,
+} from "@/lib/seo";
 
 const krokyNakupu = [
   {
@@ -72,6 +85,14 @@ export default async function HomePage() {
         tenantPodtitulek={tenantPodtitulek}
         tenantLogoUrl={tenantLogoUrl}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            vytvorOrganizacniSchema(tenantKontext.organizace, host),
+          ),
+        }}
+      />
 
       <div className="verejny-page">
         <section
@@ -112,7 +133,8 @@ export default async function HomePage() {
               </div>
               {nejblizsi ? (
                 <a className="text-link" href={`/akce/${nejblizsi.slug}`}>
-                  Otevřít detail akce
+                  <span>Otevřít detail akce</span>
+                  <IconArrowRight aria-hidden="true" size={16} stroke={2} />
                 </a>
               ) : null}
             </article>
@@ -134,18 +156,30 @@ export default async function HomePage() {
 
         <section className="verejny-metrics">
           <div className="metric-card">
+            <div className="metric-icon">
+              <IconBuildingCommunity aria-hidden="true" size={18} stroke={1.8} />
+            </div>
             <span>Aktivní pořadatelé</span>
             <strong>{data.organizace.length}</strong>
           </div>
           <div className="metric-card">
+            <div className="metric-icon">
+              <IconCalendarEvent aria-hidden="true" size={18} stroke={1.8} />
+            </div>
             <span>Naplánované akce</span>
             <strong>{data.akce.length}</strong>
           </div>
           <div className="metric-card">
+            <div className="metric-icon">
+              <IconMap2 aria-hidden="true" size={18} stroke={1.8} />
+            </div>
             <span>Kapacita v nabídce</span>
             <strong>{pocetMist}</strong>
           </div>
           <div className="metric-card">
+            <div className="metric-icon">
+              <IconTicket aria-hidden="true" size={18} stroke={1.8} />
+            </div>
             <span>Pořadatel</span>
             <strong>{aktivniOrganizace?.nazev_verejny || aktivniOrganizace?.nazev || "Místní pořadatel"}</strong>
           </div>
@@ -163,7 +197,8 @@ export default async function HomePage() {
               </p>
             </div>
             <a className="text-link" href="/akce">
-              {tenantKontext.organizace ? "Všechny akce organizace" : "Otevřít celý program"}
+              <span>{tenantKontext.organizace ? "Všechny akce organizace" : "Otevřít celý program"}</span>
+              <IconArrowRight aria-hidden="true" size={16} stroke={2} />
             </a>
           </div>
 
@@ -196,7 +231,8 @@ export default async function HomePage() {
                     <span>{formatujDatum(akcePolozka.zacatek)}</span>
                     <span>{akcePolozka.misto_konani_nazev}</span>
                     <a className="text-link" href={`/akce/${akcePolozka.slug}`}>
-                      Detail akce
+                      <span>Detail akce</span>
+                      <IconArrowRight aria-hidden="true" size={16} stroke={2} />
                     </a>
                   </div>
                 </article>
@@ -231,4 +267,40 @@ export default async function HomePage() {
       <Paticka tenantNazev={tenantNazev} tenantLogoUrl={tenantLogoUrl} />
     </main>
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const host = await nactiAktualniHost();
+  const tenantKontext = await nactiTenantKontext(host);
+  const tenant = tenantKontext.organizace;
+  const nazev = tenant?.nazev_verejny || tenant?.nazev || "KlikniListek";
+  const popis =
+    tenant?.verejny_popis ||
+    "Kulturní služba pro obce, kulturní domy a místní pořadatele. Přehled akcí, vstupenek a jednoduché online objednávky.";
+  const obrazek =
+    tenant?.banner_soubor_url ||
+    tenant?.logo_soubor_url ||
+    tenant?.logo_url ||
+    vytvorAbsolutniUrl("/og-default.svg", host);
+
+  return {
+    title: tenant ? vytvorSeoTitulek(nazev) : "KlikniListek | Kulturní akce a vstupenky",
+    description: popis,
+    alternates: {
+      canonical: vytvorAbsolutniUrl("/", host),
+    },
+    openGraph: {
+      title: tenant ? nazev : "KlikniListek | Kulturní akce a vstupenky",
+      description: popis,
+      url: vytvorAbsolutniUrl("/", host),
+      type: "website",
+      images: obrazek ? [{ url: obrazek, alt: nazev }] : undefined,
+    },
+    twitter: {
+      card: obrazek ? "summary_large_image" : "summary",
+      title: tenant ? nazev : "KlikniListek | Kulturní akce a vstupenky",
+      description: popis,
+      images: obrazek ? [obrazek] : undefined,
+    },
+  };
 }

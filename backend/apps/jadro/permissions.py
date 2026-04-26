@@ -6,7 +6,13 @@ ROLE_FINANCE = {"vlastnik", "spravce", "pokladna", "ucetni"}
 ROLE_ODBAVENI = {"vlastnik", "spravce", "odbaveni"}
 
 
+def uzivatel_je_superuser(uzivatel) -> bool:
+    return bool(uzivatel and uzivatel.is_authenticated and uzivatel.is_superuser)
+
+
 def uzivatel_ma_aktivni_clenstvi(uzivatel) -> bool:
+    if uzivatel_je_superuser(uzivatel):
+        return True
     return bool(
         uzivatel
         and uzivatel.is_authenticated
@@ -15,6 +21,8 @@ def uzivatel_ma_aktivni_clenstvi(uzivatel) -> bool:
 
 
 def uzivatel_ma_roli(uzivatel, role: set[str]) -> bool:
+    if uzivatel_je_superuser(uzivatel):
+        return True
     return bool(
         uzivatel
         and uzivatel.is_authenticated
@@ -26,6 +34,24 @@ def uzivatel_ma_roli(uzivatel, role: set[str]) -> bool:
 
 
 def ziskej_opravneni_uzivatele(uzivatel) -> dict[str, bool]:
+    if not uzivatel or not uzivatel.is_authenticated:
+        return {
+            "sprava": False,
+            "sprava_obsahu": False,
+            "finance": False,
+            "odbaveni": False,
+            "prehled": False,
+        }
+
+    if uzivatel.is_superuser:
+        return {
+            "sprava": True,
+            "sprava_obsahu": True,
+            "finance": True,
+            "odbaveni": True,
+            "prehled": True,
+        }
+
     if not uzivatel_ma_aktivni_clenstvi(uzivatel):
         return {
             "sprava": False,
@@ -51,6 +77,8 @@ class JeAktivniClenOrganizace(BasePermission):
 
 class MuzeSpravovatObsah(BasePermission):
     def has_permission(self, request, view):
+        if uzivatel_je_superuser(request.user):
+            return True
         if request.method in SAFE_METHODS:
             return True
         return uzivatel_ma_roli(request.user, ROLE_SPRAVA_OBSAHU)
@@ -58,14 +86,14 @@ class MuzeSpravovatObsah(BasePermission):
 
 class MuzeVidetSpravuObsahu(BasePermission):
     def has_permission(self, request, view):
-        return uzivatel_ma_roli(request.user, ROLE_SPRAVA_OBSAHU)
+        return uzivatel_je_superuser(request.user) or uzivatel_ma_roli(request.user, ROLE_SPRAVA_OBSAHU)
 
 
 class MuzeVidetFinance(BasePermission):
     def has_permission(self, request, view):
-        return uzivatel_ma_roli(request.user, ROLE_FINANCE)
+        return uzivatel_je_superuser(request.user) or uzivatel_ma_roli(request.user, ROLE_FINANCE)
 
 
 class MuzeOdbavovat(BasePermission):
     def has_permission(self, request, view):
-        return uzivatel_ma_roli(request.user, ROLE_ODBAVENI)
+        return uzivatel_je_superuser(request.user) or uzivatel_ma_roli(request.user, ROLE_ODBAVENI)

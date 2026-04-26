@@ -15,8 +15,6 @@ async function preposliNaBackend(request: NextRequest, context: { params: Promis
   const { cesta } = await context.params;
   const cilovaUrl = vytvorCilovouUrl(request, cesta);
   const maTelo = !["GET", "HEAD"].includes(request.method);
-  const obsahTyp = request.headers.get("content-type") ?? "";
-  const jeMultipart = obsahTyp.includes("multipart/form-data");
 
   try {
     const odpoved = await fetch(cilovaUrl, {
@@ -34,11 +32,12 @@ async function preposliNaBackend(request: NextRequest, context: { params: Promis
                 request.headers.get("authorization")) as string,
             }
           : {}),
-        ...(request.headers.get("content-type") && !jeMultipart
+        ...(request.headers.get("content-type")
           ? { "Content-Type": request.headers.get("content-type") as string }
           : {}),
       },
-      body: maTelo ? (jeMultipart ? await request.formData() : await request.text()) : undefined,
+      body: maTelo ? request.body : undefined,
+      duplex: maTelo ? "half" : undefined,
       cache: "no-store",
     });
 
